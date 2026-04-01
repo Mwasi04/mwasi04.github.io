@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BMB Electronics | Login</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    :root {
+      --primary: #00bcd4;
+      --primary-dark: #0097a7;
+      --dark: #0f172a;
+      --slate-800: #1e293b;
+      --gray-100: #f1f5f9;
+      --gray-400: #94a3b8;
+      --white: #ffffff;
+      --radius-lg: 1.5rem;
+      --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    }
+
+    /* ===== BACKGROUND IMAGE ===== */
+    body { 
+      font-family: 'Inter', sans-serif; 
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Full-screen background image layer — blurred */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: -20px; /* extend beyond edges so blur doesn't show white borders */
+      background-image: url('photos/b.jpeg');
+      /* ↑ Change this to your preferred image path, e.g. url('photos/c.jpeg') */
+      background-size: cover;
+      background-position: center;
+      filter: blur(10px) brightness(0.6);
+      z-index: -2;
+    }
+
+    /* Deep blue overlay on top of the blurred image */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+
+      z-index: -1;
+    }
+    /* ============================= */
+
+    .login-container {
+      max-width: 450px;
+      width: 100%;
+      position: relative;
+      z-index: 1;
+    }
+
+    .login-card {
+      background: rgba(255, 255, 255, 0.97);
+      backdrop-filter: blur(12px);
+      border-radius: var(--radius-lg);
+      padding: 3rem;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3);
+      animation: slideUp 0.5s ease;
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .logo-link {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      text-decoration: none;
+      margin-bottom: 2rem;
+    }
+
+    .logo-img {
+      height: 100px;
+      width: auto;
+    }
+
+    .login-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .login-header h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .login-header p {
+      color: var(--gray-400);
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: var(--dark);
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 1rem;
+      border: 2px solid #eef2f6;
+      border-radius: 1rem;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.95rem;
+      transition: 0.3s;
+      background: #fafcff;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(0, 188, 212, 0.1);
+      background: white;
+    }
+
+    .form-options {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .remember-me {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--gray-400);
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+
+    .forgot-password {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 500;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+
+    .forgot-password:hover { text-decoration: underline; }
+
+    .btn {
+      display: block;
+      width: 100%;
+      padding: 1rem;
+      border-radius: 100px;
+      font-weight: 700;
+      text-decoration: none;
+      transition: 0.3s;
+      border: none;
+      cursor: pointer;
+      text-align: center;
+      font-size: 1.1rem;
+    }
+
+    .btn-primary { 
+      background: var(--primary); 
+      color: white; 
+    }
+
+    .btn-primary:hover { 
+      background: var(--primary-dark); 
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(0, 188, 212, 0.35); 
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .divider {
+      text-align: center;
+      margin: 1.5rem 0;
+      position: relative;
+    }
+
+    .divider::before,
+    .divider::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      width: 45%;
+      height: 1px;
+      background: #eef2f6;
+    }
+
+    .divider::before { left: 0; }
+    .divider::after { right: 0; }
+
+    .divider span {
+      background: rgba(255,255,255,0.97);
+      padding: 0 1rem;
+      color: var(--gray-400);
+      font-size: 0.9rem;
+    }
+
+    .social-login {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .social-btn {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.8rem;
+      border: 2px solid #eef2f6;
+      border-radius: 100px;
+      background: white;
+      cursor: pointer;
+      transition: 0.3s;
+      font-weight: 500;
+    }
+
+    .social-btn:hover {
+      background: var(--gray-100);
+      border-color: var(--primary);
+    }
+
+    .social-btn.google { color: #DB4437; }
+    .social-btn.facebook { color: #4267B2; }
+
+    .signup-link {
+      text-align: center;
+      color: var(--gray-400);
+    }
+
+    .signup-link a {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .signup-link a:hover { text-decoration: underline; }
+
+    .back-home {
+      display: block;
+      text-align: center;
+      margin-top: 1.5rem;
+      color: var(--gray-400);
+      text-decoration: none;
+      transition: 0.3s;
+    }
+
+    .back-home:hover { color: var(--primary); }
+
+    .error-message {
+      background: #fee2e2;
+      color: #ef4444;
+      padding: 0.8rem 1rem;
+      border-radius: 0.8rem;
+      margin-bottom: 1rem;
+      display: none;
+      font-size: 0.9rem;
+    }
+
+    .error-message.show { display: block; }
+
+    .success-message {
+      background: #d1fae5;
+      color: #065f46;
+      padding: 0.8rem 1rem;
+      border-radius: 0.8rem;
+      margin-bottom: 1rem;
+      display: none;
+      font-size: 0.9rem;
+    }
+
+    .success-message.show { display: block; }
+
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .modal.show { display: flex; }
+
+    .modal-content {
+      background: white;
+      padding: 2rem;
+      border-radius: var(--radius-lg);
+      max-width: 400px;
+      width: 90%;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+    }
+
+    .modal-content h2 { margin-bottom: 1rem; }
+
+    .close-modal {
+      float: right;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--gray-400);
+    }
+
+    .close-modal:hover { color: var(--dark); }
+
+    @media (max-width: 480px) {
+      .login-card { padding: 2rem 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <div class="login-card">
+      <a href="index.html" class="logo-link">
+        <img class="logo-img" src="photos/logo.png" alt="BMB logo" onerror="this.src='https://via.placeholder.com/60x60?text=BMB'">
+      </a>
+
+      <div class="login-header">
+        <h1>Welcome Back</h1>
+        <p>Sign in to continue shopping</p>
+      </div>
+
+      <div id="errorMessage" class="error-message"></div>
+      <div id="successMessage" class="success-message"></div>
+
+      <form id="loginForm">
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" placeholder="john@example.com" required>
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" placeholder="••••••••" required>
+        </div>
+
+        <div class="form-options">
+          <label class="remember-me">
+            <input type="checkbox" id="remember" style="accent-color: var(--primary);"> Remember me
+          </label>
+          <span class="forgot-password" onclick="showForgotPassword()">Forgot Password?</span>
+        </div>
+
+        <button type="submit" id="loginBtn" class="btn btn-primary">Sign In</button>
+
+        <div class="divider"><span>or continue with</span></div>
+
+        <div class="social-login">
+          <button type="button" class="social-btn google" onclick="handleGoogleSignIn()">
+            <i class="fa-brands fa-google"></i> Continue with Google
+          </button>
+        </div>
+
+        <div class="signup-link">
+          Don't have an account? <a href="signup.html">Sign up</a>
+        </div>
+      </form>
+
+      <a href="index.html" class="back-home">
+        <i class="fa-solid fa-arrow-left"></i> Back to Home
+      </a>
+    </div>
+  </div>
+
+  <!-- Forgot Password Modal -->
+  <div id="forgotPasswordModal" class="modal">
+    <div class="modal-content">
+      <span class="close-modal" onclick="closeForgotPassword()">&times;</span>
+      <h2>Reset Password</h2>
+      <p style="margin-bottom: 1rem; color: var(--gray-400);">Enter your email and we'll send you a reset link.</p>
+      <div class="form-group">
+        <input type="email" id="resetEmail" placeholder="Enter your email" required>
+      </div>
+      <button class="btn btn-primary" onclick="handlePasswordReset()">Send Reset Link</button>
+    </div>
+  </div>
+
+  <script type="module">
+    import { 
+        signInUser, 
+        signInWithGoogle, 
+        resetPassword,
+        observeAuthState,
+        isUserAdmin 
+    } from './js/auth.js';
+
+    observeAuthState(async (user) => {
+        if (user) {
+            const admin = await isUserAdmin(user.uid);
+            if (admin) {
+                window.location.href = 'admin/dashboard.html';
+            } else {
+                window.location.href = 'profile.html';
+            }
+        }
+    });
+
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        const loginBtn = document.getElementById('loginBtn');
+        const errorDiv = document.getElementById('errorMessage');
+        
+        loginBtn.disabled = true;
+        loginBtn.textContent = 'Signing in...';
+        errorDiv.classList.remove('show');
+        
+        const result = await signInUser(email, password);
+        
+        if (!result.success) {
+            errorDiv.textContent = result.error;
+            errorDiv.classList.add('show');
+            loginBtn.disabled = false;
+            loginBtn.textContent = 'Sign In';
+        }
+    });
+
+    window.handleGoogleSignIn = async () => {
+        const loginBtn = document.getElementById('loginBtn');
+        const errorDiv = document.getElementById('errorMessage');
+        
+        loginBtn.disabled = true;
+        loginBtn.textContent = 'Signing in...';
+        errorDiv.classList.remove('show');
+        
+        const result = await signInWithGoogle();
+        
+        if (!result.success) {
+            errorDiv.textContent = result.error;
+            errorDiv.classList.add('show');
+            loginBtn.disabled = false;
+            loginBtn.textContent = 'Sign In';
+        }
+    };
+
+    window.handleFacebookSignIn = () => {
+        alert('Facebook sign-in will be implemented separately');
+    };
+
+    window.showForgotPassword = () => {
+        document.getElementById('forgotPasswordModal').classList.add('show');
+    };
+
+    window.closeForgotPassword = () => {
+        document.getElementById('forgotPasswordModal').classList.remove('show');
+    };
+
+    window.handlePasswordReset = async () => {
+        const email = document.getElementById('resetEmail').value;
+        const successDiv = document.getElementById('successMessage');
+        const errorDiv = document.getElementById('errorMessage');
+        
+        if (!email) {
+            errorDiv.textContent = 'Please enter your email';
+            errorDiv.classList.add('show');
+            return;
+        }
+        
+        const result = await resetPassword(email);
+        
+        if (result.success) {
+            closeForgotPassword();
+            successDiv.textContent = 'Password reset email sent! Check your inbox.';
+            successDiv.classList.add('show');
+            setTimeout(() => successDiv.classList.remove('show'), 5000);
+        } else {
+            errorDiv.textContent = result.error;
+            errorDiv.classList.add('show');
+        }
+    };
+  </script>
+</body>
+</html>

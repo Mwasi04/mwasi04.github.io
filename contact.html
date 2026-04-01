@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  <title>BMB Electronics | Contact Us</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    :root {
+      --primary: #00bcd4;
+      --primary-dark: #0097a7;
+      --dark: #0f172a;
+      --slate-800: #1e293b;
+      --gray-100: #f1f5f9;
+      --gray-400: #94a3b8;
+      --white: #ffffff;
+      --radius-lg: 1.5rem;
+      --radius-md: 1rem;
+      --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    }
+
+    body { 
+      font-family: 'Inter', sans-serif; 
+      background: var(--white); 
+      color: var(--dark); 
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    .container { 
+      width: 90%; 
+      max-width: 1200px; 
+      margin: 0 auto; 
+      padding: 0 15px;
+    }
+
+    /* Navigation */
+    nav {
+      background: rgba(255, 255, 255, 0.98);
+      backdrop-filter: blur(10px);
+      padding: 0.8rem 0;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      border-bottom: 1px solid rgba(0,0,0,0.05);
+    }
+
+    nav .container { 
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center; 
+      flex-wrap: wrap;
+    }
+
+    .logo-link {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+    }
+
+    .logo-img {
+      height: 32px;
+      width: auto;
+    }
+
+    .logo-text { 
+      font-size: 1.3rem; 
+      font-weight: 800; 
+      color: var(--dark); 
+      letter-spacing: -1px;
+    }
+
+    .menu-toggle {
+      display: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--dark);
+    }
+
+    .nav-links { 
+      display: flex; 
+      gap: 2rem; 
+    }
+    
+    .nav-links a { 
+      text-decoration: none; 
+      color: var(--dark); 
+      font-weight: 500; 
+      transition: 0.3s;
+      font-size: 0.95rem;
+    }
+    
+    .nav-links a:hover, 
+    .nav-links a.active { 
+      color: var(--primary); 
+    }
+
+    .nav-icons { 
+      display: flex; 
+      gap: 1.2rem; 
+      font-size: 1.2rem; 
+      align-items: center; 
+    }
+    
+    .nav-icons a { 
+      color: var(--dark); 
+      text-decoration: none; 
+    }
+    
+    .nav-icons i { 
+      cursor: pointer; 
+      transition: 0.3s; 
+    }
+    
+    .nav-icons i:hover { 
+      color: var(--primary); 
+    }
+
+    /* Page Header */
+    .page-header {
+      background: linear-gradient(rgba(15, 23, 42, 0.8), rgba(15, 23, 42, 0.8)), 
+                  url('photos/d.jpeg') center/cover;
+      padding: 4rem 1rem;
+      text-align: center;
+      color: white;
+      margin: 10px;
+      border-radius: var(--radius-lg);
+    }
+
+    .page-header h1 { 
+      font-size: clamp(2rem, 5vw, 3rem); 
+      font-weight: 800; 
+      margin-bottom: 0.8rem; 
+      letter-spacing: -1px;
+    }
+
+    .page-header p { 
+      font-size: 1rem; 
+      opacity: 0.9; 
+      max-width: 500px; 
+      margin: 0 auto; 
+    }
+
+    /* Contact Grid */
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.5fr;
+      gap: 3rem;
+      margin: 3rem 0;
+      padding: 0 15px;
+    }
+
+    .contact-info h2, .contact-form h2 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 2rem;
+      letter-spacing: -0.5px;
+    }
+
+    .info-item {
+      display: flex;
+      gap: 1.2rem;
+      margin-bottom: 2rem;
+      align-items: flex-start;
+    }
+
+    .info-icon {
+      width: 48px;
+      height: 48px;
+      background: rgba(0, 188, 212, 0.1);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      color: var(--primary);
+      flex-shrink: 0;
+    }
+
+    .info-content h3 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .info-content p {
+      color: var(--gray-400);
+      line-height: 1.6;
+      font-size: 0.95rem;
+    }
+
+    .info-content a {
+      color: var(--gray-400);
+      text-decoration: none;
+      transition: 0.3s;
+      font-size: 0.95rem;
+    }
+
+    .info-content a:hover {
+      color: var(--primary);
+    }
+
+    /* Map */
+    .map-container {
+      margin-top: 2rem;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      height: 250px;
+      box-shadow: var(--shadow);
+    }
+
+    .map-container iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+
+    /* Hours Card */
+    .hours-card {
+      background: var(--gray-100);
+      padding: 1.5rem;
+      border-radius: var(--radius-lg);
+      margin-top: 1rem;
+    }
+
+    .hours-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.8rem 0;
+      border-bottom: 1px dashed var(--gray-400);
+      font-size: 0.95rem;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .hours-item:last-child { 
+      border-bottom: none; 
+    }
+
+    /* Form */
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      font-size: 0.95rem;
+    }
+
+    .form-group label .required {
+      color: var(--primary);
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      padding: 0.9rem 1rem;
+      border: 2px solid #e2e8f0;
+      border-radius: 1rem;
+      font-family: 'Inter', sans-serif;
+      transition: 0.3s;
+      background: white;
+      font-size: 0.95rem;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(0, 188, 212, 0.1);
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 1rem 2rem;
+      border-radius: 100px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: 0.3s;
+      border: none;
+      cursor: pointer;
+      font-size: 1rem;
+      width: 100%;
+    }
+
+    .btn-primary { 
+      background: var(--primary); 
+      color: white; 
+    }
+
+    .btn-primary:hover { 
+      background: var(--primary-dark); 
+      transform: translateY(-2px); 
+      box-shadow: 0 10px 20px rgba(0, 188, 212, 0.3);
+    }
+
+    /* FAQ Section */
+    .faq-section {
+      margin: 4rem 0;
+      padding: 0 15px;
+    }
+
+    .faq-section h2 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 2.5rem;
+    }
+
+    .faq-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .faq-item {
+      background: var(--gray-100);
+      padding: 1.8rem;
+      border-radius: var(--radius-lg);
+      transition: 0.3s;
+    }
+
+    .faq-item:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow);
+    }
+
+    .faq-item h3 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 0.8rem;
+      color: var(--primary);
+    }
+
+    .faq-item p {
+      color: var(--gray-400);
+      line-height: 1.6;
+      font-size: 0.95rem;
+    }
+
+    /* Footer */
+    .main-footer {
+      background: var(--dark);
+      color: var(--gray-400);
+      padding: 4rem 0 2rem;
+      margin-top: 4rem;
+    }
+    
+    .footer-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 2.5rem;
+      margin-bottom: 3rem;
+      padding: 0 15px;
+    }
+    
+    .footer-col { 
+      text-align: left; 
+    }
+    
+    .footer-col h4 { 
+      color: white; 
+      font-size: 1rem; 
+      font-weight: 700; 
+      margin-bottom: 1.2rem; 
+      text-transform: uppercase; 
+      letter-spacing: 1px; 
+    }
+    
+    .footer-col p { 
+      line-height: 1.6; 
+      margin-bottom: 1.2rem; 
+      font-size: 0.9rem;
+    }
+    
+    .footer-links { 
+      list-style: none; 
+    }
+    
+    .footer-links li { 
+      margin-bottom: 0.6rem; 
+    }
+    
+    .footer-links a { 
+      color: var(--gray-400); 
+      text-decoration: none; 
+      transition: 0.3s; 
+      font-size: 0.9rem;
+    }
+    
+    .footer-links a:hover { 
+      color: var(--primary); 
+      padding-left: 5px; 
+    }
+    
+    .social-icons { 
+      display: flex; 
+      gap: 0.8rem; 
+      flex-wrap: wrap;
+    }
+    
+    .social-icons a {
+      width: 36px;
+      height: 36px;
+      background: var(--slate-800);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      color: white;
+      text-decoration: none;
+      transition: 0.3s;
+      font-size: 1rem;
+    }
+    
+    .social-icons a:hover { 
+      background: var(--primary); 
+      transform: translateY(-2px); 
+    }
+    
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,0.05);
+      padding-top: 2rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      text-align: center;
+    }
+    
+    .footer-bottom p {
+      width: 100%;
+      text-align: center;
+      font-size: 0.9rem;
+    }
+    
+    .payment-icons { 
+      display: flex; 
+      gap: 1rem; 
+      font-size: 1.3rem; 
+      color: white; 
+      opacity: 0.6; 
+      justify-content: center;
+      width: 100%;
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      left: 20px;
+      background: white;
+      padding: 1rem;
+      border-radius: 100px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transform: translateY(150%);
+      transition: 0.3s;
+      z-index: 1001;
+      max-width: 400px;
+      margin: 0 auto;
+    }
+
+    .toast.show {
+      transform: translateY(0);
+    }
+
+    /* Mobile Responsive */
+    @media (max-width: 992px) {
+      .footer-grid { 
+        grid-template-columns: 1fr 1fr; 
+      }
+    }
+
+    @media (max-width: 768px) {
+      .menu-toggle {
+        display: block;
+      }
+      
+      .nav-links {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: white;
+        flex-direction: column;
+        padding: 1rem 0;
+        gap: 0;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        z-index: 1000;
+      }
+      
+      .nav-links.show {
+        display: flex;
+      }
+      
+      .nav-links a {
+        padding: 1rem 2rem;
+        width: 100%;
+        text-align: left;
+        border-bottom: 1px solid #eef2f6;
+      }
+      
+      .contact-grid { 
+        grid-template-columns: 1fr; 
+        gap: 2rem;
+      }
+      
+      .footer-grid { 
+        grid-template-columns: 1fr; 
+      }
+      
+      .footer-col { 
+        text-align: center; 
+      }
+      
+      .social-icons { 
+        justify-content: center; 
+      }
+      
+      .info-item {
+        flex-direction: column;
+        text-align: center;
+        align-items: center;
+      }
+      
+      .info-content {
+        text-align: center;
+      }
+      
+      .hours-item {
+        flex-direction: column;
+        text-align: center;
+        gap: 0.3rem;
+      }
+      
+      .map-container {
+        height: 200px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .logo-text { 
+        font-size: 1.1rem; 
+      }
+      
+      .logo-img {
+        height: 28px;
+      }
+      
+      .page-header {
+        padding: 3rem 1rem;
+      }
+      
+      .page-header h1 {
+        font-size: 1.8rem;
+      }
+      
+      .contact-info h2, .contact-form h2 {
+        font-size: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="container">
+      <a href="index.html" class="logo-link">
+        <img class="logo-img" src="photos/logo.png" alt="BMB logo" onerror="this.src='https://via.placeholder.com/32x32?text=BMB'">
+        <span class="logo-text">BMB Electronics</span>
+      </a>
+      
+      <div class="menu-toggle" onclick="toggleMenu()">
+        <i class="fa-solid fa-bars"></i>
+      </div>
+      
+      <div class="nav-links" id="navLinks">
+        <a href="index.html">Home</a>
+        <a href="store.html">Store</a>
+        <a href="contact.html" class="active">Contact</a>
+        <a href="#" id="accountLink">Account</a>
+      </div>
+      
+      <div class="nav-icons">
+        <a href="cart.html"><i class="fa-solid fa-cart-shopping"></i></a>
+        <a href="#" id="accountIcon"><i class="fa-regular fa-circle-user"></i></a>
+      </div>
+    </div>
+  </nav>
+
+  <section class="page-header">
+    <div class="container">
+      <h1>Get In Touch</h1>
+      <p>We're here to help • Visit us • Call us • Message us</p>
+    </div>
+  </section>
+
+  <div class="container">
+    <div class="contact-grid">
+      <div class="contact-info">
+        <h2>Contact Information</h2>
+        
+        <div class="info-item">
+          <div class="info-icon"><i class="fa-solid fa-location-dot"></i></div>
+          <div class="info-content">
+            <h3>Visit Our Store</h3>
+            <p>Obote Avenue, Opposite BATA<br>Kitwe, Zambia</p>
+            <a href="https://maps.google.com" target="_blank" style="font-size: 0.9rem;">Get Directions <i class="fa-solid fa-arrow-right"></i></a>
+          </div>
+        </div>
+
+        <div class="info-item">
+          <div class="info-icon"><i class="fa-solid fa-phone"></i></div>
+          <div class="info-content">
+            <h3>Call Us</h3>
+            <p><a href="tel:+260968602546">+260 96 860 2546</a><br>
+            <a href="https://wa.me/260968602546" target="_blank">+260 97 123 4567 (WhatsApp)</a></p>
+          </div>
+        </div>
+
+        <div class="info-item">
+          <div class="info-icon"><i class="fa-solid fa-envelope"></i></div>
+          <div class="info-content">
+            <h3>Email Us</h3>
+            <p><a href="mailto:BmbElectronicsltd@gmail.com">BmbElectronicsltd@gmail.com</a><br>
+            <a href="mailto:support@bmbelectronics.com">support@bmbelectronics.com</a></p>
+          </div>
+        </div>
+
+        <div class="info-item">
+          <div class="info-icon"><i class="fa-solid fa-clock"></i></div>
+          <div class="info-content">
+            <h3>Business Hours</h3>
+            <div class="hours-card">
+              <div class="hours-item"><span>Monday - Friday:</span> <span>9:00 AM - 6:00 PM</span></div>
+              <div class="hours-item"><span>Saturday:</span> <span>10:00 AM - 4:00 PM</span></div>
+              <div class="hours-item"><span>Sunday:</span> <span>Closed</span></div>
+              <div class="hours-item"><span>Public Holidays:</span> <span>10:00 AM - 2:00 PM</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="map-container">
+          <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3846.789072563573!2d28.21030797480037!3d-12.8240675875198!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x194f1f3e8b3f3c3d%3A0x8f5b5e5f5e5f5e5f!2sObote%20Ave%2C%20Kitwe%2C%20Zambia!5e0!3m2!1sen!2s!4v1700000000000" allowfullscreen="" loading="lazy"></iframe>
+        </div>
+      </div>
+
+      <div class="contact-form">
+        <h2>Send Us a Message</h2>
+        <form id="contactForm" onsubmit="event.preventDefault(); submitForm();">
+          <div class="form-group">
+            <label for="name">Full Name <span class="required">*</span></label>
+            <input type="text" id="name" required placeholder="John Doe">
+          </div>
+          <div class="form-group">
+            <label for="email">Email Address <span class="required">*</span></label>
+            <input type="email" id="email" required placeholder="john@example.com">
+          </div>
+          <div class="form-group">
+            <label for="phone">Phone Number</label>
+            <input type="tel" id="phone" placeholder="+260 96 860 2546">
+          </div>
+          <div class="form-group">
+            <label for="subject">Subject</label>
+            <select id="subject">
+              <option value="">Select a subject</option>
+              <option value="product">Product Inquiry</option>
+              <option value="support">Technical Support</option>
+              <option value="returns">Returns & Refunds</option>
+              <option value="wholesale">Wholesale</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="message">Message <span class="required">*</span></label>
+            <textarea id="message" rows="5" required placeholder="How can we help you?"></textarea>
+          </div>
+          <div class="form-group">
+            <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 0.95rem;">
+              <input type="checkbox" id="newsletter" checked>
+              <span>Subscribe to our newsletter</span>
+            </label>
+          </div>
+          <button type="submit" class="btn btn-primary">Send Message</button>
+        </form>
+      </div>
+    </div>
+
+    <div class="faq-section">
+      <h2>Frequently Asked Questions</h2>
+      <div class="faq-grid">
+        <div class="faq-item">
+          <h3>What are your shipping options?</h3>
+          <p>We offer free shipping within Kitwe for orders above K500. For other areas, we use reliable courier services with tracking.</p>
+        </div>
+        <div class="faq-item">
+          <h3>Do you offer warranty on products?</h3>
+          <p>Yes, all our products come with a minimum 12-month warranty. Extended warranties are available on selected items.</p>
+        </div>
+        <div class="faq-item">
+          <h3>Can I return a product?</h3>
+          <p>We have a 14-day return policy for unused products in original packaging. Visit our Returns & Refunds page for details.</p>
+        </div>
+        <div class="faq-item">
+          <h3>Do you offer installation services?</h3>
+          <p>Yes, we provide installation services for TVs, home theaters, and other electronics at an additional cost.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="main-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <h4 style="color: var(--primary); font-size: 1.5rem;">BMB Electronics</h4>
+          <p>We are the pulse of technology in Zambia. Offering the world's most innovative brands with a commitment to quality and customer satisfaction since 2015.</p>
+          <div class="social-icons">
+            <a href="https://www.facebook.com/share/1NeNktaSHE/" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+            <a href="#" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+            <a href="https://www.tiktok.com/@bmbelectronics1?_r=1&_t=ZS-94JpNk5cDPc" target="_blank" rel="noopener noreferrer" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+            <a href="https://wa.me/260968602546" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4>Explore</h4>
+          <ul class="footer-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="store.html">All Products</a></li>
+            <li><a href="#">Featured Deals</a></li>
+            <li><a href="contact.html">New Arrivals</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Support</h4>
+          <ul class="footer-links">
+            <li><a href="#">Shipping Policy</a></li>
+            <li><a href="#">Returns & Refunds</a></li>
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="contact.html">Help Center</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Get In Touch</h4>
+          <p><i class="fa-solid fa-location-dot" style="color: var(--primary); margin-right: 10px;"></i> Obote Avenue, Opposite BATA, Kitwe, Zambia</p>
+          <p><i class="fa-solid fa-phone" style="color: var(--primary); margin-right: 10px;"></i> +260 96 860 2546</p>
+          <p><i class="fa-solid fa-envelope" style="color: var(--primary); margin-right: 10px;"></i> BmbElectronicsltd@gmail.com</p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 BMB Electronics. All Rights Reserved.</p>
+        <div class="payment-icons">
+          <i class="fa-brands fa-cc-visa"></i>
+          <i class="fa-brands fa-cc-mastercard"></i>
+          <i class="fa-brands fa-cc-paypal"></i>
+          <i class="fa-solid fa-mobile-screen"></i>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <div class="toast" id="toast">
+    <i class="fa-regular fa-circle-check"></i>
+    <span>Message sent successfully!</span>
+  </div>
+
+  <script type="module">
+    import { auth } from './js/firebase-config.js';
+    import { observeAuthState } from './js/auth.js';
+
+    window.toggleMenu = () => {
+      document.getElementById('navLinks').classList.toggle('show');
+    };
+
+    document.querySelectorAll('#navLinks a').forEach(link => {
+      link.addEventListener('click', () => {
+        document.getElementById('navLinks').classList.remove('show');
+      });
+    });
+
+    document.getElementById('accountLink').addEventListener('click', (e) => {
+      e.preventDefault();
+      handleAccountClick();
+    });
+
+    document.getElementById('accountIcon').addEventListener('click', (e) => {
+      e.preventDefault();
+      handleAccountClick();
+    });
+
+    function handleAccountClick() {
+      const user = auth.currentUser;
+      if (user) {
+        window.location.href = 'profile.html';
+      } else {
+        if (confirm('Please login to access your account')) {
+          window.location.href = 'login.html';
+        }
+      }
+    }
+
+    observeAuthState((user) => {
+      const icon = document.querySelector('#accountIcon i');
+      if (user) {
+        icon.className = 'fa-solid fa-circle-user';
+      } else {
+        icon.className = 'fa-regular fa-circle-user';
+      }
+    });
+
+    window.submitForm = () => {
+      const name = document.getElementById('name').value;
+      const email = document.getElementById('email').value;
+      const message = document.getElementById('message').value;
+      
+      if (!name || !email || !message) {
+        alert('Please fill in all required fields');
+        return;
+      }
+      
+      const toast = document.getElementById('toast');
+      toast.classList.add('show');
+      document.getElementById('contactForm').reset();
+      
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3000);
+      
+      console.log('Form submitted:', { name, email, message });
+    };
+  </script>
+</body>
+</html>
