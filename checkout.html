@@ -3,11 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-  <title>BMB Electronics | Checkout</title>
+  <title>BMB Electronics | Secure Checkout</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
     :root {
       --primary: #00bcd4;
@@ -20,891 +24,991 @@
       --white: #ffffff;
       --radius-lg: 1.5rem;
       --radius-md: 1rem;
-      --shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
-      --success: #16a34a;
-      --error: #dc2626;
+      --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
     }
 
     body {
       font-family: 'Inter', sans-serif;
       background: var(--gray-100);
       color: var(--dark);
-      line-height: 1.6;
       overflow-x: hidden;
     }
 
-    .container { width: 90%; max-width: 1100px; margin: 0 auto; padding: 0 15px; }
+    .container {
+      width: 90%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 15px;
+    }
 
-    /* ── NAV ── */
+    /* --- NAVIGATION --- */
     nav {
-      background: rgba(255,255,255,0.98);
+      background: rgba(255, 255, 255, 0.98);
       backdrop-filter: blur(10px);
       padding: 0.8rem 0;
-      position: sticky; top: 0; z-index: 1000;
-      border-bottom: 1px solid rgba(0,0,0,0.05);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
     }
-    nav .container { display: flex; justify-content: space-between; align-items: center; }
-    .logo-link { display: flex; align-items: center; gap: 8px; text-decoration: none; }
-    .logo-img { height: 32px; width: auto; }
-    .logo-text { font-size: 1.3rem; font-weight: 800; color: var(--dark); letter-spacing: -1px; }
-    .nav-icons { display: flex; gap: 1.2rem; font-size: 1.2rem; align-items: center; }
-    .nav-icons a { color: var(--dark); text-decoration: none; transition: 0.3s; }
-    .nav-icons a:hover { color: var(--primary); }
 
-    /* ── PROGRESS STEPS ── */
+    nav .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .logo-link {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+    }
+
+    .logo-img {
+      height: 32px;
+      width: auto;
+    }
+
+    .logo-text {
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: var(--dark);
+      letter-spacing: -1px;
+    }
+
+    .menu-toggle {
+      display: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--dark);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--dark);
+      font-weight: 500;
+      transition: 0.3s;
+      font-size: 0.95rem;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: var(--primary);
+    }
+
+    .nav-icons {
+      display: flex;
+      gap: 1.2rem;
+      font-size: 1.2rem;
+      align-items: center;
+    }
+
+    .nav-icons a {
+      color: var(--dark);
+      text-decoration: none;
+    }
+
+    .nav-icons i {
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .nav-icons i:hover {
+      color: var(--primary);
+    }
+
+    /* --- CHECKOUT HEADER & PROGRESS --- */
+    .checkout-header {
+      margin: 2rem 0 1rem;
+      padding: 0 15px;
+    }
+
+    .checkout-header h1 {
+      font-size: clamp(1.8rem, 5vw, 2.5rem);
+      font-weight: 800;
+      letter-spacing: -1px;
+    }
+
     .checkout-progress {
-      display: flex; align-items: center; justify-content: center;
-      gap: 0; padding: 1.5rem 0; margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      padding: 0 15px;
+      margin-bottom: 1.5rem;
+      gap: 0;
     }
+
     .step {
-      display: flex; align-items: center; gap: 8px;
-      font-size: 0.82rem; font-weight: 600; color: var(--gray-400);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--gray-400);
     }
-    .step.active { color: var(--primary); }
-    .step.done { color: var(--success); }
+
+    .step.active {
+      color: var(--primary);
+    }
+
     .step-num {
-      width: 28px; height: 28px; border-radius: 50%;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
       border: 2px solid currentColor;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 0.75rem; font-weight: 700; flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.72rem;
+      font-weight: 700;
+      flex-shrink: 0;
       background: white;
     }
-    .step.done .step-num { background: var(--success); color: white; border-color: var(--success); }
-    .step.active .step-num { background: var(--primary); color: white; border-color: var(--primary); }
-    .step-line { width: 48px; height: 2px; background: var(--gray-200); margin: 0 6px; flex-shrink: 0; }
-    .step-line.done { background: var(--success); }
 
-    /* ── LAYOUT ── */
+    .step.active .step-num {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+
+    .step-line {
+      width: 40px;
+      height: 2px;
+      background: var(--gray-200);
+      margin: 0 6px;
+      flex-shrink: 0;
+    }
+
+    /* --- MAIN CHECKOUT GRID --- */
     .checkout-grid {
-      display: grid; grid-template-columns: 1fr 380px;
-      gap: 1.5rem; padding-bottom: 4rem;
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 1.5rem;
+      margin: 0 0 4rem;
+      padding: 0 15px;
     }
 
-    /* ── CARDS ── */
-    .card {
-      background: white; border-radius: var(--radius-lg);
-      padding: 1.8rem; margin-bottom: 1.2rem;
-    }
-    .card-title {
-      font-size: 1rem; font-weight: 700; margin-bottom: 1.4rem;
-      display: flex; align-items: center; gap: 8px; color: var(--dark);
-    }
-    .card-title i { color: var(--primary); }
-
-    /* ── FORM ELEMENTS ── */
-    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
-    .form-row.single { grid-template-columns: 1fr; }
-    .form-group { display: flex; flex-direction: column; gap: 5px; }
-    .form-group label {
-      font-size: 0.78rem; font-weight: 600; color: var(--dark);
-      text-transform: uppercase; letter-spacing: 0.5px;
-    }
-    .form-group label .req { color: var(--error); margin-left: 2px; }
-    .form-control {
-      padding: 0.75rem 1rem; border-radius: 0.75rem;
-      border: 1.5px solid var(--gray-200); background: white;
-      font-family: 'Inter', sans-serif; font-size: 0.92rem; color: var(--dark);
-      transition: 0.2s; outline: none; width: 100%;
-    }
-    .form-control:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(0,188,212,0.1); }
-    .form-control.error { border-color: var(--error); }
-    .form-control::placeholder { color: var(--gray-400); }
-    .field-hint { font-size: 0.75rem; color: var(--gray-400); }
-    .field-error { font-size: 0.75rem; color: var(--error); display: none; }
-    .form-control.error ~ .field-error { display: block; }
-
-    /* ── PAYMENT METHOD TABS ── */
-    .payment-tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 1.5rem; }
-    .pay-tab {
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      gap: 6px; padding: 1rem; border: 2px solid var(--gray-200);
-      border-radius: var(--radius-md); cursor: pointer; transition: 0.2s;
-      background: white; font-family: 'Inter', sans-serif;
-    }
-    .pay-tab:hover { border-color: var(--primary); }
-    .pay-tab.active { border-color: var(--primary); background: rgba(0,188,212,0.05); }
-    .pay-tab i { font-size: 1.4rem; color: var(--gray-400); transition: 0.2s; }
-    .pay-tab.active i { color: var(--primary); }
-    .pay-tab .tab-label { font-size: 0.82rem; font-weight: 600; color: var(--gray-400); transition: 0.2s; }
-    .pay-tab.active .tab-label { color: var(--primary); }
-    .pay-tab .tab-sub { font-size: 0.7rem; color: var(--gray-400); }
-
-    /* Mobile money operator select */
-    .operator-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 1rem; }
-    .operator-btn {
-      display: flex; flex-direction: column; align-items: center; gap: 4px;
-      padding: 0.7rem 0.5rem; border: 1.5px solid var(--gray-200);
-      border-radius: var(--radius-md); cursor: pointer; transition: 0.2s;
-      background: white; font-family: 'Inter', sans-serif;
-    }
-    .operator-btn:hover { border-color: var(--primary); }
-    .operator-btn.active { border-color: var(--primary); background: rgba(0,188,212,0.05); }
-    .operator-logo { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1rem; font-weight: 800; color: white; }
-    .airtel-logo { background: #e00000; }
-    .mtn-logo { background: #f5c400; color: #333; }
-    .zamtel-logo { background: #00853f; }
-    .operator-name { font-size: 0.7rem; font-weight: 600; color: var(--dark); }
-
-    /* Payment panels */
-    .pay-panel { display: none; }
-    .pay-panel.active { display: block; }
-
-    /* Card number with icon */
-    .card-input-wrap { position: relative; }
-    .card-input-wrap .form-control { padding-right: 3rem; }
-    .card-icons-inline {
-      position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
-      display: flex; gap: 4px; font-size: 1.2rem; opacity: 0.6;
+    /* --- ORDER SUMMARY CARD (items) --- */
+    .order-items-card {
+      background: white;
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      box-shadow: var(--shadow-md);
     }
 
-    /* ── SECURE BADGE ── */
-    .secure-badge {
-      display: flex; align-items: center; gap: 8px;
-      background: #f0fdf4; border: 1px solid #bbf7d0;
-      border-radius: 0.75rem; padding: 0.75rem 1rem;
-      font-size: 0.78rem; color: #166534; margin-bottom: 1.2rem;
+    .order-items-card h2 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      border-bottom: 2px solid var(--gray-100);
+      padding-bottom: 0.75rem;
     }
-    .secure-badge i { color: var(--success); font-size: 0.95rem; }
 
-    /* ── ORDER SUMMARY ── */
-    .summary-card { position: sticky; top: 80px; }
-    .order-items { max-height: 260px; overflow-y: auto; margin-bottom: 1rem; }
-    .order-item {
-      display: flex; align-items: center; gap: 10px;
-      padding: 10px 0; border-bottom: 1px solid var(--gray-100);
+    .checkout-item {
+      display: flex;
+      gap: 1rem;
+      padding: 1rem 0;
+      border-bottom: 1px solid #eef2f6;
     }
-    .order-item:last-child { border-bottom: none; }
-    .oi-img {
-      width: 52px; height: 52px; border-radius: 0.5rem;
-      background: var(--gray-100); overflow: hidden; flex-shrink: 0;
-      display: flex; align-items: center; justify-content: center; font-size: 22px;
-    }
-    .oi-img img { width: 100%; height: 100%; object-fit: cover; }
-    .oi-body { flex: 1; min-width: 0; }
-    .oi-name { font-size: 0.82rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .oi-meta { font-size: 0.72rem; color: var(--gray-400); }
-    .oi-price { font-size: 0.88rem; font-weight: 700; color: var(--primary); white-space: nowrap; }
 
-    .summary-lines { margin: 0.8rem 0; }
-    .summary-line { display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--gray-400); margin-bottom: 0.5rem; }
-    .summary-line span:last-child { color: var(--dark); font-weight: 500; }
-    .summary-divider { border: none; border-top: 1px solid var(--gray-200); margin: 0.8rem 0; }
-    .summary-total { display: flex; justify-content: space-between; font-size: 1.1rem; font-weight: 800; }
-    .summary-total span:last-child { color: var(--primary); }
+    .checkout-item:last-child {
+      border-bottom: none;
+    }
 
-    /* ── PAY BUTTON ── */
-    .pay-btn {
-      width: 100%; padding: 1.1rem; background: var(--primary); color: white;
-      border: none; border-radius: 100px; font-size: 1rem; font-weight: 700;
-      cursor: pointer; transition: 0.3s; font-family: 'Inter', sans-serif;
-      display: flex; align-items: center; justify-content: center; gap: 8px;
-      margin-top: 1.2rem; position: relative; overflow: hidden;
+    .item-img {
+      width: 70px;
+      height: 70px;
+      object-fit: contain;
+      background: var(--gray-100);
+      border-radius: var(--radius-md);
+      padding: 0.3rem;
+      flex-shrink: 0;
     }
-    .pay-btn:hover:not(:disabled) { background: var(--primary-dark); transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0,188,212,0.3); }
-    .pay-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
-    .pay-btn .spinner {
-      width: 18px; height: 18px; border: 2px solid rgba(255,255,255,0.4);
-      border-top-color: white; border-radius: 50%;
-      animation: spin 0.8s linear infinite; display: none;
-    }
-    .pay-btn.loading .btn-text { display: none; }
-    .pay-btn.loading .spinner { display: block; }
-    @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* ── PROCESSING OVERLAY ── */
-    .processing-overlay {
-      display: none; position: fixed; inset: 0;
-      background: rgba(15,23,42,0.85); backdrop-filter: blur(6px);
-      z-index: 5000; align-items: center; justify-content: center;
+    .item-img-placeholder {
+      width: 70px;
+      height: 70px;
+      background: var(--gray-100);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
     }
-    .processing-overlay.show { display: flex; }
-    .processing-box {
-      background: white; border-radius: var(--radius-lg);
-      padding: 3rem 2.5rem; max-width: 420px; width: 90%;
-      text-align: center; animation: slideUp 0.35s ease;
-    }
-    @keyframes slideUp { from { opacity:0; transform:translateY(30px); } to { opacity:1; transform:translateY(0); } }
-    .processing-icon {
-      width: 72px; height: 72px; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      margin: 0 auto 1.5rem; font-size: 2rem;
-    }
-    .processing-icon.spin-wrap { background: rgba(0,188,212,0.1); }
-    .processing-icon .big-spinner {
-      width: 48px; height: 48px; border: 4px solid rgba(0,188,212,0.2);
-      border-top-color: var(--primary); border-radius: 50%;
-      animation: spin 1s linear infinite;
-    }
-    .processing-icon.success { background: #dcfce7; color: var(--success); }
-    .processing-icon.error { background: #fee2e2; color: var(--error); }
-    .processing-icon.pending { background: #fff7ed; color: #ea580c; }
-    .processing-title { font-size: 1.3rem; font-weight: 800; margin-bottom: 0.5rem; }
-    .processing-sub { font-size: 0.9rem; color: var(--gray-400); line-height: 1.5; }
-    .processing-detail {
-      background: var(--gray-100); border-radius: var(--radius-md);
-      padding: 1rem; margin: 1.2rem 0; text-align: left; font-size: 0.82rem;
-    }
-    .processing-detail div { display: flex; justify-content: space-between; padding: 3px 0; }
-    .processing-detail div span:first-child { color: var(--gray-400); }
-    .processing-detail div span:last-child { font-weight: 600; }
-    .overlay-btn {
-      width: 100%; padding: 0.9rem; border: none; border-radius: 100px;
-      font-size: 0.95rem; font-weight: 700; cursor: pointer; transition: 0.3s;
-      font-family: 'Inter', sans-serif; margin-top: 0.5rem;
-    }
-    .overlay-btn.primary { background: var(--primary); color: white; }
-    .overlay-btn.primary:hover { background: var(--primary-dark); }
-    .overlay-btn.secondary { background: var(--gray-100); color: var(--dark); margin-top: 0.5rem; }
-    .overlay-btn.secondary:hover { background: var(--gray-200); }
 
-    /* ── MMONEY USSD INSTRUCTION ── */
-    .ussd-info {
-      background: #fff7ed; border: 1px solid #fed7aa;
-      border-radius: 0.75rem; padding: 0.85rem 1rem;
-      font-size: 0.8rem; color: #92400e; margin-bottom: 1rem;
+    .item-details {
+      flex: 1;
+    }
+
+    .item-name {
+      font-weight: 700;
+      font-size: 0.95rem;
+      margin-bottom: 0.2rem;
+    }
+
+    .item-meta {
+      font-size: 0.7rem;
+      color: var(--gray-400);
+      margin-bottom: 0.3rem;
+    }
+
+    .item-price-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.85rem;
+      margin-top: 0.3rem;
+    }
+
+    .item-qty {
+      color: var(--gray-400);
+    }
+
+    .item-subtotal {
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    /* --- PAYMENT CARD --- */
+    .payment-card {
+      background: white;
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      box-shadow: var(--shadow-md);
+      position: sticky;
+      top: 90px;
+    }
+
+    .payment-card h2 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .totals-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.6rem;
+      font-size: 0.85rem;
+      color: var(--gray-400);
+    }
+
+    .totals-row.total {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--dark);
+      border-top: 1px solid var(--gray-200);
+      padding-top: 0.8rem;
+      margin-top: 0.4rem;
+    }
+
+    .totals-row.total span:last-child {
+      color: var(--primary);
+      font-size: 1.3rem;
+    }
+
+    .phone-input-group {
+      margin: 1.2rem 0 1rem;
+    }
+
+    .phone-input-group label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      display: block;
+      margin-bottom: 0.4rem;
+      color: var(--dark);
+    }
+
+    .phone-input-wrapper {
+      display: flex;
+      align-items: center;
+      border: 1.5px solid var(--gray-200);
+      border-radius: 100px;
+      background: white;
+      transition: 0.2s;
+      overflow: hidden;
+    }
+
+    .phone-input-wrapper:focus-within {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(0, 188, 212, 0.1);
+    }
+
+    .country-code {
+      background: var(--gray-100);
+      padding: 0.8rem 1rem;
+      font-weight: 600;
+      color: var(--dark);
+      border-right: 1px solid var(--gray-200);
+      font-size: 0.9rem;
+    }
+
+    .phone-input {
+      flex: 1;
+      border: none;
+      padding: 0.8rem 1rem;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+      outline: none;
+    }
+
+    .phone-input::placeholder {
+      color: var(--gray-400);
+    }
+
+    .helper-text {
+      font-size: 0.7rem;
+      color: var(--gray-400);
+      margin-top: 0.3rem;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .error-text {
+      color: #ef4444;
+      font-size: 0.7rem;
+      margin-top: 0.3rem;
       display: none;
     }
-    .ussd-info.show { display: flex; gap: 8px; align-items: flex-start; }
-    .ussd-info i { flex-shrink: 0; margin-top: 2px; }
 
-    /* ── MOBILE ── */
-    @media (max-width: 768px) {
-      .checkout-grid { grid-template-columns: 1fr; }
-      .summary-card { position: static; }
-      .form-row { grid-template-columns: 1fr; }
-      .operator-grid { grid-template-columns: repeat(3, 1fr); }
+    .error-text.show {
+      display: block;
     }
 
-    /* ── FOOTER ── */
-    .checkout-footer {
-      text-align: center; padding: 1.5rem 0;
-      font-size: 0.8rem; color: var(--gray-400);
-      border-top: 1px solid var(--gray-200); margin-top: 1rem;
+    .pay-btn {
+      width: 100%;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 100px;
+      padding: 1rem;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: 0.3s;
+      margin: 0.8rem 0 1rem;
+      font-family: 'Inter', sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
     }
-    .checkout-footer i { margin: 0 4px; }
+
+    .pay-btn:hover:not(:disabled) {
+      background: var(--primary-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0, 188, 212, 0.25);
+    }
+
+    .pay-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .secure-badge {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      font-size: 0.7rem;
+      color: var(--gray-400);
+      margin-top: 0.5rem;
+    }
+
+    .payment-methods {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--gray-200);
+    }
+
+    .payment-methods i {
+      font-size: 1.2rem;
+      color: var(--dark);
+      opacity: 0.5;
+    }
 
     .back-link {
-      display: inline-flex; align-items: center; gap: 6px;
-      color: var(--gray-400); text-decoration: none;
-      font-size: 0.85rem; font-weight: 500; transition: 0.2s;
-      margin-bottom: 1rem; padding: 0 15px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 1rem;
+      text-decoration: none;
+      font-size: 0.85rem;
+      color: var(--gray-400);
+      transition: 0.2s;
     }
-    .back-link:hover { color: var(--primary); }
+
+    .back-link:hover {
+      color: var(--primary);
+    }
+
+    /* --- empty / login state --- */
+    .state-card {
+      text-align: center;
+      padding: 3rem 1.5rem;
+      background: white;
+      border-radius: var(--radius-lg);
+      grid-column: 1 / -1;
+    }
+
+    .state-card i {
+      font-size: 3rem;
+      color: var(--gray-400);
+      margin-bottom: 1rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0.8rem 1.8rem;
+      border-radius: 100px;
+      font-weight: 600;
+      text-decoration: none;
+      background: var(--primary);
+      color: white;
+      margin-top: 1rem;
+      transition: 0.3s;
+    }
+
+    .btn:hover {
+      background: var(--primary-dark);
+    }
+
+    /* toast */
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      left: 20px;
+      background: white;
+      padding: 1rem 1.4rem;
+      border-radius: 100px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transform: translateY(150%);
+      transition: 0.35s;
+      z-index: 9999;
+      max-width: 400px;
+      margin: 0 auto;
+    }
+
+    .toast.show {
+      transform: translateY(0);
+    }
+
+    /* loading spinner */
+    .loading-spinner-sm {
+      width: 20px;
+      height: 20px;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      display: inline-block;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* footer */
+    .main-footer {
+      background: var(--dark);
+      color: var(--gray-400);
+      padding: 4rem 0 2rem;
+      margin-top: 2rem;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 2.5rem;
+      margin-bottom: 3rem;
+    }
+
+    .footer-col h4 {
+      color: white;
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 1.2rem;
+    }
+
+    .social-icons {
+      display: flex;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+    }
+
+    .social-icons a {
+      width: 36px;
+      height: 36px;
+      background: var(--slate-800);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      color: white;
+      transition: 0.3s;
+    }
+
+    .social-icons a:hover {
+      background: var(--primary);
+    }
+
+    .footer-bottom {
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      padding-top: 2rem;
+      text-align: center;
+    }
+
+    @media (max-width: 768px) {
+      .menu-toggle {
+        display: block;
+      }
+
+      .nav-links {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: white;
+        flex-direction: column;
+        padding: 1rem 0;
+        gap: 0;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+      }
+
+      .nav-links.show {
+        display: flex;
+      }
+
+      .nav-links a {
+        padding: 1rem 2rem;
+        border-bottom: 1px solid #eef2f6;
+      }
+
+      .checkout-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .payment-card {
+        position: static;
+      }
+
+      .checkout-progress {
+        display: none;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .item-img {
+        width: 55px;
+        height: 55px;
+      }
+    }
   </style>
 </head>
 <body>
 
-<!-- NAV -->
 <nav>
   <div class="container">
     <a href="index.html" class="logo-link">
-      <img class="logo-img" src="photos/logo.png" alt="BMB logo"
-           onerror="this.src='https://via.placeholder.com/32x32?text=BMB'">
+      <img class="logo-img" src="photos/logo.png" alt="BMB logo" onerror="this.src='https://via.placeholder.com/32x32?text=BMB'">
       <span class="logo-text">BMB Electronics</span>
     </a>
+    <div class="menu-toggle" onclick="toggleMenu()"><i class="fa-solid fa-bars"></i></div>
+    <div class="nav-links" id="navLinks">
+      <a href="index.html">Home</a>
+      <a href="store.html">Store</a>
+      <a href="contact.html">Contact</a>
+      <a href="#" id="accountLink">Account</a>
+    </div>
     <div class="nav-icons">
-      <a href="store.html" title="Store"><i class="fa-solid fa-store"></i></a>
-      <a href="cart.html" title="Cart"><i class="fa-solid fa-cart-shopping"></i></a>
+      <a href="cart.html" title="Cart"><i class="fa-solid fa-cart-shopping" style="color:var(--primary)"></i></a>
+      <a href="#" id="accountIcon"><i class="fa-regular fa-circle-user"></i></a>
     </div>
   </div>
 </nav>
 
 <div class="container">
-
-  <!-- PROGRESS -->
+  <div class="checkout-header">
+    <h1>Secure Checkout</h1>
+  </div>
   <div class="checkout-progress">
-    <div class="step done">
-      <div class="step-num"><i class="fa-solid fa-check" style="font-size:0.7rem"></i></div>
-      <span>Cart</span>
-    </div>
-    <div class="step-line done"></div>
-    <div class="step active">
-      <div class="step-num">2</div>
-      <span>Checkout</span>
-    </div>
+    <div class="step"><div class="step-num">1</div><span>Cart</span></div>
     <div class="step-line"></div>
-    <div class="step">
-      <div class="step-num">3</div>
-      <span>Confirmation</span>
-    </div>
+    <div class="step active"><div class="step-num">2</div><span>Checkout</span></div>
+    <div class="step-line"></div>
+    <div class="step"><div class="step-num">3</div><span>Confirmation</span></div>
   </div>
 
-  <a href="cart.html" class="back-link"><i class="fa-solid fa-arrow-left"></i> Back to cart</a>
+  <div id="checkoutContainer">
+    <div style="text-align:center;padding:3rem;">
+      <div class="loading-spinner-sm" style="width:40px;height:40px;border-top-color:var(--primary);margin:0 auto;"></div>
+      <p style="margin-top:1rem;color:var(--gray-400);">Loading your order...</p>
+    </div>
+  </div>
+</div>
 
-  <div class="checkout-grid">
-
-    <!-- LEFT COLUMN -->
-    <div>
-
-      <!-- CONTACT INFO -->
-      <div class="card">
-        <div class="card-title"><i class="fa-solid fa-user"></i> Contact Information</div>
-        <div class="form-row">
-          <div class="form-group">
-            <label>First Name <span class="req">*</span></label>
-            <input type="text" id="firstName" class="form-control" placeholder="John">
-            <span class="field-error">Required</span>
-          </div>
-          <div class="form-group">
-            <label>Last Name <span class="req">*</span></label>
-            <input type="text" id="lastName" class="form-control" placeholder="Doe">
-            <span class="field-error">Required</span>
-          </div>
-        </div>
-        <div class="form-row single">
-          <div class="form-group">
-            <label>Email Address <span class="req">*</span></label>
-            <input type="email" id="email" class="form-control" placeholder="john@example.com">
-            <span class="field-error">Enter a valid email</span>
-          </div>
-        </div>
-        <div class="form-row single">
-          <div class="form-group">
-            <label>Phone Number <span class="req">*</span></label>
-            <input type="tel" id="phone" class="form-control" placeholder="260XXXXXXXXX"
-                   maxlength="12">
-            <span class="field-hint">Format: 260XXXXXXXXX (Zambia, 12 digits)</span>
-            <span class="field-error">Enter a valid Zambian number (260XXXXXXXXX)</span>
-          </div>
+<footer class="main-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <h4 style="color:var(--primary);font-size:1.5rem;">BMB Electronics</h4>
+        <p>Innovative tech solutions in Zambia. Quality & satisfaction since 2015.</p>
+        <div class="social-icons">
+          <a href="https://www.facebook.com/share/1NeNktaSHE/" target="_blank"><i class="fa-brands fa-facebook-f"></i></a>
+          <a href="#" target="_blank"><i class="fa-brands fa-instagram"></i></a>
+          <a href="https://www.tiktok.com/@bmbelectronics1" target="_blank"><i class="fa-brands fa-tiktok"></i></a>
+          <a href="https://wa.me/260968602546" target="_blank"><i class="fa-brands fa-whatsapp"></i></a>
         </div>
       </div>
-
-      <!-- PAYMENT -->
-      <div class="card">
-        <div class="card-title"><i class="fa-solid fa-credit-card"></i> Payment Method</div>
-
-        <div class="payment-tabs">
-          <button class="pay-tab active" id="tab-mobile" onclick="switchPayTab('mobile')">
-            <i class="fa-solid fa-mobile-screen"></i>
-            <span class="tab-label">Mobile Money</span>
-            <span class="tab-sub">Airtel · MTN · Zamtel</span>
-          </button>
-          <button class="pay-tab" id="tab-card" onclick="switchPayTab('card')">
-            <i class="fa-solid fa-credit-card"></i>
-            <span class="tab-label">Card Payment</span>
-            <span class="tab-sub">Visa · Mastercard</span>
-          </button>
-        </div>
-
-        <!-- MOBILE MONEY PANEL -->
-        <div class="pay-panel active" id="panel-mobile">
-          <div class="form-group" style="margin-bottom:1rem">
-            <label>Select Operator</label>
-            <div class="operator-grid">
-              <button class="operator-btn active" id="op-airtel" onclick="selectOperator('airtel')">
-                <div class="operator-logo airtel-logo">A</div>
-                <span class="operator-name">Airtel</span>
-              </button>
-              <button class="operator-btn" id="op-mtn" onclick="selectOperator('mtn')">
-                <div class="operator-logo mtn-logo">M</div>
-                <span class="operator-name">MTN</span>
-              </button>
-              <button class="operator-btn" id="op-zamtel" onclick="selectOperator('zamtel')">
-                <div class="operator-logo zamtel-logo">Z</div>
-                <span class="operator-name">Zamtel</span>
-              </button>
-            </div>
-          </div>
-
-          <div class="ussd-info show" id="ussdInfo">
-            <i class="fa-solid fa-circle-info"></i>
-            <span>After clicking Pay, you will receive a USSD prompt on your phone to approve the payment. Please keep your phone nearby and enter your PIN when prompted.</span>
-          </div>
-
-          <div class="form-row single">
-            <div class="form-group">
-              <label>Mobile Money Number <span class="req">*</span></label>
-              <input type="tel" id="mmNumber" class="form-control" placeholder="260XXXXXXXXX" maxlength="12">
-              <span class="field-hint">The number registered with your mobile money wallet</span>
-              <span class="field-error">Enter a valid mobile money number</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- CARD PANEL -->
-        <div class="pay-panel" id="panel-card">
-          <div class="secure-badge">
-            <i class="fa-solid fa-lock"></i>
-            Your card details are encrypted and processed securely by PrimeNet Payment Gateway
-          </div>
-
-          <div class="form-row single">
-            <div class="form-group">
-              <label>Cardholder Name <span class="req">*</span></label>
-              <input type="text" id="cardName" class="form-control" placeholder="John Doe">
-              <span class="field-error">Required</span>
-            </div>
-          </div>
-          <div class="form-row single">
-            <div class="form-group">
-              <label>Card Number <span class="req">*</span></label>
-              <div class="card-input-wrap">
-                <input type="text" id="cardNumber" class="form-control" placeholder="1234 5678 9012 3456"
-                       maxlength="19" oninput="formatCardNumber(this)">
-                <div class="card-icons-inline">
-                  <i class="fa-brands fa-cc-visa"></i>
-                  <i class="fa-brands fa-cc-mastercard"></i>
-                </div>
-              </div>
-              <span class="field-error">Enter a valid 16-digit card number</span>
-            </div>
-          </div>
-          <div class="form-row">
-            <div class="form-group">
-              <label>Expiry Date <span class="req">*</span></label>
-              <input type="text" id="cardExpiry" class="form-control" placeholder="MM/YY"
-                     maxlength="5" oninput="formatExpiry(this)">
-              <span class="field-error">Enter valid expiry MM/YY</span>
-            </div>
-            <div class="form-group">
-              <label>CVV <span class="req">*</span></label>
-              <input type="text" id="cardCvv" class="form-control" placeholder="123"
-                     maxlength="4" oninput="this.value=this.value.replace(/\D/g,'')">
-              <span class="field-error">Enter 3 or 4 digit CVV</span>
-            </div>
-          </div>
-          <div class="form-row single">
-            <div class="form-group">
-              <label>Currency</label>
-              <select id="cardCurrency" class="form-control">
-                <option value="ZMW">ZMW – Zambian Kwacha</option>
-                <option value="USD">USD – US Dollar</option>
-              </select>
-            </div>
-          </div>
-        </div>
+      <div class="footer-col">
+        <h4>Explore</h4>
+        <ul class="footer-links" style="list-style:none;">
+          <li><a href="index.html" style="color:var(--gray-400);text-decoration:none;">Home</a></li>
+          <li><a href="store.html" style="color:var(--gray-400);text-decoration:none;">Store</a></li>
+        </ul>
       </div>
-
-    </div><!-- end left column -->
-
-    <!-- ORDER SUMMARY -->
-    <div>
-      <div class="card summary-card">
-        <div class="card-title"><i class="fa-solid fa-receipt"></i> Order Summary</div>
-
-        <div class="order-items" id="orderItems">
-          <div style="text-align:center;padding:1.5rem;color:var(--gray-400);">
-            <div style="width:32px;height:32px;border:3px solid #f3f3f3;border-top-color:var(--primary);border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 0.5rem"></div>
-            Loading cart…
-          </div>
-        </div>
-
-        <div class="summary-lines">
-          <div class="summary-line"><span>Subtotal</span><span id="sumSubtotal">—</span></div>
-          <div class="summary-line"><span>Shipping</span><span id="sumShipping">—</span></div>
-          <div class="summary-line"><span>Tax (16% VAT)</span><span id="sumTax">—</span></div>
-        </div>
-        <hr class="summary-divider">
-        <div class="summary-total">
-          <span>Total</span><span id="sumTotal">—</span>
-        </div>
-
-        <button class="pay-btn" id="payBtn" onclick="handlePay()" disabled>
-          <span class="btn-text"><i class="fa-solid fa-lock"></i> &nbsp;Pay Now</span>
-          <div class="spinner"></div>
-        </button>
-
-        <div style="text-align:center;margin-top:0.8rem;font-size:0.75rem;color:var(--gray-400);">
-          <i class="fa-solid fa-shield-halved"></i> Secured by PrimeNet Payment Gateway
-        </div>
+      <div class="footer-col">
+        <h4>Support</h4>
+        <ul class="footer-links" style="list-style:none;">
+          <li><a href="#" style="color:var(--gray-400);text-decoration:none;">Shipping Policy</a></li>
+          <li><a href="#" style="color:var(--gray-400);text-decoration:none;">Returns</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <p><i class="fa-solid fa-location-dot" style="color:var(--primary);margin-right:8px;"></i>Obote Avenue, Kitwe</p>
+        <p><i class="fa-solid fa-phone" style="color:var(--primary);margin-right:8px;"></i>+260 96 860 2546</p>
       </div>
     </div>
-
-  </div><!-- end grid -->
-</div><!-- end container -->
-
-<!-- PROCESSING OVERLAY -->
-<div class="processing-overlay" id="processingOverlay">
-  <div class="processing-box" id="processingBox">
-    <!-- filled dynamically -->
+    <div class="footer-bottom">
+      <p>&copy; 2026 BMB Electronics. All Rights Reserved.</p>
+    </div>
   </div>
+</footer>
+
+<div class="toast" id="toast">
+  <i class="fa-regular fa-circle-check" style="color:var(--primary)"></i>
+  <span id="toastMsg">Done!</span>
 </div>
 
 <script type="module">
   import { auth, db } from './js/firebase-config.js';
-  import { doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+  import { doc, getDoc, updateDoc, addDoc, collection, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
   import { observeAuthState } from './js/auth.js';
 
-  /* ─────────────────────────────────────────────────────────────
-     CONFIGURATION — Replace with your actual PrimeNet credentials
-     provided during onboarding.
-  ───────────────────────────────────────────────────────────── */
-  const PPG_CONFIG = {
-    BASE_URL:       'http://test.primenetpay.com:8000',
-    // Basic auth credentials from PrimeNet onboarding:
-    USERNAME:       'bmbelectronicsltd@gmail.com',
-    PASSWORD:       '0OimjaPf',
-    // Your registered callback URL that PrimeNet will POST results to:
-    // e.g. 'https://yourdomain.com/api/payment-callback'
-    CALLBACK_URL:   'YOUR_CALLBACK_URL',
-  };
+  function showToast(message, isError = false) {
+    const toast = document.getElementById('toast');
+    const icon = toast.querySelector('i');
+    const msgSpan = document.getElementById('toastMsg');
+    icon.className = isError ? 'fa-regular fa-circle-exclamation' : 'fa-regular fa-circle-check';
+    icon.style.color = isError ? '#ef4444' : 'var(--primary)';
+    msgSpan.textContent = message;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 3500);
+  }
 
-  /* ─────────────────────────────────────────────────────────────
-     STATE
-  ───────────────────────────────────────────────────────────── */
-  let cart        = [];
-  let totals      = {};
-  let payTab      = 'mobile';   // 'mobile' | 'card'
-  let operator    = 'airtel';
-
-  /* ─────────────────────────────────────────────────────────────
-     AUTH + LOAD CART
-  ───────────────────────────────────────────────────────────── */
-  observeAuthState(async user => {
-    if (!user) { window.location.href = 'login.html'; return; }
-
-    // Pre-fill email if signed in
-    if (user.email) document.getElementById('email').value = user.email;
-    if (user.displayName) {
-      const parts = user.displayName.split(' ');
-      document.getElementById('firstName').value = parts[0] || '';
-      document.getElementById('lastName').value  = parts.slice(1).join(' ') || '';
-    }
-
-    try {
-      const snap = await getDoc(doc(db, 'users', user.uid));
-      cart = snap.data()?.cart || [];
-      if (!cart.length) { window.location.href = 'cart.html'; return; }
-      renderOrderSummary();
-      document.getElementById('payBtn').disabled = false;
-    } catch (e) {
-      console.error(e);
-      showOverlay('error', 'Could not load cart', e.message, false);
-    }
+  window.toggleMenu = () => document.getElementById('navLinks').classList.toggle('show');
+  document.querySelectorAll('#navLinks a').forEach(link =>
+    link.addEventListener('click', () => document.getElementById('navLinks').classList.remove('show'))
+  );
+  function handleAccountClick() {
+    auth.currentUser ? (window.location.href = 'profile.html') : (confirm('Please login to continue') && (window.location.href = 'login.html'));
+  }
+  document.getElementById('accountLink')?.addEventListener('click', (e) => { e.preventDefault(); handleAccountClick(); });
+  document.getElementById('accountIcon')?.addEventListener('click', (e) => { e.preventDefault(); handleAccountClick(); });
+  observeAuthState(user => {
+    const iconElem = document.querySelector('#accountIcon i');
+    if (iconElem) iconElem.className = user ? 'fa-solid fa-circle-user' : 'fa-regular fa-circle-user';
   });
 
-  function calcTotals() {
-    const subtotal = cart.reduce((s, i) => s + i.price * (i.qty || i.quantity || 1), 0);
-    const shipping = subtotal > 0 ? 50 : 0;
-    const tax      = Math.round(subtotal * 0.16);
-    return { subtotal, shipping, tax, total: subtotal + shipping + tax };
+  function formatPhoneNumber(raw) {
+    let cleaned = raw.replace(/\D/g, '');
+    if (cleaned.startsWith('0') && cleaned.length === 10) cleaned = '260' + cleaned.slice(1);
+    if (cleaned.startsWith('260') && cleaned.length === 12) return cleaned;
+    if (cleaned.length === 9 && !cleaned.startsWith('260')) return '260' + cleaned;
+    return null;
   }
 
-  function renderOrderSummary() {
-    totals = calcTotals();
-    const container = document.getElementById('orderItems');
-    container.innerHTML = cart.map(item => {
-      const qty    = item.qty || item.quantity || 1;
-      const imgHtml = item.img
-        ? `<img src="${item.img}" alt="${item.name}" onerror="this.parentElement.textContent='📦'">`
-        : (item.category === 'laptops' ? '💻' : item.category === 'accessories' ? '🎧' : '📱');
-      const meta = [item.storage, item.color, `×${qty}`].filter(Boolean).join(' · ');
-      return `
-        <div class="order-item">
-          <div class="oi-img">${imgHtml}</div>
-          <div class="oi-body">
-            <div class="oi-name">${item.name}</div>
-            <div class="oi-meta">${meta}</div>
-          </div>
-          <div class="oi-price">K${(item.price * qty).toLocaleString()}</div>
+  async function initiatePayment(payerNumber, amount, orderId, externalRef) {
+    const API_URL = "https://api.primenetpay.com:9001/api/v2/transaction/collect";
+    const headers = new Headers();
+    headers.append("X-Authorization", "7XyHpDXvuxNCLPtZHf71F7xb3b4u1fhfmHLF7fuE9twQ5LUalCTwYC5Yq0J2ONRo");
+    headers.append("Content-Type", "application/json");
+
+    const payload = {
+      payer_number: payerNumber,
+      external_reference: externalRef,
+      payment_narration: `BMB Order ${orderId.slice(-8)}`,
+      currency: "ZMW",
+      amount: amount.toFixed(2),
+      account_number: "TEST101"
+    };
+
+    const requestOptions = {
+      method: "POST",
+      headers: headers,
+      body: JSON.stringify(payload),
+    };
+
+    try {
+      const response = await fetch(API_URL, requestOptions);
+      const text = await response.text();
+      let data;
+      try { data = JSON.parse(text); } catch(e) { data = { raw: text }; }
+      if (!response.ok) throw new Error(`Payment API error ${response.status}: ${text}`);
+      return { success: true, data };
+    } catch (err) {
+      console.error("PrimeNet error:", err);
+      return { success: false, error: err.message };
+    }
+  }
+
+  async function loadAndRenderCheckout() {
+    const user = auth.currentUser;
+    if (!user) {
+      document.getElementById('checkoutContainer').innerHTML = `
+        <div class="state-card">
+          <i class="fa-solid fa-lock"></i>
+          <h2>Please Login to Checkout</h2>
+          <p>You need to be logged in to complete your purchase.</p>
+          <a href="login.html" class="btn"><i class="fa-solid fa-right-to-bracket"></i> Login</a>
         </div>`;
-    }).join('');
-
-    document.getElementById('sumSubtotal').textContent = `K${totals.subtotal.toLocaleString()}`;
-    document.getElementById('sumShipping').textContent = `K${totals.shipping}`;
-    document.getElementById('sumTax').textContent      = `K${totals.tax.toLocaleString()}`;
-    document.getElementById('sumTotal').textContent    = `K${totals.total.toLocaleString()}`;
-  }
-
-  /* ─────────────────────────────────────────────────────────────
-     TAB / OPERATOR SWITCHING  (exposed globally)
-  ───────────────────────────────────────────────────────────── */
-  window.switchPayTab = tab => {
-    payTab = tab;
-    ['mobile', 'card'].forEach(t => {
-      document.getElementById(`tab-${t}`).classList.toggle('active', t === tab);
-      document.getElementById(`panel-${t}`).classList.toggle('active', t === tab);
-    });
-  };
-
-  window.selectOperator = op => {
-    operator = op;
-    ['airtel', 'mtn', 'zamtel'].forEach(o =>
-      document.getElementById(`op-${o}`).classList.toggle('active', o === op)
-    );
-  };
-
-  /* ─────────────────────────────────────────────────────────────
-     INPUT FORMATTERS
-  ───────────────────────────────────────────────────────────── */
-  window.formatCardNumber = el => {
-    let v = el.value.replace(/\D/g, '').slice(0, 16);
-    el.value = v.replace(/(.{4})/g, '$1 ').trim();
-  };
-
-  window.formatExpiry = el => {
-    let v = el.value.replace(/\D/g, '').slice(0, 4);
-    if (v.length >= 2) v = v.slice(0, 2) + '/' + v.slice(2);
-    el.value = v;
-  };
-
-  /* ─────────────────────────────────────────────────────────────
-     VALIDATION
-  ───────────────────────────────────────────────────────────── */
-  function validateField(id, test) {
-    const el = document.getElementById(id);
-    const ok = test(el.value.trim());
-    el.classList.toggle('error', !ok);
-    return ok;
-  }
-
-  function validateForm() {
-    const phoneRe = /^260\d{9}$/;
-    const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-    let ok = true;
-    if (!validateField('firstName', v => v.length > 0)) ok = false;
-    if (!validateField('lastName',  v => v.length > 0)) ok = false;
-    if (!validateField('email',     v => emailRe.test(v))) ok = false;
-    if (!validateField('phone',     v => phoneRe.test(v))) ok = false;
-
-    if (payTab === 'mobile') {
-      if (!validateField('mmNumber', v => phoneRe.test(v))) ok = false;
-    } else {
-      if (!validateField('cardName',   v => v.length > 1)) ok = false;
-      if (!validateField('cardNumber', v => v.replace(/\s/g,'').length === 16)) ok = false;
-      if (!validateField('cardExpiry', v => /^\d{2}\/\d{2}$/.test(v))) ok = false;
-      if (!validateField('cardCvv',    v => v.length >= 3)) ok = false;
-    }
-    return ok;
-  }
-
-  /* ─────────────────────────────────────────────────────────────
-     GENERATE UNIQUE EXTERNAL REFERENCE
-  ───────────────────────────────────────────────────────────── */
-  function genExternalRef() {
-    const ts  = Date.now();
-    const rnd = Math.random().toString(36).slice(2, 8).toUpperCase();
-    return `BMB-${ts}-${rnd}`;
-  }
-
-  /* ─────────────────────────────────────────────────────────────
-     PPG API CALL — Collections (mobile money debit)
-     POST /api/v2/transaction/collect
-  ───────────────────────────────────────────────────────────── */
-  async function callCollect(payerNumber, externalRef, amount, accountNumber) {
-    const credentials = btoa(`${PPG_CONFIG.USERNAME}:${PPG_CONFIG.PASSWORD}`);
-    const resp = await fetch(`${PPG_CONFIG.BASE_URL}/api/v2/transaction/collect`, {
-      method: 'POST',
-      headers: {
-        'Content-Type':  'application/json',
-        'Authorization': `Basic ${credentials}`,
-      },
-      body: JSON.stringify({
-        payer_number:      payerNumber,
-        external_reference: externalRef,
-        payment_narration: `BMB Electronics Order ${externalRef}`,
-        currency:          'ZMW',
-        amount:            String(amount),
-        account_number:    accountNumber,
-      }),
-    });
-    return resp;
-  }
-
-  /* ─────────────────────────────────────────────────────────────
-     PPG API CALL — Card (redirect to PrimeNet checkout URL)
-     For card, the PPG v2.2 docs do not expose a direct card API
-     endpoint — card payments go through the checkout URL (v1.1).
-     We build that URL and redirect the customer.
-  ───────────────────────────────────────────────────────────── */
-  function buildCardCheckoutUrl(clientId, amount, externalRef, currency) {
-    // Actual URL pattern from PrimeNet checkout v1.1 docs
-    // Real URL will be provided by Primenet during integration
-    return `https://checkout.primenetpay.com/payment-checkout/${clientId}/${amount}/${externalRef}/card/${currency}`;
-  }
-
-  /* ─────────────────────────────────────────────────────────────
-     FETCH STATUS — poll after mobile money push
-     GET /api/v2/transaction/status/{id}
-  ───────────────────────────────────────────────────────────── */
-  async function fetchStatus(externalRef) {
-    const credentials = btoa(`${PPG_CONFIG.USERNAME}:${PPG_CONFIG.PASSWORD}`);
-    const resp = await fetch(
-      `${PPG_CONFIG.BASE_URL}/api/v2/transaction/status/${externalRef}`,
-      { headers: { 'Authorization': `Basic ${credentials}` } }
-    );
-    if (resp.status === 404) return null;
-    return resp.json();
-  }
-
-  /* ─────────────────────────────────────────────────────────────
-     POLL FOR TRANSACTION STATUS (mobile money is async)
-     PrimeNet sends callback once; we poll as fallback for UX.
-     300 = success, 301 = failed, 302 = in progress
-  ───────────────────────────────────────────────────────────── */
-  async function pollStatus(externalRef, customerName, amount) {
-    const MAX_POLLS    = 24;   // 24 × 5s = 2 min timeout
-    const POLL_INTERVAL = 5000;
-
-    showOverlay('processing', 'Waiting for payment…',
-      'Please approve the USSD prompt on your phone. This may take up to 2 minutes.', false,
-      { ref: externalRef, amount: `K${amount.toLocaleString()}`, name: customerName }
-    );
-
-    for (let i = 0; i < MAX_POLLS; i++) {
-      await delay(POLL_INTERVAL);
-      try {
-        const status = await fetchStatus(externalRef);
-        if (!status) continue; // 404 — not yet processed
-
-        const fc = status.final_status || status.status_code;
-
-        if (fc === 300) {
-          // SUCCESS
-          await clearCart();
-          showOverlay('success',
-            'Payment Successful! 🎉',
-            `Thank you, ${customerName}! Your order has been confirmed.`,
-            true,
-            { ref: externalRef, txId: status.transaction_id, amount: `K${amount.toLocaleString()}`, payer: status.payer_number }
-          );
-          return;
-        } else if (fc === 301) {
-          // FAILED
-          showOverlay('error',
-            'Payment Failed',
-            status.status_message || 'The transaction was declined. Please try again.',
-            true
-          );
-          return;
-        }
-        // 302 = in progress, keep polling
-      } catch (e) {
-        console.warn('Poll error:', e);
-      }
-    }
-
-    // TIMEOUT — show ambiguous state
-    showOverlay('pending',
-      'Payment Pending',
-      'We haven\'t received confirmation yet. Please check your mobile money balance or contact us if the amount was deducted.',
-      true,
-      { ref: externalRef, amount: `K${amount.toLocaleString()}` }
-    );
-  }
-
-  /* ─────────────────────────────────────────────────────────────
-     MAIN PAY HANDLER
-  ───────────────────────────────────────────────────────────── */
-  window.handlePay = async () => {
-    if (!validateForm()) {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
       return;
     }
 
-    const firstName = document.getElementById('firstName').value.trim();
-    const lastName  = document.getElementById('lastName').value.trim();
-    const fullName  = `${firstName} ${lastName}`;
-    const phone     = document.getElementById('phone').value.trim();
-    const externalRef = genExternalRef();
-    const amount      = totals.total;
-
-    const btn = document.getElementById('payBtn');
-    btn.disabled = true;
-    btn.classList.add('loading');
-
     try {
-      if (payTab === 'mobile') {
-        // ── MOBILE MONEY ──────────────────────────────────────
-        const mmNumber = document.getElementById('mmNumber').value.trim();
-
-        const resp = await callCollect(mmNumber, externalRef, amount, phone);
-
-        if (resp.status === 202) {
-          // Request accepted — begin polling for final status
-          pollStatus(externalRef, fullName, amount);
-        } else if (resp.status === 400) {
-          const body = await resp.json();
-          showOverlay('error', 'Payment Error', body.message || 'Invalid request.', true);
-        } else if (resp.status === 401) {
-          showOverlay('error', 'Authentication Error', 'Payment gateway authentication failed. Please contact support.', true);
-        } else {
-          showOverlay('error', 'Payment Failed', `Unexpected error (${resp.status}). Please try again.`, true);
-        }
-
-      } else {
-        // ── CARD — redirect to PrimeNet hosted checkout page ──
-        // Card processing uses the PrimeNet checkout redirect flow (v1.1).
-        // Your clientIdentifier will be provided by Primenet during integration.
-        const clientId = 'YOUR_CLIENT_IDENTIFIER';
-        const currency = document.getElementById('cardCurrency').value;
-        const checkoutUrl = buildCardCheckoutUrl(clientId, amount, externalRef, currency);
-
-        // Store pending order in sessionStorage so confirmation page can retrieve it
-        sessionStorage.setItem('pendingOrder', JSON.stringify({
-          externalRef, amount, fullName, phone, items: cart
-        }));
-
-        window.location.href = checkoutUrl;
+      const userDoc = await getDoc(doc(db, "users", user.uid));
+      let cart = userDoc.data()?.cart || [];
+      if (!cart.length) {
+        document.getElementById('checkoutContainer').innerHTML = `
+          <div class="state-card">
+            <i class="fa-solid fa-cart-shopping"></i>
+            <h2>Your cart is empty</h2>
+            <p>Add some amazing products before checking out.</p>
+            <a href="store.html" class="btn"><i class="fa-solid fa-store"></i> Browse Store</a>
+          </div>`;
+        return;
       }
 
-    } catch (e) {
-      console.error('Payment error:', e);
-      showOverlay('error', 'Network Error', 'Could not reach the payment gateway. Please check your connection and try again.', true);
-    } finally {
-      btn.disabled = false;
-      btn.classList.remove('loading');
+      let subtotal = 0;
+      cart.forEach(item => {
+        const qty = item.qty ?? item.quantity ?? 1;
+        item.qtyForCalc = qty;
+        subtotal += item.price * qty;
+      });
+      const shipping = 50;
+      const tax = Math.round(subtotal * 0.16);
+      const total = subtotal + shipping + tax;
+
+      const itemsHtml = cart.map(item => {
+        const qty = item.qtyForCalc;
+        const meta = [item.storage, item.color].filter(Boolean).join(' · ');
+        const imgHtml = item.img
+          ? `<img class="item-img" src="${item.img}" alt="${item.name}" onerror="this.outerHTML='<div class=\\'item-img-placeholder\\'>📦</div>'">`
+          : `<div class="item-img-placeholder">${item.category === 'laptops' ? '💻' : item.category === 'accessories' ? '🎧' : '📱'}</div>`;
+        return `
+          <div class="checkout-item">
+            ${imgHtml}
+            <div class="item-details">
+              <div class="item-name">${escapeHtml(item.name)}</div>
+              ${meta ? `<div class="item-meta">${escapeHtml(meta)}</div>` : ''}
+              <div class="item-price-row">
+                <span class="item-qty">Qty: ${qty}</span>
+                <span class="item-subtotal">K${(item.price * qty).toLocaleString()}</span>
+              </div>
+            </div>
+          </div>`;
+      }).join('');
+
+      const summaryHtml = `
+        <div class="checkout-grid">
+          <div class="order-items-card">
+            <h2><i class="fa-solid fa-receipt" style="color:var(--primary)"></i> Order Summary</h2>
+            ${itemsHtml}
+          </div>
+
+          <div class="payment-card">
+            <h2><i class="fa-solid fa-credit-card"></i> Payment Details</h2>
+            <div class="totals-row"><span>Subtotal</span><span>K${subtotal.toLocaleString()}</span></div>
+            <div class="totals-row"><span>Shipping</span><span>K${shipping.toLocaleString()}</span></div>
+            <div class="totals-row"><span>Tax (16% VAT)</span><span>K${tax.toLocaleString()}</span></div>
+            <div class="totals-row total"><span>Total Amount</span><span id="displayTotal">K${total.toLocaleString()}</span></div>
+
+            <div class="phone-input-group">
+              <label><i class="fa-solid fa-phone"></i> Mobile Money Number</label>
+              <div class="phone-input-wrapper">
+                <span class="country-code">+260</span>
+                <input type="tel" class="phone-input" id="phoneNumber" placeholder="97 654 3210" autocomplete="off">
+              </div>
+              <div class="helper-text">
+                <i class="fa-regular fa-circle-info"></i> Enter your registered mobile money number (MTN / Airtel / Zamtel)
+              </div>
+              <div class="error-text" id="phoneError">Please enter a valid Zambia mobile number (e.g., 0976543210 or 260976543210)</div>
+            </div>
+
+            <button class="pay-btn" id="payNowBtn">
+              <i class="fa-solid fa-mobile-screen-button"></i> Pay K${total.toLocaleString()} via Mobile Money
+            </button>
+            <div class="secure-badge">
+              <i class="fa-solid fa-shield-heart"></i> Secured by PrimeNet Pay
+            </div>
+            <div class="payment-methods">
+              <i class="fa-brands fa-cc-visa"></i>
+              <i class="fa-brands fa-cc-mastercard"></i>
+              <span style="font-size:0.7rem; background:#eef2ff; padding:2px 8px; border-radius:20px;">Airtel</span>
+              <span style="font-size:0.7rem; background:#eef2ff; padding:2px 8px; border-radius:20px;">MTN</span>
+            </div>
+            <a href="cart.html" class="back-link"><i class="fa-solid fa-arrow-left"></i> Back to Cart</a>
+          </div>
+        </div>
+      `;
+
+      document.getElementById('checkoutContainer').innerHTML = summaryHtml;
+
+      const payBtn = document.getElementById('payNowBtn');
+      const phoneInput = document.getElementById('phoneNumber');
+      const phoneError = document.getElementById('phoneError');
+
+      function validatePhone() {
+        const raw = phoneInput.value.trim();
+        const formatted = formatPhoneNumber(raw);
+        if (!formatted) {
+          phoneError.classList.add('show');
+          return false;
+        }
+        phoneError.classList.remove('show');
+        return formatted;
+      }
+
+      phoneInput.addEventListener('input', () => validatePhone());
+
+      payBtn.addEventListener('click', async () => {
+        const validatedPhone = validatePhone();
+        if (!validatedPhone) {
+          showToast("Please enter a valid Zambian mobile number (e.g., 0976543210)", true);
+          return;
+        }
+
+        payBtn.disabled = true;
+        const originalText = payBtn.innerHTML;
+        payBtn.innerHTML = '<span class="loading-spinner-sm"></span> Processing...';
+
+        try {
+          const orderData = {
+            userId: auth.currentUser.uid,
+            items: cart.map(i => ({
+              id: i.id,
+              name: i.name,
+              price: i.price,
+              qty: i.qty ?? i.quantity ?? 1,
+              storage: i.storage || null,
+              color: i.color || null,
+              img: i.img || null
+            })),
+            subtotal: subtotal,
+            shipping: shipping,
+            tax: tax,
+            totalAmount: total,
+            payerNumber: validatedPhone,
+            status: 'pending_payment',
+            createdAt: serverTimestamp(),
+            externalReference: `BMB_${Date.now()}_${Math.random().toString(36).substring(2, 8)}`
+          };
+          const orderRef = await addDoc(collection(db, "orders"), orderData);
+          const orderId = orderRef.id;
+
+          const paymentResult = await initiatePayment(validatedPhone, total, orderId, orderData.externalReference);
+
+          if (paymentResult.success) {
+            await updateDoc(doc(db, "orders", orderId), {
+              paymentResponse: paymentResult.data,
+              status: 'payment_initiated',
+              updatedAt: serverTimestamp()
+            });
+            await updateDoc(doc(db, "users", auth.currentUser.uid), { cart: [] });
+            showToast(`Payment request sent to ${validatedPhone}. Please complete transaction on your mobile.`, false);
+            setTimeout(() => {
+              window.location.href = `order-confirmation.html?order=${orderId}`;
+            }, 2000);
+          } else {
+            await updateDoc(doc(db, "orders", orderId), {
+              status: 'payment_failed',
+              paymentError: paymentResult.error,
+              updatedAt: serverTimestamp()
+            });
+            showToast(`Payment initiation failed: ${paymentResult.error}`, true);
+            payBtn.disabled = false;
+            payBtn.innerHTML = originalText;
+          }
+        } catch (err) {
+          console.error("Checkout error:", err);
+          showToast("Something went wrong. Please try again.", true);
+          payBtn.disabled = false;
+          payBtn.innerHTML = originalText;
+        }
+      });
+    } catch (error) {
+      console.error("Load cart error:", error);
+      document.getElementById('checkoutContainer').innerHTML = `
+        <div class="state-card">
+          <i class="fa-solid fa-circle-exclamation"></i>
+          <h2>Error loading cart</h2>
+          <p>${error.message}</p>
+          <a href="cart.html" class="btn">Go back to Cart</a>
+        </div>`;
     }
-  };
-
-  /* ─────────────────────────────────────────────────────────────
-     CLEAR CART FROM FIRESTORE AFTER SUCCESSFUL PAYMENT
-  ───────────────────────────────────────────────────────────── */
-  async function clearCart() {
-    const user = auth.currentUser;
-    if (!user) return;
-    try {
-      await updateDoc(doc(db, 'users', user.uid), { cart: [] });
-    } catch (e) { console.warn('Cart clear error:', e); }
   }
 
-  /* ─────────────────────────────────────────────────────────────
-     OVERLAY STATES
-     type: 'processing' | 'success' | 'error' | 'pending'
-  ───────────────────────────────────────────────────────────── */
-  function showOverlay(type, title, subtitle, showActions = true, details = null) {
-    const overlay = document.getElementById('processingOverlay');
-    const box     = document.getElementById('processingBox');
-
-    const icons = {
-      processing: `<div class="processing-icon spin-wrap"><div class="big-spinner"></div></div>`,
-      success:    `<div class="processing-icon success"><i class="fa-solid fa-circle-check"></i></div>`,
-      error:      `<div class="processing-icon error"><i class="fa-solid fa-circle-xmark"></i></div>`,
-      pending:    `<div class="processing-icon pending"><i class="fa-solid fa-clock"></i></div>`,
-    };
-
-    const detailHtml = details
-      ? `<div class="processing-detail">${
-          Object.entries(details).map(([k, v]) =>
-            `<div><span>${k.charAt(0).toUpperCase()+k.slice(1)}</span><span>${v}</span></div>`
-          ).join('')
-        }</div>` : '';
-
-    const actionsHtml = showActions ? (
-      type === 'success'
-        ? `<button class="overlay-btn primary" onclick="window.location.href='confirmation.html'">View Order Confirmation</button>
-           <button class="overlay-btn secondary" onclick="window.location.href='store.html'">Continue Shopping</button>`
-        : `<button class="overlay-btn primary" onclick="document.getElementById('processingOverlay').classList.remove('show')">Try Again</button>
-           <button class="overlay-btn secondary" onclick="window.open('https://wa.me/260968602546','_blank')"><i class="fa-brands fa-whatsapp"></i> Contact Support</button>`
-    ) : '';
-
-    box.innerHTML = `
-      ${icons[type]}
-      <div class="processing-title">${title}</div>
-      <div class="processing-sub">${subtitle}</div>
-      ${detailHtml}
-      ${actionsHtml}
-    `;
-
-    overlay.classList.add('show');
+  function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/[&<>]/g, function(m) {
+      if (m === '&') return '&amp;';
+      if (m === '<') return '&lt;';
+      if (m === '>') return '&gt;';
+      return m;
+    });
   }
 
-  /* ─────────────────────────────────────────────────────────────
-     UTILITIES
-  ───────────────────────────────────────────────────────────── */
-  function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
-
+  observeAuthState(user => {
+    if (user) loadAndRenderCheckout();
+    else {
+      document.getElementById('checkoutContainer').innerHTML = `
+        <div class="state-card">
+          <i class="fa-solid fa-lock"></i>
+          <h2>Please Login to Checkout</h2>
+          <p>You need to be signed in to complete your purchase.</p>
+          <a href="login.html" class="btn"><i class="fa-solid fa-right-to-bracket"></i> Login</a>
+        </div>`;
+    }
+  });
 </script>
 </body>
 </html>
