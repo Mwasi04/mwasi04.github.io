@@ -681,7 +681,6 @@
   ────────────────────────────────────────────────────── */
   async function loadProducts() {
     try {
-      // Try ordered fetch; fall back to unordered if Firestore index is missing
       let snap;
       try {
         snap = await getDocs(query(collection(db, "products"), orderBy("createdAt", "desc")));
@@ -692,7 +691,6 @@
 
       allProducts = snap.docs.map(d => ({ id: d.id, ...d.data() }));
 
-      // Sort client-side — handles products with missing createdAt field
       allProducts.sort((a, b) => {
         const ta = a.createdAt ? new Date(a.createdAt).getTime() : 0;
         const tb = b.createdAt ? new Date(b.createdAt).getTime() : 0;
@@ -709,12 +707,11 @@
         + '<i class="fa-solid fa-exclamation-circle" style="font-size:2rem;margin-bottom:1rem;display:block"></i>'
         + '<p><strong>Could not load products.</strong></p>'
         + '<p style="font-size:0.85rem;margin-top:0.5rem;color:#94a3b8">' + err.message + '</p>'
-        + '<button onclick="loadProducts()" style="margin-top:1rem;padding:0.6rem 1.4rem;background:var(--primary);color:white;border:none;border-radius:100px;cursor:pointer;font-size:0.9rem">Try again</button>'
+        + '<button onclick="location.reload()" style="margin-top:1rem;padding:0.6rem 1.4rem;background:var(--primary);color:white;border:none;border-radius:100px;cursor:pointer;font-size:0.9rem">Try again</button>'
         + '</div>';
     }
   }
 
-  // Call immediately — products are public, no login needed to browse
   loadProducts();
 
   function populateDropdowns() {
@@ -757,18 +754,15 @@
     }
 
     grid.innerHTML = page.map(p => {
-      // Images: use images array if available, fall back to legacy image field
       const imgSrc = (p.images && p.images.length) ? p.images[0] : (p.image || '');
       const imgHtml = imgSrc
         ? `<img src="${imgSrc}" alt="${p.name}" onerror="this.parentElement.innerHTML='<div class=\\'emoji-placeholder\\'>📦</div>'">`
         : `<div class="emoji-placeholder">${p.category==='laptops'?'💻':p.category==='accessories'?'🎧':'📱'}</div>`;
 
-      // Storage pills (from array or single storage field)
       const storages = Array.isArray(p.storage) ? p.storage : (p.storage ? [p.storage] : []);
       const storagePills = storages.length
         ? `<div class="card-storage">${storages.map(s=>`<span class="storage-pill">${s}</span>`).join('')}</div>` : '';
 
-      // Color swatches
       const colors = Array.isArray(p.colors) ? p.colors : (p.color ? [p.color] : []);
       const colorSwatches = colors.length
         ? `<div class="card-colors">${colors.slice(0,6).map(c=>`<span class="color-swatch" style="background:${getHex(c)}" title="${c}"></span>`).join('')}</div>` : '';
@@ -781,9 +775,9 @@
           ${saleBadge}
           ${stockTag(p.stock)}
           <div class="card-img-wrap">${imgHtml}</div>
-          <h3>${p.name}</h3>
+          <h3>${escapeHtml(p.name)}</h3>
           <div class="category">${p.category || 'Uncategorized'}</div>
-          ${p.brand ? `<div class="brand-line">${p.brand}</div>` : ''}
+          ${p.brand ? `<div class="brand-line">${escapeHtml(p.brand)}</div>` : ''}
           ${storagePills}
           ${colorSwatches}
           <div class="price">
@@ -798,6 +792,16 @@
     }).join('');
 
     updatePagination();
+  }
+
+  function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/[&<>]/g, function(m) {
+      if (m === '&') return '&amp;';
+      if (m === '<') return '&lt;';
+      if (m === '>') return '&gt;';
+      return m;
+    });
   }
 
   function updatePagination() {
@@ -863,7 +867,6 @@
 
     const images = (p.images && p.images.length) ? p.images : (p.image ? [p.image] : []);
 
-    // Gallery
     const galleryHtml = images.length
       ? `<div class="gallery-main" id="galleryMain">
            <img id="galleryMainImg" src="${images[0]}" alt="${p.name}">
@@ -874,14 +877,12 @@
             </div>`).join('')}</div>` : ''}`
       : `<div class="gallery-main"><div class="emoji-main">${p.category==='laptops'?'💻':p.category==='accessories'?'🎧':'📱'}</div></div>`;
 
-    // Specs
     const specs = [];
     if (p.screen)    specs.push(['Screen',    p.screen]);
     if (p.ram)       specs.push(['RAM',       p.ram]);
     if (p.condition) specs.push(['Condition', p.condition]);
     if (p.warranty)  specs.push(['Warranty',  p.warranty]);
     if (p.stock !== undefined) specs.push(['Stock', `${p.stock} units`]);
-    // Also handle specs object
     if (p.specs && typeof p.specs === 'object') {
       Object.entries(p.specs).forEach(([k,v]) => specs.push([k, v]));
     }
@@ -891,7 +892,6 @@
           `<div class="spec-card"><div class="s-label">${l}</div><div class="s-val">${v}</div></div>`).join('')}</div>`
       : '';
 
-    // Storage selector
     const storageHtml = storages.length
       ? `<div class="variant-section">
            <div class="variant-label">Storage <span id="selectedStorageLabel">${modalSelectedStorage||''}</span></div>
@@ -901,7 +901,6 @@
            </div>
          </div>` : '';
 
-    // Color selector
     const colorsHtml = colors.length
       ? `<div class="variant-section">
            <div class="variant-label">Color <span id="selectedColorLabel">${modalSelectedColor||''}</span></div>
@@ -919,8 +918,8 @@
       <div class="modal-gallery">${galleryHtml}</div>
       <div class="product-info">
         <span class="category-badge">${p.category||'Uncategorized'}</span>
-        <h2>${p.name}</h2>
-        ${p.brand ? `<div class="modal-brand"><i class="fa-solid fa-tag" style="color:var(--primary);font-size:0.75rem"></i> ${p.brand}</div>` : ''}
+        <h2>${escapeHtml(p.name)}</h2>
+        ${p.brand ? `<div class="modal-brand"><i class="fa-solid fa-tag" style="color:var(--primary);font-size:0.75rem"></i> ${escapeHtml(p.brand)}</div>` : ''}
         <div class="modal-price-row">
           <span class="current-price">K${(p.price||0).toLocaleString()}</span>
           ${p.oldPrice ? `<span class="old-price">K${p.oldPrice.toLocaleString()}</span>` : ''}
@@ -931,7 +930,7 @@
         ${storageHtml}
         ${colorsHtml}
 
-        ${(p.description||p.shortDesc) ? `<p class="modal-desc">${p.description||p.shortDesc}</p><hr class="info-divider">` : ''}
+        ${(p.description||p.shortDesc) ? `<p class="modal-desc">${escapeHtml(p.description||p.shortDesc)}</p><hr class="info-divider">` : ''}
 
         ${specsHtml ? `<div class="variant-label" style="margin-bottom:8px">Specifications</div>${specsHtml}<hr class="info-divider">` : ''}
 
@@ -1026,7 +1025,7 @@
         <div class="cart-item">
           <div class="cart-item-img">${imgHtml}</div>
           <div class="cart-item-body">
-            <div class="cart-item-name">${item.name}</div>
+            <div class="cart-item-name">${escapeHtml(item.name)}</div>
             <div class="cart-item-meta">${[item.storage, item.color].filter(Boolean).join(' &bull; ')}</div>
             <div class="cart-item-bottom">
               <span class="cart-item-price">K${(item.price * item.qty).toLocaleString()}</span>
@@ -1077,7 +1076,6 @@
 
   window.handleCheckout = () => {
     closeCart();
-    // Redirect to checkout page — replace with your actual checkout route
     window.location.href = 'checkout.html';
   };
 
