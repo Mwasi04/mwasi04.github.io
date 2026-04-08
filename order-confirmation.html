@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payment Confirmation | BMB Electronics</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; background: #f1f5f9; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; }
+    .card { background: white; border-radius: 2rem; padding: 2rem; max-width: 500px; text-align: center; box-shadow: 0 20px 35px -10px rgba(0,0,0,0.1); }
+    .spinner { width: 48px; height: 48px; border: 5px solid #e2e8f0; border-top-color: #00bcd4; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 20px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .success { color: #16a34a; }
+    .failed { color: #dc2626; }
+    .btn { display: inline-block; background: #00bcd4; color: white; padding: 12px 24px; border-radius: 100px; text-decoration: none; margin-top: 20px; }
+  </style>
+</head>
+<body>
+<div class="card" id="confirmationCard">
+  <div class="spinner"></div>
+  <h2>Processing your payment...</h2>
+  <p>Waiting for confirmation from the mobile money network.</p>
+</div>
+<script type="module">
+  import { auth, db } from './js/firebase-config.js';
+  import { doc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+  const urlParams = new URLSearchParams(window.location.search);
+  const orderId = urlParams.get('order');
+  if (!orderId) {
+    document.getElementById('confirmationCard').innerHTML = `<h2>Invalid order</h2><a href="store.html" class="btn">Go to Store</a>`;
+  } else {
+    const orderRef = doc(db, "orders", orderId);
+    onSnapshot(orderRef, (docSnap) => {
+      if (!docSnap.exists()) return;
+      const data = docSnap.data();
+      if (data.status === 'successful') {
+        document.getElementById('confirmationCard').innerHTML = `<i class="fa-regular fa-circle-check" style="font-size:4rem;color:#16a34a;"></i><h2 class="success">Payment Successful!</h2><p>Your order #${orderId.slice(-6)} is confirmed.</p><a href="index.html" class="btn">Continue Shopping</a>`;
+      } else if (data.status === 'failed') {
+        document.getElementById('confirmationCard').innerHTML = `<i class="fa-regular fa-circle-xmark" style="font-size:4rem;color:#dc2626;"></i><h2 class="failed">Payment Failed</h2><p>${data.failureReason || 'Please try again.'}</p><a href="checkout.html" class="btn">Back to Checkout</a>`;
+      }
+    });
+  }
+</script>
+</body>
+</html>
