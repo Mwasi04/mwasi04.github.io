@@ -157,7 +157,6 @@
     .summary-total { display: flex; justify-content: space-between; font-size: 1.15rem; font-weight: 800; margin-bottom: 1.5rem; }
     .summary-total span:last-child { color: var(--primary); }
 
-    /* ── CHECKOUT BUTTON ── (changed from WhatsApp to checkout page) */
     .checkout-btn {
       width: 100%; padding: 1.1rem; background: var(--primary); color: white;
       border: none; border-radius: 100px; font-weight: 700; cursor: pointer;
@@ -174,7 +173,6 @@
     }
     .continue-link:hover { color: var(--primary); }
 
-    /* Payment methods badge */
     .payment-methods {
       display: flex; align-items: center; justify-content: center;
       gap: 0.5rem; margin: 1rem 0 0.5rem;
@@ -188,14 +186,12 @@
       border-radius: 100px; background: #e0f2fe; color: #0369a1;
     }
 
-    /* Secure note */
     .secure-note {
       display: flex; align-items: center; justify-content: center;
       gap: 6px; font-size: 0.72rem; color: var(--gray-400); margin-top: 0.75rem;
     }
     .secure-note i { color: #16a34a; }
 
-    /* ── PROMO CODE ── */
     .promo-wrap {
       display: flex; gap: 8px; margin-bottom: 1rem;
     }
@@ -212,7 +208,6 @@
     }
     .promo-btn:hover { background: var(--slate-800); }
 
-    /* ── STATE CARDS ── */
     .state-card {
       text-align: center; padding: 3.5rem 1.5rem;
       background: white; border-radius: var(--radius-lg);
@@ -229,20 +224,6 @@
     .btn-primary { background: var(--primary); color: white; }
     .btn-primary:hover { background: var(--primary-dark); }
 
-    /* ── RECOMMENDED ── */
-    .recommended { margin: 0 0 4rem; padding: 0 15px; }
-    .rec-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem; }
-    .rec-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1rem; }
-    .rec-card {
-      background: white; border-radius: var(--radius-md); padding: 1rem;
-      border: 1px solid #f1f5f9; transition: 0.3s; cursor: pointer;
-    }
-    .rec-card:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
-    .rec-img { width: 100%; height: 110px; object-fit: contain; border-radius: 0.5rem; background: var(--gray-100); padding: 0.3rem; margin-bottom: 0.6rem; }
-    .rec-name { font-size: 0.82rem; font-weight: 600; margin-bottom: 2px; }
-    .rec-price { font-size: 0.9rem; font-weight: 800; color: var(--primary); }
-
-    /* ── TOAST ── */
     .toast {
       position: fixed; bottom: 20px; right: 20px; left: 20px;
       background: white; padding: 1rem 1.5rem; border-radius: 100px;
@@ -253,7 +234,6 @@
     }
     .toast.show { transform: translateY(0); }
 
-    /* ── LOADING ── */
     .loading-spinner {
       display: inline-block; width: 40px; height: 40px;
       border: 4px solid #f3f3f3; border-top: 4px solid var(--primary);
@@ -261,9 +241,12 @@
     }
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* ── FOOTER ── */
-    .main-footer { background: var(--dark); color: var(--gray-400); padding: 4rem 0 2rem; margin-top: 2rem; }
-    .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2.5rem; margin-bottom: 3rem; padding: 0 15px; }
+    .main-footer {
+      background: var(--dark); color: var(--gray-400); padding: 4rem 0 2rem; margin-top: 2rem;
+    }
+    .footer-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2.5rem; margin-bottom: 3rem; padding: 0 15px;
+    }
     .footer-col h4 { color: white; font-size: 1rem; font-weight: 700; margin-bottom: 1.2rem; text-transform: uppercase; letter-spacing: 1px; }
     .footer-col p { line-height: 1.6; margin-bottom: 1.2rem; font-size: 0.9rem; }
     .footer-links { list-style: none; }
@@ -277,7 +260,6 @@
     .footer-bottom p { width: 100%; font-size: 0.9rem; }
     .payment-icons-footer { display: flex; gap: 1rem; font-size: 1.3rem; color: white; opacity: 0.6; justify-content: center; width: 100%; }
 
-    /* ── MOBILE ── */
     @media (max-width: 768px) {
       .menu-toggle { display: block; }
       .nav-links { display: none; position: absolute; top: 100%; left: 0; right: 0; background: white; flex-direction: column; padding: 1rem 0; gap: 0; box-shadow: 0 10px 20px rgba(0,0,0,0.1); z-index: 1000; }
@@ -300,7 +282,6 @@
 </head>
 <body>
 
-  <!-- ── NAV ── -->
   <nav>
     <div class="container">
       <a href="index.html" class="logo-link">
@@ -324,13 +305,11 @@
 
   <div class="container">
 
-    <!-- ── CART HEADER ── -->
     <div class="cart-header">
       <h1>Shopping Cart</h1>
       <span class="cart-count-badge" id="cartBadge" style="display:none;"></span>
     </div>
 
-    <!-- ── PROGRESS ── -->
     <div class="checkout-progress">
       <div class="step active">
         <div class="step-num">1</div>
@@ -348,7 +327,6 @@
       </div>
     </div>
 
-    <!-- ── MAIN CONTENT ── -->
     <div id="cartContainer">
       <div style="text-align:center;padding:4rem 0;">
         <div class="loading-spinner"></div>
@@ -356,9 +334,8 @@
       </div>
     </div>
 
-  </div><!-- /container -->
+  </div>
 
-  <!-- ── FOOTER ── -->
   <footer class="main-footer">
     <div class="container">
       <div class="footer-grid">
@@ -408,7 +385,6 @@
     </div>
   </footer>
 
-  <!-- ── TOAST ── -->
   <div class="toast" id="toast">
     <i class="fa-regular fa-circle-check" style="color:var(--primary)"></i>
     <span>Cart updated!</span>
@@ -419,15 +395,9 @@
     import { doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
     import { observeAuthState } from './js/auth.js';
 
-    /* ─────────────────────────────────────────────────────────
-       STATE
-    ───────────────────────────────────────────────────────── */
     let cart      = [];
     let saveTimer = null;
 
-    /* ─────────────────────────────────────────────────────────
-       NAV
-    ───────────────────────────────────────────────────────── */
     window.toggleMenu = () => document.getElementById('navLinks').classList.toggle('show');
     document.querySelectorAll('#navLinks a').forEach(l =>
       l.addEventListener('click', () => document.getElementById('navLinks').classList.remove('show'))
@@ -446,9 +416,6 @@
         user ? 'fa-solid fa-circle-user' : 'fa-regular fa-circle-user';
     });
 
-    /* ─────────────────────────────────────────────────────────
-       LOAD — one Firestore read
-    ───────────────────────────────────────────────────────── */
     async function loadCart() {
       const user = auth.currentUser;
       if (!user) { renderLoginPrompt(); return; }
@@ -463,9 +430,6 @@
       }
     }
 
-    /* ─────────────────────────────────────────────────────────
-       SAVE — debounced, single write
-    ───────────────────────────────────────────────────────── */
     function saveCart() {
       const user = auth.currentUser;
       if (!user) return;
@@ -480,9 +444,6 @@
       }, 400);
     }
 
-    /* ─────────────────────────────────────────────────────────
-       TOTALS
-    ───────────────────────────────────────────────────────── */
     function calcTotals() {
       const subtotal = cart.reduce((s, i) => s + i.price * (i.qty || i.quantity || 1), 0);
       const shipping = subtotal > 0 ? 50 : 0;
@@ -490,9 +451,6 @@
       return { subtotal, shipping, tax, total: subtotal + shipping + tax };
     }
 
-    /* ─────────────────────────────────────────────────────────
-       UPDATE QUANTITY (patch DOM, no full re-render)
-    ───────────────────────────────────────────────────────── */
     window.updateQuantity = (itemKey, change) => {
       const idx = cart.findIndex(i => (i.key || i.id) === itemKey);
       if (idx === -1) return;
@@ -514,7 +472,6 @@
       cart[idx].quantity = newQty;
       saveCart();
 
-      // Patch the row
       const row        = document.querySelector(`.cart-item[data-key="${itemKey}"]`);
       const qtyEl      = row?.querySelector('.qty-value');
       const subEl      = row?.querySelector('.item-subtotal');
@@ -547,9 +504,6 @@
       showToast('Cart cleared');
     };
 
-    /* ─────────────────────────────────────────────────────────
-       PATCH SUMMARY (no re-render)
-    ───────────────────────────────────────────────────────── */
     function patchSummary() {
       const { subtotal, shipping, tax, total } = calcTotals();
       const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
@@ -567,20 +521,12 @@
       else badge.style.display = 'none';
     }
 
-    /* ─────────────────────────────────────────────────────────
-       PROMO CODE (UI only — hook up to backend as needed)
-    ───────────────────────────────────────────────────────── */
     window.applyPromo = () => {
       const code = document.getElementById('promoInput')?.value.trim().toUpperCase();
       if (!code) return;
-      // TODO: validate promo code against your backend / Firestore
       showToast('Promo code "' + code + '" is not valid', 'error');
     };
 
-    /* ─────────────────────────────────────────────────────────
-       CHECKOUT — redirect to checkout.html
-       (previously this opened WhatsApp directly)
-    ───────────────────────────────────────────────────────── */
     window.goToCheckout = () => {
       if (!cart.length) return;
       if (!auth.currentUser) {
@@ -590,9 +536,16 @@
       window.location.href = 'checkout.html';
     };
 
-    /* ─────────────────────────────────────────────────────────
-       FULL RENDER
-    ───────────────────────────────────────────────────────── */
+    function escapeHtml(str) {
+      if (!str) return '';
+      return str.replace(/[&<>]/g, function(m) {
+        if (m === '&') return '&amp;';
+        if (m === '<') return '&lt;';
+        if (m === '>') return '&gt;';
+        return m;
+      });
+    }
+
     function renderCart() {
       if (cart.length === 0) { renderEmpty(); return; }
 
@@ -611,8 +564,8 @@
           <div class="cart-item" data-key="${itemKey}">
             ${imgHtml}
             <div class="item-body">
-              <div class="item-name">${item.name}</div>
-              ${meta ? `<div class="item-meta">${meta}</div>` : ''}
+              <div class="item-name">${escapeHtml(item.name)}</div>
+              ${meta ? `<div class="item-meta">${escapeHtml(meta)}</div>` : ''}
               <div class="item-unit-price">K${item.price.toLocaleString()} each</div>
             </div>
             <div class="item-controls">
@@ -635,7 +588,6 @@
       document.getElementById('cartContainer').innerHTML = `
         <div class="cart-grid">
 
-          <!-- ITEMS -->
           <div class="cart-items-card">
             <div class="card-header">
               <h2><i class="fa-solid fa-cart-shopping" style="color:var(--primary);margin-right:6px"></i>
@@ -648,11 +600,9 @@
             ${itemsHtml}
           </div>
 
-          <!-- SUMMARY -->
           <div class="cart-summary">
             <h2>Order Summary</h2>
 
-            <!-- Promo code -->
             <div class="promo-wrap">
               <input type="text" id="promoInput" class="promo-input" placeholder="Promo code">
               <button class="promo-btn" onclick="applyPromo()">Apply</button>
@@ -666,7 +616,6 @@
               <span>Total</span><span id="sumTotal">K${total.toLocaleString()}</span>
             </div>
 
-            <!-- CHECKOUT BUTTON — now goes to checkout.html, not WhatsApp -->
             <button class="checkout-btn" onclick="goToCheckout()">
               <i class="fa-solid fa-lock" style="font-size:0.85rem"></i>
               Proceed to Checkout
@@ -675,7 +624,6 @@
 
             <a href="store.html" class="continue-link">← Continue Shopping</a>
 
-            <!-- Accepted payment methods -->
             <div class="payment-methods">
               <span>We accept</span>
               <i class="fa-brands fa-cc-visa"></i>
@@ -696,9 +644,6 @@
       updateBadge();
     }
 
-    /* ─────────────────────────────────────────────────────────
-       STATE RENDERS
-    ───────────────────────────────────────────────────────── */
     function renderEmpty() {
       document.getElementById('cartContainer').innerHTML = `
         <div class="state-card">
@@ -734,9 +679,6 @@
         </div>`;
     }
 
-    /* ─────────────────────────────────────────────────────────
-       TOAST
-    ───────────────────────────────────────────────────────── */
     function showToast(message, type = 'success') {
       const t = document.getElementById('toast');
       t.querySelector('i').className   = type === 'success' ? 'fa-regular fa-circle-check' : 'fa-regular fa-circle-exclamation';
@@ -746,9 +688,6 @@
       setTimeout(() => t.classList.remove('show'), 2500);
     }
 
-    /* ─────────────────────────────────────────────────────────
-       BOOT
-    ───────────────────────────────────────────────────────── */
     observeAuthState(() => loadCart());
   </script>
 </body>
