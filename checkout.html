@@ -313,11 +313,10 @@
 <script type="module">
   import { auth, db } from './js/firebase-config.js';
   import { doc, getDoc, addDoc, collection, serverTimestamp, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+  import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-functions.js";
   import { observeAuthState } from './js/auth.js';
 
-  const PRIMENET_API_KEY = '7XyHpDXvuxNCLPtZHf71F7xb3b4u1fhfmHLF7fuE9twQ5LUalCTwYC5Yq0J2ONRo';
-  const PRIMENET_ACCOUNT_NUMBER = 'TEST511';
-  const PRIMENET_API_URL = 'https://api.primenetpay.com:9001/api/v2/transaction/collect';
+  const PRIMENET_ACCOUNT_NUMBER = 'TEST511'; // Replace with your real account number
 
   let cart = [], orderSubtotal = 0, orderShipping = 50, orderTax = 0, orderTotal = 0;
   let currentOrderId = null;
@@ -437,16 +436,6 @@
     logDebug('Checkout UI rendered', 'success');
   }
 
-  /* ── GENERATE CURL COMMAND FOR DEBUGGING ── */
-  function generateCurlCommand(url, headers, body) {
-    let cmd = `curl -X POST '${url}'`;
-    for (const [key, value] of Object.entries(headers)) {
-      cmd += ` -H '${key}: ${value}'`;
-    }
-    cmd += ` -d '${body.replace(/'/g, "'\\''")}'`;
-    return cmd;
-  }
-
   /* ── MAIN PAYMENT HANDLER ── */
   window.handlePay = async () => {
     logDebug('=== PAYMENT INITIATED ===');
@@ -457,7 +446,8 @@
     }
 
     const externalRef = generateExternalReference();
-    const narration = `BMB Order: ${cart.map(i => `${i.name} x${i._qty}`).join(', ').substring(0, 80)}`;
+    const rawNarration = `BMB Order: ${cart.map(i => `${i.name} x${i._qty}`).join(', ')}`;
+    const narration = rawNarration.substring(0, 80).trim();
 
     setBtnLoading('Sending payment request…');
 
@@ -479,45 +469,36 @@
       return;
     }
 
-    // Build payload
+    // Trim ALL string fields before sending (extra safety)
     const payload = {
-      payer_number: payerNumber,
-      external_reference: externalRef,
-      payment_narration: narration,
-      currency: "ZMW",
-      amount: orderTotal.toString(),
-      account_number: PRIMENET_ACCOUNT_NUMBER
+      payer_number: payerNumber.trim(),
+      external_reference: externalRef.trim(),
+      payment_narration: narration.trim(),
+      currency: "ZMW".trim(),
+      amount: orderTotal.toString().trim(),
+      account_number: PRIMENET_ACCOUNT_NUMBER.trim()
     };
 
-    // Try JSON first (as per sample)
-    const jsonBody = JSON.stringify(payload);
-    logDebug(`JSON payload: ${jsonBody}`);
-
-    const headers = {
-      'X-Authorization': PRIMENET_API_KEY,
-      'Content-Type': 'application/json'
-    };
-
-    // Log cURL command for manual testing
-    const curlCmd = generateCurlCommand(PRIMENET_API_URL, headers, jsonBody);
-    logDebug(`cURL command (copy to terminal): ${curlCmd}`);
+    // Log each field individually for debugging
+    logDebug(`Trimmed payer_number: "${payload.payer_number}"`);
+    logDebug(`Trimmed external_reference: "${payload.external_reference}"`);
+    logDebug(`Trimmed payment_narration: "${payload.payment_narration}"`);
+    logDebug(`Trimmed currency: "${payload.currency}"`);
+    logDebug(`Trimmed amount: "${payload.amount}"`);
+    logDebug(`Trimmed account_number: "${payload.account_number}"`);
 
     try {
-      const response = await fetch(PRIMENET_API_URL, {
-        method: 'POST',
-        mode: 'cors',
-        headers: headers,
-        body: jsonBody
-      });
+      const functions = getFunctions();
+      const initiatePayment = httpsCallable(functions, 'initiatePayment');
+      const result = await initiatePayment(payload);
+      const data = result.data;
 
-      logDebug(`Response status: ${response.status}`);
-      const result = await response.json();
-      logDebug(`PrimeNet response: ${JSON.stringify(result)}`);
+      logDebug(`Cloud Function response: ${JSON.stringify(data)}`);
 
-      if (result.status === 'success') {
-        logDebug(`Success! Transaction ID: ${result.transaction_id}`, 'success');
+      if (data.success) {
+        logDebug(`Success! Transaction ID: ${data.transactionId}`, 'success');
         await updateDoc(doc(db, 'orders', currentOrderId), {
-          primenetTransactionId: result.transaction_id,
+          primenetTransactionId: data.transactionId,
           status: 'awaiting_payment'
         });
         await updateDoc(doc(db, 'users', auth.currentUser.uid), { cart: [] });
@@ -525,36 +506,7 @@
         document.getElementById('waitOverlay').classList.add('show');
         updatePayBtn();
       } else {
-        // If JSON fails with "non blank fields", try form-urlencoded as fallback
-        if (result.message && result.message.includes('non blank')) {
-          logDebug('Attempting fallback with application/x-www-form-urlencoded');
-          const formBody = new URLSearchParams(payload).toString();
-          const fallbackResponse = await fetch(PRIMENET_API_URL, {
-            method: 'POST',
-            mode: 'cors',
-            headers: {
-              'X-Authorization': PRIMENET_API_KEY,
-              'Content-Type': 'application/x-www-form-urlencoded'
-            },
-            body: formBody
-          });
-          const fallbackResult = await fallbackResponse.json();
-          logDebug(`Fallback response: ${JSON.stringify(fallbackResult)}`);
-          if (fallbackResult.status === 'success') {
-            await updateDoc(doc(db, 'orders', currentOrderId), {
-              primenetTransactionId: fallbackResult.transaction_id,
-              status: 'awaiting_payment'
-            });
-            await updateDoc(doc(db, 'users', auth.currentUser.uid), { cart: [] });
-            document.getElementById('waitNumber').textContent = `+${payerNumber}`;
-            document.getElementById('waitOverlay').classList.add('show');
-            updatePayBtn();
-            return;
-          } else {
-            throw new Error(fallbackResult.message || 'Fallback failed');
-          }
-        }
-        throw new Error(result.message || 'Payment rejected');
+        throw new Error(data.error || 'Payment request rejected');
       }
     } catch (error) {
       logDebug(`Payment error: ${error.message}`, 'error');
