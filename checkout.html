@@ -186,7 +186,7 @@
         </div>
         <div class="card-body">
 
-          <!-- Only Mobile Money option kept -->
+          <!-- Only Mobile Money option -->
           <div class="method-grid">
             <label class="method-card selected" id="momoCard">
               <input type="radio" name="payMethod" value="momo" checked>
@@ -246,7 +246,7 @@
   </div><!-- /checkout-grid -->
 </div>
 
-<!-- MOMO WAITING OVERLAY (mock) -->
+<!-- MOMO WAITING OVERLAY (shown after API call) -->
 <div class="wait-overlay" id="waitOverlay">
   <div class="wait-box">
     <div class="wait-spinner"></div>
@@ -258,7 +258,6 @@
     </div>
     <p style="margin-top:0.9rem;font-size:0.78rem;">
       Open your mobile money app and <strong>approve the prompt</strong> to complete your order.
-      This page will update once payment is confirmed.
     </p>
     <button class="wait-done" onclick="goToConfirmation()">
       I've Approved — View My Order
@@ -270,16 +269,18 @@
 
 <script type="module">
   import { auth, db } from './js/firebase-config.js';
-  import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+  import { doc, getDoc, addDoc, collection, serverTimestamp, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
   import { observeAuthState } from './js/auth.js';
 
   // =============================================
-  // SIMPLIFIED CHECKOUT – NO BACKEND INTEGRATION
+  // PRIMENET CONFIGURATION
   // =============================================
-  // This version only handles the UI and shows a mock payment prompt.
-  // The actual mobile money API integration will be added later.
+  const PRIMENET_API_KEY = '7XyHpDXvuxNCLPtZHf71F7xb3b4u1fhfmHLF7fuE9twQ5LUalCTwYC5Yq0J2ONRo';
+  const PRIMENET_ACCOUNT_NUMBER = 'TEST511'; // Replace with your actual account number
+  const PRIMENET_API_URL = 'https://api.primenetpay.com:9001/api/v2/transaction/collect';
 
   let cart = [], orderSubtotal = 0, orderShipping = 50, orderTax = 0, orderTotal = 0;
+  let currentOrderId = null;
 
   /* ── UTILS ── */
   function esc(s) {
@@ -300,6 +301,7 @@
 
   function updatePayBtn() {
     const btn = document.getElementById('payBtn');
+    btn.disabled = false;
     btn.innerHTML = `<i class="fa-solid fa-mobile-screen-button" style="font-size:0.8rem;"></i> Pay K${orderTotal.toLocaleString()} via Mobile Money`;
   }
 
@@ -327,23 +329,17 @@
   }
 
   /**
-   * Generates a unique external reference as per requirement:
-   * First three letters of the first item's name + timestamp.
-   * Example: "MacBook Pro" → "MAC" + timestamp
+   * Generates a unique external reference:
+   * First three letters of first item (only letters/numbers) + timestamp.
    */
   function generateExternalReference() {
-    if (!cart || cart.length === 0) return `BMB_${Date.now()}`; // fallback
+    if (!cart || cart.length === 0) return `BMB_${Date.now()}`;
 
     const firstItemName = cart[0].name || '';
-    // Take first 3 letters, convert to uppercase, remove non-letters if needed
     let prefix = firstItemName.trim().substring(0, 3).toUpperCase();
-    // If the name is shorter than 3 chars or starts with numbers, pad or fallback
-    if (prefix.length < 3) {
-      prefix = prefix.padEnd(3, 'X');
-    }
-    // Ensure only letters/numbers (optional, but good for API compatibility)
+    if (prefix.length < 3) prefix = prefix.padEnd(3, 'X');
+    // Remove any non-alphanumeric characters (only letters and numbers allowed)
     prefix = prefix.replace(/[^A-Z0-9]/g, 'X');
-
     const timestamp = Date.now();
     return `${prefix}_${timestamp}`;
   }
@@ -396,35 +392,117 @@
     updatePayBtn();
   }
 
-  /* ── MAIN HANDLER (MOCK) ── */
-  window.handlePay = () => {
-    const num = validateMomoPhone();
-    if (!num) {
+  /* ── MAIN PAYMENT HANDLER ── */
+  window.handlePay = async () => {
+    const payerNumber = validateMomoPhone();
+    if (!payerNumber) {
       showToast('Please enter a valid Zambian mobile number', true);
       return;
     }
 
-    // Generate external reference using the required format
+    // 1. Generate external reference
     const externalRef = generateExternalReference();
-    console.log('External Reference (for PrimeNet):', externalRef);
+    console.log('External Reference:', externalRef);
 
-    // SIMULATION: Show waiting overlay with the entered number
-    setBtnLoading('Sending request…');
-    setTimeout(() => {
-      document.getElementById('waitNumber').textContent = `+${num}`;
-      document.getElementById('waitOverlay').classList.add('show');
-      // Re-enable button after overlay closes (if needed)
+    // 2. Create narration from cart items (max 80 chars as per PrimeNet typical limit)
+    const narration = `BMB Order: ${cart.map(i => `${i.name} x${i._qty}`).join(', ').substring(0, 80)}`;
+
+    setBtnLoading('Sending payment request…');
+
+    // 3. Create order in Firestore first (optional but good practice)
+    try {
+      const orderRef = await addDoc(collection(db, 'orders'), {
+        userId: auth.currentUser.uid,
+        items: cart.map(i => ({
+          id: i.id,
+          name: i.name,
+          price: i.price,
+          qty: i._qty,
+          storage: i.storage || null,
+          color: i.color || null
+        })),
+        subtotal: orderSubtotal,
+        shipping: orderShipping,
+        tax: orderTax,
+        totalAmount: orderTotal,
+        payerNumber,
+        paymentMethod: 'mobile_money',
+        externalReference: externalRef,
+        narration: narration,
+        status: 'pending',
+        createdAt: serverTimestamp()
+      });
+      currentOrderId = orderRef.id;
+    } catch (e) {
+      console.error('Firestore error:', e);
+      showToast('Could not save order. Please try again.', true);
       updatePayBtn();
-      document.getElementById('payBtn').disabled = false;
-    }, 800);
+      return;
+    }
+
+    // 4. Call PrimeNet API directly
+    const payload = {
+      payer_number: payerNumber,
+      external_reference: externalRef,
+      payment_narration: narration,
+      currency: "ZMW",
+      amount: orderTotal.toString(),
+      account_number: PRIMENET_ACCOUNT_NUMBER
+    };
+
+    try {
+      const response = await fetch(PRIMENET_API_URL, {
+        method: 'POST',
+        headers: {
+          'X-Authorization': PRIMENET_API_KEY,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      });
+
+      const result = await response.json();
+      console.log('PrimeNet response:', result);
+
+      // PrimeNet returns { "status": "success", "transaction_id": "..." } on success
+      if (result.status === 'success') {
+        // Update order with transaction ID
+        await updateDoc(doc(db, 'orders', currentOrderId), {
+          primenetTransactionId: result.transaction_id,
+          status: 'awaiting_payment'
+        });
+
+        // Clear user's cart
+        await updateDoc(doc(db, 'users', auth.currentUser.uid), { cart: [] });
+
+        // Show waiting overlay
+        document.getElementById('waitNumber').textContent = `+${payerNumber}`;
+        document.getElementById('waitOverlay').classList.add('show');
+        updatePayBtn(); // Reset button state (overlay is open, but button may be re-enabled later)
+      } else {
+        // Payment request failed
+        await updateDoc(doc(db, 'orders', currentOrderId), {
+          status: 'failed',
+          error: result.message || 'Payment request rejected'
+        });
+        showToast(`Payment failed: ${result.message || 'Request rejected'}`, true);
+        updatePayBtn();
+      }
+    } catch (error) {
+      console.error('API error:', error);
+      await updateDoc(doc(db, 'orders', currentOrderId), {
+        status: 'failed',
+        error: error.message
+      });
+      showToast('Network error. Please try again.', true);
+      updatePayBtn();
+    }
   };
 
-  /* Go to confirmation after user "approves" (mock) */
+  /* Go to confirmation after user approves (mock) */
   window.goToConfirmation = () => {
     document.getElementById('waitOverlay').classList.remove('show');
-    // For now, just go to a dummy confirmation or back to home
-    // In a real implementation, this would redirect to confirmation.html
-    window.location.href = 'store.html'; // placeholder
+    // In a real app, redirect to confirmation page with order details
+    window.location.href = 'confirmation.html';
   };
 
   /* ── ACCOUNT NAV ── */
