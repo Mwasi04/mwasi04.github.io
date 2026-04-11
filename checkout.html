@@ -186,7 +186,7 @@
         </div>
         <div class="card-body">
 
-          <!-- Only Mobile Money option kept; card option removed -->
+          <!-- Only Mobile Money option kept -->
           <div class="method-grid">
             <label class="method-card selected" id="momoCard">
               <input type="radio" name="payMethod" value="momo" checked>
@@ -326,6 +326,28 @@
     return null;
   }
 
+  /**
+   * Generates a unique external reference as per requirement:
+   * First three letters of the first item's name + timestamp.
+   * Example: "MacBook Pro" → "MAC" + timestamp
+   */
+  function generateExternalReference() {
+    if (!cart || cart.length === 0) return `BMB_${Date.now()}`; // fallback
+
+    const firstItemName = cart[0].name || '';
+    // Take first 3 letters, convert to uppercase, remove non-letters if needed
+    let prefix = firstItemName.trim().substring(0, 3).toUpperCase();
+    // If the name is shorter than 3 chars or starts with numbers, pad or fallback
+    if (prefix.length < 3) {
+      prefix = prefix.padEnd(3, 'X');
+    }
+    // Ensure only letters/numbers (optional, but good for API compatibility)
+    prefix = prefix.replace(/[^A-Z0-9]/g, 'X');
+
+    const timestamp = Date.now();
+    return `${prefix}_${timestamp}`;
+  }
+
   /* ── LOAD CART ── */
   async function load(user) {
     if (!user) {
@@ -374,13 +396,17 @@
     updatePayBtn();
   }
 
-  /* ── MAIN HANDLER ── */
+  /* ── MAIN HANDLER (MOCK) ── */
   window.handlePay = () => {
     const num = validateMomoPhone();
     if (!num) {
       showToast('Please enter a valid Zambian mobile number', true);
       return;
     }
+
+    // Generate external reference using the required format
+    const externalRef = generateExternalReference();
+    console.log('External Reference (for PrimeNet):', externalRef);
 
     // SIMULATION: Show waiting overlay with the entered number
     setBtnLoading('Sending request…');
