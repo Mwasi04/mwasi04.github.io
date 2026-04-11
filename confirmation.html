@@ -3,167 +3,223 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BMB Electronics | Order Confirmed</title>
+  <title>Order Confirmed | BMB Electronics</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     :root {
-      --primary: #00bcd4; --primary-dark: #0097a7;
-      --dark: #0f172a; --gray-100: #f1f5f9;
-      --gray-400: #94a3b8; --success: #16a34a;
-      --radius-lg: 1.5rem; --radius-md: 1rem;
+      --primary: #00bcd4;
+      --primary-dark: #0097a7;
+      --dark: #0f172a;
+      --gray-100: #f1f5f9;
+      --gray-200: #e2e8f0;
+      --gray-400: #94a3b8;
+      --white: #ffffff;
+      --success: #16a34a;
+      --radius-lg: 1.5rem;
+      --radius-md: 1rem;
+      --shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
     }
     body { font-family: 'Inter', sans-serif; background: var(--gray-100); color: var(--dark); }
-    .container { width: 90%; max-width: 640px; margin: 0 auto; padding: 0 15px; }
+    .container { width: 90%; max-width: 1200px; margin: 0 auto; padding: 0 15px; }
 
-    nav { background: rgba(255,255,255,0.98); padding: 0.8rem 0; border-bottom: 1px solid rgba(0,0,0,0.05); }
-    nav .container { display: flex; justify-content: space-between; align-items: center; max-width: 1100px; }
+    /* ── ORIGINAL NAV – UNTOUCHED ── */
+    nav {
+      background: rgba(255,255,255,0.98);
+      backdrop-filter: blur(10px);
+      padding: 0.8rem 0;
+      position: sticky; top: 0; z-index: 1000;
+      border-bottom: 1px solid rgba(0,0,0,0.05);
+    }
+    nav .container { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; }
     .logo-link { display: flex; align-items: center; gap: 8px; text-decoration: none; }
+    .logo-img { height: 32px; width: auto; }
     .logo-text { font-size: 1.3rem; font-weight: 800; color: var(--dark); letter-spacing: -1px; }
+    .menu-toggle { display: none; font-size: 1.5rem; cursor: pointer; color: var(--dark); }
+    .nav-links { display: flex; gap: 2rem; }
+    .nav-links a { text-decoration: none; color: var(--dark); font-weight: 500; transition: 0.3s; font-size: 0.95rem; }
+    .nav-links a:hover, .nav-links a.active { color: var(--primary); }
+    .nav-icons { display: flex; gap: 1.2rem; font-size: 1.2rem; align-items: center; }
+    .nav-icons a { color: var(--dark); text-decoration: none; }
+    .nav-icons i { cursor: pointer; transition: 0.3s; }
+    .nav-icons i:hover { color: var(--primary); }
+    .cart-icon-wrap { position: relative; cursor: pointer; }
+    .cart-badge { position: absolute; top: -8px; right: -8px; background: #ef4444; color: white; width: 18px; height: 18px; border-radius: 50%; font-size: 10px; font-weight: 700; display: none; align-items: center; justify-content: center; }
+    /* ── END ORIGINAL NAV ── */
 
-    .confirmation-wrap { padding: 3rem 0 4rem; }
+    .page { max-width: 620px; margin: 0 auto; padding: 2.5rem 1rem 5rem; }
 
+    /* Success hero */
     .success-hero {
-      text-align: center; background: white;
-      border-radius: var(--radius-lg); padding: 3rem 2rem 2rem;
-      margin-bottom: 1.2rem; box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+      background: white; border-radius: var(--radius-lg);
+      border: 1px solid var(--gray-200);
+      padding: 2.5rem 2rem 2rem; text-align: center;
+      margin-bottom: 1.25rem; box-shadow: var(--shadow);
     }
     .check-circle {
-      width: 88px; height: 88px; border-radius: 50%;
-      background: #dcfce7; display: flex; align-items: center; justify-content: center;
-      margin: 0 auto 1.5rem; font-size: 2.5rem; color: var(--success);
+      width: 80px; height: 80px; border-radius: 50%;
+      background: #dcfce7; border: 2px solid rgba(22,163,74,0.2);
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 1.25rem;
       animation: popIn 0.5s cubic-bezier(0.34,1.56,0.64,1);
     }
-    @keyframes popIn { from { transform: scale(0); opacity:0; } to { transform:scale(1); opacity:1; } }
-    .success-hero h1 { font-size: 1.8rem; font-weight: 800; margin-bottom: 0.5rem; }
-    .success-hero p { color: var(--gray-400); font-size: 0.95rem; max-width: 380px; margin: 0 auto; }
+    @keyframes popIn { from { transform: scale(0); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+    .check-circle i { font-size: 2rem; color: var(--success); }
+    .success-hero h1 { font-size: 1.65rem; font-weight: 800; margin-bottom: 0.45rem; }
+    .success-hero p { color: var(--gray-400); font-size: 0.88rem; max-width: 340px; margin: 0 auto; line-height: 1.6; }
 
+    /* Info card */
     .info-card {
       background: white; border-radius: var(--radius-lg);
-      padding: 1.5rem; margin-bottom: 1.2rem;
+      border: 1px solid var(--gray-200);
+      margin-bottom: 1.1rem; overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
     }
-    .info-card h3 { font-size: 0.9rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 1rem; color: var(--gray-400); }
-    .info-row { display: flex; justify-content: space-between; align-items: flex-start; padding: 0.6rem 0; border-bottom: 1px solid var(--gray-100); font-size: 0.88rem; }
-    .info-row:last-child { border-bottom: none; }
-    .info-row .label { color: var(--gray-400); }
-    .info-row .value { font-weight: 600; text-align: right; max-width: 55%; word-break: break-all; }
-    .info-row .value.green { color: var(--success); }
-    .info-row .value.primary { color: var(--primary); font-size: 1rem; }
+    .ic-head { padding: 0.9rem 1.4rem; border-bottom: 1px solid var(--gray-200); display: flex; align-items: center; gap: 9px; }
+    .ic-head-icon { width: 28px; height: 28px; border-radius: 6px; background: rgba(0,188,212,0.1); color: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 0.78rem; }
+    .ic-head h3 { font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--gray-400); }
+    .ic-body { padding: 0.2rem 1.4rem 0.6rem; }
 
-    .action-btns { display: flex; flex-direction: column; gap: 10px; }
-    .btn {
-      width: 100%; padding: 1rem; border: none; border-radius: 100px;
-      font-size: 0.95rem; font-weight: 700; cursor: pointer; transition: 0.3s;
-      font-family: 'Inter', sans-serif; text-align: center; text-decoration: none;
-      display: flex; align-items: center; justify-content: center; gap: 8px;
-    }
+    .info-row { display: flex; justify-content: space-between; align-items: center; padding: 0.6rem 0; border-bottom: 1px solid var(--gray-100); font-size: 0.87rem; }
+    .info-row:last-child { border-bottom: none; }
+    .info-row .lbl { color: var(--gray-400); }
+    .info-row .val { font-weight: 600; text-align: right; max-width: 58%; word-break: break-all; }
+    .val.green { color: var(--success); }
+    .val.primary { color: var(--primary); font-size: 1rem; font-weight: 800; }
+
+    /* Next steps */
+    .next-step { display: flex; align-items: flex-start; gap: 13px; padding: 0.9rem 0; border-bottom: 1px solid var(--gray-100); }
+    .next-step:last-child { border-bottom: none; }
+    .ns-icon { width: 38px; height: 38px; border-radius: 10px; background: rgba(0,188,212,0.08); color: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 0.88rem; flex-shrink: 0; }
+    .ns-title { font-size: 0.86rem; font-weight: 700; margin-bottom: 2px; }
+    .ns-desc { font-size: 0.78rem; color: var(--gray-400); line-height: 1.5; }
+
+    /* Action buttons */
+    .actions { display: flex; flex-direction: column; gap: 0.7rem; }
+    .btn { width: 100%; padding: 0.9rem; border-radius: 100px; border: none; font-family: 'Inter', sans-serif; font-size: 0.9rem; font-weight: 700; cursor: pointer; text-decoration: none; text-align: center; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.2s; }
+    .btn-wa { background: #25d366; color: white; }
+    .btn-wa:hover { background: #1ab655; }
     .btn-primary { background: var(--primary); color: white; }
     .btn-primary:hover { background: var(--primary-dark); }
-    .btn-whatsapp { background: #25d366; color: white; }
-    .btn-whatsapp:hover { background: #1da851; }
-    .btn-secondary { background: var(--gray-100); color: var(--dark); }
-    .btn-secondary:hover { background: #e2e8f0; }
+    .btn-secondary { background: white; color: var(--dark); border: 1.5px solid var(--gray-200); }
+    .btn-secondary:hover { border-color: var(--gray-400); }
 
-    .what-next { background: white; border-radius: var(--radius-lg); padding: 1.5rem; margin-bottom: 1.2rem; }
-    .what-next h3 { font-size: 0.9rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 1rem; color: var(--gray-400); }
-    .next-step { display: flex; align-items: flex-start; gap: 12px; padding: 0.75rem 0; border-bottom: 1px solid var(--gray-100); }
-    .next-step:last-child { border-bottom: none; }
-    .next-icon { width: 36px; height: 36px; border-radius: 50%; background: rgba(0,188,212,0.1); display: flex; align-items: center; justify-content: center; color: var(--primary); flex-shrink: 0; font-size: 0.9rem; }
-    .next-body { flex: 1; }
-    .next-body strong { font-size: 0.88rem; display: block; margin-bottom: 2px; }
-    .next-body span { font-size: 0.8rem; color: var(--gray-400); }
+    @media (max-width: 768px) {
+      .menu-toggle { display: block; }
+      .nav-links { display: none; position: absolute; top: 100%; left: 0; right: 0; background: white; flex-direction: column; padding: 1rem; border-bottom: 1px solid var(--gray-200); }
+      .nav-links.show { display: flex; }
+    }
   </style>
 </head>
 <body>
 
+<!-- ── ORIGINAL NAV ── -->
 <nav>
   <div class="container">
     <a href="index.html" class="logo-link">
-      <img height="32" src="photos/logo.png" alt="BMB" onerror="this.src='https://via.placeholder.com/32x32?text=BMB'">
+      <img class="logo-img" src="photos/logo.png" alt="logo">
       <span class="logo-text">BMB Electronics</span>
     </a>
+    <div class="menu-toggle" onclick="document.getElementById('navLinks').classList.toggle('show')"><i class="fa-solid fa-bars"></i></div>
+    <div class="nav-links" id="navLinks">
+      <a href="index.html">Home</a>
+      <a href="store.html">Store</a>
+      <a href="contact.html">Contact</a>
+      <a href="profile.html">Account</a>
+    </div>
+    <div class="nav-icons">
+      <div class="cart-icon-wrap" onclick="window.location.href='store.html'">
+        <i class="fa-solid fa-cart-shopping"></i>
+      </div>
+      <a href="profile.html"><i class="fa-regular fa-circle-user"></i></a>
+    </div>
   </div>
 </nav>
 
-<div class="container">
-  <div class="confirmation-wrap">
+<div class="page">
 
-    <div class="success-hero">
-      <div class="check-circle"><i class="fa-solid fa-check"></i></div>
-      <h1>Order Confirmed!</h1>
-      <p>Your payment was successful. We'll have your order ready soon.</p>
-    </div>
-
-    <div class="info-card" id="orderDetails">
-      <h3>Order Details</h3>
-      <div class="info-row"><span class="label">Status</span><span class="value green"><i class="fa-solid fa-circle-check"></i> Payment Successful</span></div>
-      <div class="info-row"><span class="label">Reference</span><span class="value" id="confRef">—</span></div>
-      <div class="info-row"><span class="label">Transaction ID</span><span class="value" id="confTxId">—</span></div>
-      <div class="info-row"><span class="label">Amount Paid</span><span class="value primary" id="confAmount">—</span></div>
-      <div class="info-row"><span class="label">Payer Number</span><span class="value" id="confPayer">—</span></div>
-      <div class="info-row"><span class="label">Date</span><span class="value" id="confDate">—</span></div>
-    </div>
-
-    <div class="what-next">
-      <h3>What happens next?</h3>
-      <div class="next-step">
-        <div class="next-icon"><i class="fa-solid fa-bell"></i></div>
-        <div class="next-body">
-          <strong>Order Notification</strong>
-          <span>Our team has been notified and will begin processing your order immediately.</span>
-        </div>
-      </div>
-      <div class="next-step">
-        <div class="next-icon"><i class="fa-brands fa-whatsapp"></i></div>
-        <div class="next-body">
-          <strong>WhatsApp Confirmation</strong>
-          <span>We'll send you a WhatsApp message confirming your order details and pickup/delivery arrangement.</span>
-        </div>
-      </div>
-      <div class="next-step">
-        <div class="next-icon"><i class="fa-solid fa-store"></i></div>
-        <div class="next-body">
-          <strong>Ready for Collection</strong>
-          <span>Visit us at Obote Avenue, Opposite BATA, Kitwe during business hours.</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="action-btns">
-      <a id="whatsappBtn" href="https://wa.me/260968602546" target="_blank" class="btn btn-whatsapp">
-        <i class="fa-brands fa-whatsapp"></i> Chat with us on WhatsApp
-      </a>
-      <a href="store.html" class="btn btn-primary">
-        <i class="fa-solid fa-store"></i> Continue Shopping
-      </a>
-      <a href="index.html" class="btn btn-secondary">Back to Home</a>
-    </div>
-
+  <div class="success-hero">
+    <div class="check-circle"><i class="fa-solid fa-check"></i></div>
+    <h1>Order Confirmed!</h1>
+    <p>Your payment was received. We'll have your order ready and will be in touch shortly.</p>
   </div>
+
+  <div class="info-card">
+    <div class="ic-head">
+      <div class="ic-head-icon"><i class="fa-solid fa-receipt"></i></div>
+      <h3>Order Details</h3>
+    </div>
+    <div class="ic-body">
+      <div class="info-row"><span class="lbl">Status</span><span class="val green"><i class="fa-solid fa-circle-check" style="margin-right:5px;"></i>Payment Successful</span></div>
+      <div class="info-row"><span class="lbl">Reference</span><span class="val" id="confRef">—</span></div>
+      <div class="info-row"><span class="lbl">Transaction ID</span><span class="val" id="confTxId">—</span></div>
+      <div class="info-row"><span class="lbl">Amount Paid</span><span class="val primary" id="confAmount">—</span></div>
+      <div class="info-row"><span class="lbl">Payment Method</span><span class="val" id="confPayer">—</span></div>
+      <div class="info-row"><span class="lbl">Date &amp; Time</span><span class="val" id="confDate">—</span></div>
+    </div>
+  </div>
+
+  <div class="info-card">
+    <div class="ic-head">
+      <div class="ic-head-icon"><i class="fa-solid fa-list-check"></i></div>
+      <h3>What Happens Next</h3>
+    </div>
+    <div class="ic-body">
+      <div class="next-step">
+        <div class="ns-icon"><i class="fa-solid fa-bell"></i></div>
+        <div>
+          <div class="ns-title">Order Notification Sent</div>
+          <div class="ns-desc">Our team has been notified and will begin processing your order immediately.</div>
+        </div>
+      </div>
+      <div class="next-step">
+        <div class="ns-icon"><i class="fa-brands fa-whatsapp"></i></div>
+        <div>
+          <div class="ns-title">WhatsApp Confirmation</div>
+          <div class="ns-desc">We'll send you a WhatsApp message confirming your order details and collection arrangement.</div>
+        </div>
+      </div>
+      <div class="next-step">
+        <div class="ns-icon"><i class="fa-solid fa-store"></i></div>
+        <div>
+          <div class="ns-title">Ready for Collection</div>
+          <div class="ns-desc">Visit us at Obote Avenue, Opposite BATA, Kitwe during business hours.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="actions">
+    <a id="waBtn" href="https://wa.me/260968602546" target="_blank" class="btn btn-wa">
+      <i class="fa-brands fa-whatsapp"></i> Chat with Us on WhatsApp
+    </a>
+    <a href="store.html" class="btn btn-primary">
+      <i class="fa-solid fa-store"></i> Continue Shopping
+    </a>
+    <a href="index.html" class="btn btn-secondary">Back to Home</a>
+  </div>
+
 </div>
 
 <script>
-  // Populate confirmation details from sessionStorage (set by checkout.html after polling)
   const raw = sessionStorage.getItem('confirmedOrder') || sessionStorage.getItem('pendingOrder');
   if (raw) {
     try {
-      const order = JSON.parse(raw);
-      document.getElementById('confRef').textContent    = order.externalRef    || '—';
-      document.getElementById('confTxId').textContent   = order.transactionId  || '—';
-      document.getElementById('confAmount').textContent = order.amount ? `K${Number(order.amount).toLocaleString()}` : '—';
-      document.getElementById('confPayer').textContent  = order.payerNumber    || '—';
+      const o = JSON.parse(raw);
+      document.getElementById('confRef').textContent    = o.externalRef    || '—';
+      document.getElementById('confTxId').textContent   = o.transactionId  || '—';
+      document.getElementById('confAmount').textContent = o.amount ? `K${Number(o.amount).toLocaleString()}` : '—';
+      document.getElementById('confPayer').textContent  = o.payerNumber    || '—';
       document.getElementById('confDate').textContent   = new Date().toLocaleString('en-ZM', { dateStyle:'medium', timeStyle:'short' });
-
-      // Pre-fill WhatsApp message with order ref
-      const msg = `Hello BMB Electronics! I just completed payment for order *${order.externalRef}*. Please confirm my order.`;
-      document.getElementById('whatsappBtn').href =
-        `https://wa.me/260968602546?text=${encodeURIComponent(msg)}`;
+      if (o.externalRef) {
+        const msg = `Hello BMB Electronics! I just completed payment for order *${o.externalRef}*. Please confirm my order. 🙏`;
+        document.getElementById('waBtn').href = `https://wa.me/260968602546?text=${encodeURIComponent(msg)}`;
+      }
     } catch(e) { console.warn('Could not parse order data', e); }
     sessionStorage.removeItem('confirmedOrder');
     sessionStorage.removeItem('pendingOrder');
   } else {
-    // No order data — set a generic date at least
     document.getElementById('confDate').textContent = new Date().toLocaleString('en-ZM', { dateStyle:'medium', timeStyle:'short' });
   }
 </script>
