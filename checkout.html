@@ -8,148 +8,529 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    :root { --primary: #00bcd4; --primary-dark: #0097a7; --dark: #0f172a; --gray-100: #f1f5f9; --gray-200: #e2e8f0; --white: #ffffff; --radius-lg: 1.5rem; }
-    body { font-family: 'Inter', sans-serif; background: var(--gray-100); }
+    :root {
+      --primary: #00bcd4;
+      --primary-dark: #0097a7;
+      --dark: #0f172a;
+      --gray-100: #f1f5f9;
+      --gray-200: #e2e8f0;
+      --gray-400: #94a3b8;
+      --white: #ffffff;
+      --radius-lg: 1.5rem;
+      --radius-md: 1rem;
+      --shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+    }
+    body { font-family: 'Inter', sans-serif; background: var(--gray-100); color: var(--dark); }
     .container { width: 90%; max-width: 1200px; margin: 0 auto; padding: 0 15px; }
-    nav { background: white; padding: 0.8rem 0; position: sticky; top: 0; }
-    .checkout-grid { display: grid; grid-template-columns: 1fr 380px; gap: 1.5rem; margin: 2rem 0; }
-    .order-items-card, .payment-card { background: white; border-radius: var(--radius-lg); padding: 1.5rem; }
-    .phone-input-wrapper { display: flex; border: 1px solid var(--gray-200); border-radius: 100px; overflow: hidden; margin: 1rem 0; }
-    .country-code { background: var(--gray-100); padding: 0.8rem 1rem; font-weight: 600; }
-    .phone-input { flex: 1; border: none; padding: 0.8rem 1rem; outline: none; }
-    .pay-btn { width: 100%; background: var(--primary); color: white; border: none; border-radius: 100px; padding: 1rem; font-weight: 700; cursor: pointer; }
-    .error-text { color: #ef4444; font-size: 0.75rem; display: none; }
+
+    /* ── ORIGINAL NAV – UNTOUCHED ── */
+    nav {
+      background: rgba(255,255,255,0.98);
+      backdrop-filter: blur(10px);
+      padding: 0.8rem 0;
+      position: sticky; top: 0; z-index: 1000;
+      border-bottom: 1px solid rgba(0,0,0,0.05);
+    }
+    nav .container { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; }
+    .logo-link { display: flex; align-items: center; gap: 8px; text-decoration: none; }
+    .logo-img { height: 32px; width: auto; }
+    .logo-text { font-size: 1.3rem; font-weight: 800; color: var(--dark); letter-spacing: -1px; }
+    .menu-toggle { display: none; font-size: 1.5rem; cursor: pointer; color: var(--dark); }
+    .nav-links { display: flex; gap: 2rem; }
+    .nav-links a { text-decoration: none; color: var(--dark); font-weight: 500; transition: 0.3s; font-size: 0.95rem; }
+    .nav-links a:hover, .nav-links a.active { color: var(--primary); }
+    .nav-icons { display: flex; gap: 1.2rem; font-size: 1.2rem; align-items: center; }
+    .nav-icons a { color: var(--dark); text-decoration: none; }
+    .nav-icons i { cursor: pointer; transition: 0.3s; }
+    .nav-icons i:hover { color: var(--primary); }
+    .cart-icon-wrap { position: relative; cursor: pointer; }
+    .cart-badge { position: absolute; top: -8px; right: -8px; background: #ef4444; color: white; width: 18px; height: 18px; border-radius: 50%; font-size: 10px; font-weight: 700; display: none; align-items: center; justify-content: center; }
+    /* ── END ORIGINAL NAV ── */
+
+    /* Page */
+    .page-wrap { max-width: 1100px; margin: 0 auto; padding: 2rem 1rem 4rem; }
+    .page-title { font-size: 1.6rem; font-weight: 800; margin-bottom: 0.25rem; }
+    .page-sub { color: var(--gray-400); font-size: 0.88rem; margin-bottom: 1.75rem; }
+
+    /* Checkout grid */
+    .checkout-grid { display: grid; grid-template-columns: 1fr 380px; gap: 1.5rem; align-items: start; }
+
+    /* Cards */
+    .card { background: white; border-radius: var(--radius-lg); border: 1px solid var(--gray-200); overflow: hidden; }
+    .card + .card { margin-top: 1.25rem; }
+    .card-head { padding: 1.1rem 1.5rem; border-bottom: 1px solid var(--gray-200); display: flex; align-items: center; gap: 10px; }
+    .card-head-icon { width: 32px; height: 32px; border-radius: 8px; background: rgba(0,188,212,0.1); color: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 0.85rem; }
+    .card-head h2 { font-size: 0.95rem; font-weight: 700; }
+    .card-body { padding: 1.25rem 1.5rem; }
+
+    /* Order items */
+    .order-item { display: flex; align-items: center; gap: 12px; padding: 0.85rem 0; border-bottom: 1px solid var(--gray-200); }
+    .order-item:last-child { border-bottom: none; }
+    .oi-img { width: 52px; height: 52px; border-radius: 8px; object-fit: contain; background: var(--gray-100); padding: 3px; flex-shrink: 0; }
+    .oi-img-ph { width: 52px; height: 52px; border-radius: 8px; background: var(--gray-100); display: flex; align-items: center; justify-content: center; font-size: 1.3rem; flex-shrink: 0; }
+    .oi-info { flex: 1; min-width: 0; }
+    .oi-name { font-size: 0.88rem; font-weight: 600; margin-bottom: 2px; }
+    .oi-meta { font-size: 0.75rem; color: var(--gray-400); }
+    .oi-price { font-weight: 800; font-size: 0.9rem; white-space: nowrap; }
+
+    /* Payment method selector */
+    .method-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 1.25rem; }
+    .method-card {
+      border: 2px solid var(--gray-200); border-radius: var(--radius-md);
+      padding: 1rem; cursor: pointer; transition: all 0.2s;
+      background: white; position: relative;
+    }
+    .method-card:hover { border-color: rgba(0,188,212,0.5); background: rgba(0,188,212,0.03); }
+    .method-card.selected { border-color: var(--primary); background: rgba(0,188,212,0.05); }
+    .method-card input[type=radio] { position: absolute; opacity: 0; pointer-events: none; }
+    .method-icon-wrap { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1rem; margin-bottom: 0.6rem; }
+    .method-icon-wrap.momo { background: #fff3e0; color: #e65100; }
+    .method-icon-wrap.card-pay { background: #e8f5e9; color: #2e7d32; }
+    .method-title { font-size: 0.88rem; font-weight: 700; margin-bottom: 2px; }
+    .method-desc { font-size: 0.72rem; color: var(--gray-400); }
+    .method-check { position: absolute; top: 10px; right: 10px; width: 18px; height: 18px; border-radius: 50%; background: var(--primary); color: white; display: none; align-items: center; justify-content: center; font-size: 0.6rem; }
+    .method-card.selected .method-check { display: flex; }
+
+    /* Payment panels */
+    .pay-panel { display: none; }
+    .pay-panel.active { display: block; animation: fadeUp 0.22s ease; }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+    .field-label { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; color: var(--gray-400); display: block; margin-bottom: 0.45rem; }
+    .field-group { margin-bottom: 1rem; }
+    .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+
+    /* Phone input */
+    .phone-wrap { display: flex; border: 1.5px solid var(--gray-200); border-radius: 100px; overflow: hidden; transition: border-color 0.2s; }
+    .phone-wrap:focus-within { border-color: var(--primary); }
+    .phone-wrap.error { border-color: #ef4444; }
+    .phone-code { background: var(--gray-100); padding: 0.75rem 1rem; font-weight: 700; font-size: 0.88rem; display: flex; align-items: center; gap: 6px; white-space: nowrap; border-right: 1.5px solid var(--gray-200); }
+    .phone-input { flex: 1; border: none; padding: 0.75rem 1rem; outline: none; font-family: 'Inter', sans-serif; font-size: 0.9rem; }
+
+    /* Text/card inputs */
+    .text-input {
+      width: 100%; padding: 0.75rem 1rem;
+      border: 1.5px solid var(--gray-200); border-radius: 100px;
+      font-family: 'Inter', sans-serif; font-size: 0.9rem;
+      outline: none; transition: border-color 0.2s; color: var(--dark);
+      background: white;
+    }
+    .text-input:focus { border-color: var(--primary); }
+    .text-input.error { border-color: #ef4444; }
+
+    .card-number-wrap { position: relative; }
+    .card-brand-icons { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); display: flex; gap: 4px; }
+    .card-brand-icon { font-size: 1.2rem; color: var(--gray-400); transition: color 0.2s; }
+    .card-brand-icon.active { color: var(--dark); }
+
+    .error-text { color: #ef4444; font-size: 0.74rem; margin-top: 4px; display: none; }
     .error-text.show { display: block; }
-    .toast { position: fixed; bottom: 20px; left: 20px; right: 20px; background: white; border-radius: 100px; padding: 1rem; text-align: center; transition: 0.3s; transform: translateY(150%); z-index: 9999; }
-    .toast.show { transform: translateY(0); }
+
+    .info-note { display: flex; align-items: flex-start; gap: 9px; background: var(--gray-100); border-radius: var(--radius-md); padding: 0.75rem 1rem; font-size: 0.78rem; color: var(--gray-400); margin-top: 0.75rem; line-height: 1.5; }
+    .info-note i { color: var(--primary); margin-top: 1px; flex-shrink: 0; }
+
+    /* Summary */
+    .sum-row { display: flex; justify-content: space-between; font-size: 0.88rem; color: var(--gray-400); padding: 0.3rem 0; }
+    .sum-row.total { font-size: 1.05rem; font-weight: 800; color: var(--dark); padding-top: 0.8rem; border-top: 1.5px solid var(--gray-200); margin-top: 0.5rem; }
+
+    .pay-btn {
+      width: 100%; background: var(--primary); color: white;
+      border: none; border-radius: 100px; padding: 1rem;
+      font-family: 'Inter', sans-serif; font-weight: 700; font-size: 0.95rem;
+      cursor: pointer; transition: background 0.2s;
+      display: flex; align-items: center; justify-content: center; gap: 9px;
+      margin-top: 1.1rem;
+    }
+    .pay-btn:hover { background: var(--primary-dark); }
+    .pay-btn:disabled { background: var(--gray-200); color: var(--gray-400); cursor: not-allowed; }
+    .spin { width: 16px; height: 16px; border: 2.5px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 0.8s linear infinite; display: inline-block; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .trust-row { display: flex; justify-content: center; gap: 1.5rem; margin-top: 0.9rem; }
+    .trust-item { display: flex; align-items: center; gap: 5px; font-size: 0.72rem; color: var(--gray-400); }
+    .trust-item i { font-size: 0.78rem; color: #16a34a; }
+
+    /* Toast */
+    .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(120px); background: var(--dark); color: white; border-radius: 100px; padding: 0.85rem 1.4rem; font-size: 0.88rem; display: flex; align-items: center; gap: 9px; z-index: 9999; transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1), opacity 0.3s; opacity: 0; white-space: nowrap; box-shadow: var(--shadow); }
+    .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+    @media (max-width: 860px) {
+      .checkout-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 768px) {
+      .menu-toggle { display: block; }
+      .nav-links { display: none; position: absolute; top: 100%; left: 0; right: 0; background: white; flex-direction: column; padding: 1rem; border-bottom: 1px solid var(--gray-200); }
+      .nav-links.show { display: flex; }
+      .method-grid { grid-template-columns: 1fr 1fr; }
+      .field-row { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 480px) {
+      .method-grid { grid-template-columns: 1fr; }
+    }
   </style>
 </head>
 <body>
-<nav>...</nav>
-<div class="container">
-  <div class="checkout-header"><h1>Secure Checkout</h1></div>
-  <div id="checkoutContainer">Loading your order...</div>
+
+<!-- ── ORIGINAL NAV ── -->
+<nav>
+  <div class="container">
+    <a href="index.html" class="logo-link">
+      <img class="logo-img" src="photos/logo.png" alt="logo">
+      <span class="logo-text">BMB Electronics</span>
+    </a>
+    <div class="menu-toggle" onclick="document.getElementById('navLinks').classList.toggle('show')"><i class="fa-solid fa-bars"></i></div>
+    <div class="nav-links" id="navLinks">
+      <a href="index.html">Home</a>
+      <a href="store.html">Store</a>
+      <a href="contact.html">Contact</a>
+      <a href="#" id="accountLink">Account</a>
+    </div>
+    <div class="nav-icons">
+      <div class="cart-icon-wrap" onclick="window.location.href='cart.html'">
+        <i class="fa-solid fa-cart-shopping"></i>
+        <span class="cart-badge" id="cartBadge"></span>
+      </div>
+      <a href="#" id="accountIcon"><i class="fa-regular fa-circle-user"></i></a>
+    </div>
+  </div>
+</nav>
+
+<div class="page-wrap">
+  <h1 class="page-title">Secure Checkout</h1>
+  <p class="page-sub">Review your order and complete payment</p>
+
+  <div id="loadingMsg" style="text-align:center;padding:3rem;color:var(--gray-400);">
+    <div class="spin" style="margin:0 auto 1rem;width:28px;height:28px;border-width:3px;border-color:var(--gray-200);border-top-color:var(--primary);"></div>
+    Loading your order…
+  </div>
+
+  <div class="checkout-grid" id="checkoutGrid" style="display:none;">
+    <!-- LEFT -->
+    <div>
+      <!-- Order Items -->
+      <div class="card">
+        <div class="card-head">
+          <div class="card-head-icon"><i class="fa-solid fa-cart-shopping"></i></div>
+          <h2>Order Items</h2>
+        </div>
+        <div class="card-body" id="orderItemsList"></div>
+      </div>
+
+      <!-- Payment Method -->
+      <div class="card">
+        <div class="card-head">
+          <div class="card-head-icon"><i class="fa-solid fa-credit-card"></i></div>
+          <h2>Payment Method</h2>
+        </div>
+        <div class="card-body">
+          <div class="method-grid">
+            <!-- Mobile Money -->
+            <label class="method-card selected" id="momoCard" onclick="selectMethod('momo')">
+              <input type="radio" name="payMethod" value="momo" checked>
+              <div class="method-icon-wrap momo"><i class="fa-solid fa-mobile-screen-button"></i></div>
+              <div class="method-title">Mobile Money</div>
+              <div class="method-desc">Airtel · MTN · Zamtel</div>
+              <div class="method-check"><i class="fa-solid fa-check"></i></div>
+            </label>
+            <!-- Card -->
+            <label class="method-card" id="cardMethodCard" onclick="selectMethod('card')">
+              <input type="radio" name="payMethod" value="card">
+              <div class="method-icon-wrap card-pay"><i class="fa-solid fa-credit-card"></i></div>
+              <div class="method-title">Debit / Credit Card</div>
+              <div class="method-desc">Visa · Mastercard</div>
+              <div class="method-check"><i class="fa-solid fa-check"></i></div>
+            </label>
+          </div>
+
+          <!-- Mobile Money Panel -->
+          <div class="pay-panel active" id="momoPanel">
+            <div class="field-group">
+              <label class="field-label">Mobile Money Number</label>
+              <div class="phone-wrap" id="momoPhoneWrap">
+                <div class="phone-code">🇿🇲 +260</div>
+                <input type="tel" class="phone-input" id="momoPhone" placeholder="97 654 3210" maxlength="12" oninput="validateMomoPhone()">
+              </div>
+              <div class="error-text" id="momoPhoneErr">Please enter a valid Zambia number (e.g. 0976543210)</div>
+            </div>
+            <div class="info-note">
+              <i class="fa-solid fa-circle-info"></i>
+              You will receive a push notification on your phone. Keep it nearby and approve the payment prompt to complete your order.
+            </div>
+          </div>
+
+          <!-- Card Panel -->
+          <div class="pay-panel" id="cardPanel">
+            <div class="field-group">
+              <label class="field-label">Cardholder Name</label>
+              <input type="text" class="text-input" id="cardName" placeholder="John Banda" autocomplete="cc-name">
+            </div>
+            <div class="field-group">
+              <label class="field-label">Card Number</label>
+              <div class="card-number-wrap">
+                <input type="text" class="text-input" id="cardNumber" placeholder="1234  5678  9012  3456" maxlength="19" oninput="fmtCardNum(this)" autocomplete="cc-number" style="padding-right:80px;">
+                <div class="card-brand-icons">
+                  <i class="fa-brands fa-cc-visa card-brand-icon" id="iconVisa"></i>
+                  <i class="fa-brands fa-cc-mastercard card-brand-icon" id="iconMC"></i>
+                </div>
+              </div>
+            </div>
+            <div class="field-row">
+              <div class="field-group">
+                <label class="field-label">Expiry Date</label>
+                <input type="text" class="text-input" id="cardExpiry" placeholder="MM / YY" maxlength="7" oninput="fmtExpiry(this)" autocomplete="cc-exp">
+              </div>
+              <div class="field-group">
+                <label class="field-label">CVV / CVC</label>
+                <input type="text" class="text-input" id="cardCvv" placeholder="123" maxlength="4" oninput="this.value=this.value.replace(/\D/g,'')" autocomplete="cc-csc">
+              </div>
+            </div>
+            <div class="info-note">
+              <i class="fa-solid fa-lock"></i>
+              Your card details are encrypted with 256-bit SSL. We never store your full card number.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT – Summary -->
+    <div>
+      <div class="card" style="position:sticky;top:80px;">
+        <div class="card-head">
+          <div class="card-head-icon"><i class="fa-solid fa-receipt"></i></div>
+          <h2>Order Total</h2>
+        </div>
+        <div class="card-body">
+          <div id="summaryRows"></div>
+          <button class="pay-btn" id="payBtn" onclick="handlePay()">
+            <i class="fa-solid fa-lock" style="font-size:0.8rem;" id="payIcon"></i>
+            <span id="payLabel">Pay Now</span>
+          </button>
+          <div class="trust-row">
+            <div class="trust-item"><i class="fa-solid fa-shield-halved"></i> Secure</div>
+            <div class="trust-item"><i class="fa-solid fa-lock"></i> Encrypted</div>
+            <div class="trust-item"><i class="fa-solid fa-rotate-left"></i> Refundable</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
-<div class="toast" id="toast"><i class="fa-regular fa-circle-check"></i> <span id="toastMsg"></span></div>
+
+<div class="toast" id="toast"></div>
+
 <script type="module">
   import { auth, db } from './js/firebase-config.js';
   import { doc, getDoc, addDoc, collection, serverTimestamp, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
   import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-functions.js";
   import { observeAuthState } from './js/auth.js';
 
-  function showToast(msg, isError = false) {
-    const toast = document.getElementById('toast');
-    toast.querySelector('i').className = isError ? 'fa-regular fa-circle-exclamation' : 'fa-regular fa-circle-check';
-    toast.querySelector('i').style.color = isError ? '#ef4444' : 'var(--primary)';
-    document.getElementById('toastMsg').innerText = msg;
-    toast.classList.add('show');
-    setTimeout(() => toast.classList.remove('show'), 3500);
+  let cart = [], orderSubtotal = 0, orderShipping = 50, orderTax = 0, orderTotal = 0;
+  let selectedMethod = 'momo';
+
+  /* METHOD SWITCH */
+  window.selectMethod = (method) => {
+    selectedMethod = method;
+    document.getElementById('momoCard').classList.toggle('selected', method === 'momo');
+    document.getElementById('cardMethodCard').classList.toggle('selected', method === 'card');
+    document.getElementById('momoPanel').classList.toggle('active', method === 'momo');
+    document.getElementById('cardPanel').classList.toggle('active', method === 'card');
+    syncPayBtn();
+  };
+
+  function syncPayBtn() {
+    document.getElementById('payIcon').className = selectedMethod === 'momo'
+      ? 'fa-solid fa-mobile-screen-button'
+      : 'fa-solid fa-credit-card';
+    document.getElementById('payLabel').textContent = `Pay K${orderTotal.toLocaleString()}`;
   }
 
-  function formatPhoneNumber(raw) {
-    let cleaned = raw.replace(/\D/g, '');
-    if (cleaned.startsWith('0') && cleaned.length === 10) cleaned = '260' + cleaned.slice(1);
-    if (cleaned.startsWith('260') && cleaned.length === 12) return cleaned;
-    if (cleaned.length === 9) return '260' + cleaned;
+  /* PHONE VALIDATION */
+  window.validateMomoPhone = () => {
+    const raw = document.getElementById('momoPhone').value;
+    const fmt = fmtPhone(raw);
+    const wrap = document.getElementById('momoPhoneWrap');
+    const err = document.getElementById('momoPhoneErr');
+    if (!fmt) { wrap.classList.add('error'); err.classList.add('show'); }
+    else { wrap.classList.remove('error'); err.classList.remove('show'); }
+    return fmt;
+  };
+  function fmtPhone(raw) {
+    let c = raw.replace(/\D/g, '');
+    if (c.startsWith('0') && c.length === 10) c = '260' + c.slice(1);
+    if (c.startsWith('260') && c.length === 12) return c;
+    if (c.length === 9) return '260' + c;
     return null;
   }
 
-  async function loadAndRenderCheckout() {
-    const user = auth.currentUser;
-    if (!user) {
-      document.getElementById('checkoutContainer').innerHTML = '<div>Please login to checkout</div>';
-      return;
-    }
-    const userDoc = await getDoc(doc(db, "users", user.uid));
-    let cart = userDoc.data()?.cart || [];
-    if (!cart.length) {
-      document.getElementById('checkoutContainer').innerHTML = '<div>Your cart is empty</div>';
-      return;
-    }
-    let subtotal = 0;
-    cart.forEach(item => { const qty = item.qty ?? 1; item.qtyForCalc = qty; subtotal += item.price * qty; });
-    const shipping = 50, tax = Math.round(subtotal * 0.16), total = subtotal + shipping + tax;
-    const productNames = cart.map(i => `${i.name} x${i.qtyForCalc}`).join(', ');
-    const narration = `BMB Order: ${productNames.substring(0, 80)}`;
+  /* CARD FORMATTING */
+  window.fmtCardNum = (inp) => {
+    let v = inp.value.replace(/\D/g, '').substring(0, 16);
+    inp.value = v.replace(/(.{4})/g, '$1 ').trim();
+    document.getElementById('iconVisa').classList.toggle('active', v.startsWith('4'));
+    document.getElementById('iconMC').classList.toggle('active', v.startsWith('5'));
+  };
+  window.fmtExpiry = (inp) => {
+    let v = inp.value.replace(/\D/g, '').substring(0, 4);
+    if (v.length >= 3) v = v.substring(0, 2) + ' / ' + v.substring(2);
+    inp.value = v;
+  };
 
-    const itemsHtml = cart.map(item => `<div>${item.name} x${item.qtyForCalc} - K${(item.price * item.qtyForCalc).toLocaleString()}</div>`).join('');
-    document.getElementById('checkoutContainer').innerHTML = `
-      <div class="checkout-grid">
-        <div class="order-items-card"><h2>Order Summary</h2>${itemsHtml}</div>
-        <div class="payment-card">
-          <h2>Payment Details</h2>
-          <div>Total: K${total.toLocaleString()}</div>
-          <div class="phone-input-group">
-            <label>Mobile Money Number</label>
-            <div class="phone-input-wrapper"><span class="country-code">+260</span><input type="tel" id="phoneNumber" class="phone-input" placeholder="97 654 3210"></div>
-            <div class="error-text" id="phoneError">Enter a valid Zambia number (e.g., 0976543210)</div>
-          </div>
-          <button class="pay-btn" id="payNowBtn"><i class="fa-solid fa-mobile-screen-button"></i> Pay K${total.toLocaleString()}</button>
-        </div>
-      </div>`;
-
-    const payBtn = document.getElementById('payNowBtn');
-    const phoneInput = document.getElementById('phoneNumber');
-    const phoneError = document.getElementById('phoneError');
-
-    function validatePhone() {
-      const formatted = formatPhoneNumber(phoneInput.value.trim());
-      if (!formatted) { phoneError.classList.add('show'); return false; }
-      phoneError.classList.remove('show');
-      return formatted;
-    }
-    phoneInput.addEventListener('input', validatePhone);
-
-    payBtn.onclick = async () => {
-      const payerNumber = validatePhone();
-      if (!payerNumber) { showToast("Please enter a valid mobile number", true); return; }
-      payBtn.disabled = true;
-      payBtn.innerHTML = '<span class="loading-spinner-sm"></span> Processing...';
-
-      try {
-        // Create order in Firestore
-        const orderData = {
-          userId: user.uid,
-          items: cart.map(i => ({ id: i.id, name: i.name, price: i.price, qty: i.qtyForCalc, storage: i.storage, color: i.color })),
-          subtotal, shipping, tax, totalAmount: total,
-          payerNumber, narration,
-          status: 'pending_payment',
-          createdAt: serverTimestamp(),
-          externalReference: `BMB_${Date.now()}_${Math.random().toString(36).substring(2, 10)}`
-        };
-        const orderRef = await addDoc(collection(db, "orders"), orderData);
-        const orderId = orderRef.id;
-
-        // Call Firebase Function
-        const functions = getFunctions();
-        const initiatePaymentFn = httpsCallable(functions, 'initiatePayment');
-        const result = await initiatePaymentFn({
-          payer_number: payerNumber,
-          amount: total,
-          external_reference: orderData.externalReference,
-          payment_narration: narration,
-          orderId: orderId
-        });
-
-        if (result.data.success) {
-          await updateDoc(doc(db, "orders", orderId), { status: 'awaiting_callback', primenetTransactionId: result.data.transactionId });
-          await updateDoc(doc(db, "users", user.uid), { cart: [] });
-          showToast(`Payment request sent to ${payerNumber}. Complete on your phone.`, false);
-          setTimeout(() => { window.location.href = `order-confirmation.html?order=${orderId}`; }, 2000);
-        } else {
-          await updateDoc(doc(db, "orders", orderId), { status: 'failed', error: result.data.error });
-          showToast(`Payment failed: ${result.data.error}`, true);
-          payBtn.disabled = false;
-          payBtn.innerHTML = `<i class="fa-solid fa-mobile-screen-button"></i> Pay K${total.toLocaleString()}`;
-        }
-      } catch (err) {
-        showToast("Network error. Please try again.", true);
-        payBtn.disabled = false;
-        payBtn.innerHTML = `<i class="fa-solid fa-mobile-screen-button"></i> Pay K${total.toLocaleString()}`;
-      }
-    };
+  function validateCard() {
+    const name = document.getElementById('cardName').value.trim();
+    const num = document.getElementById('cardNumber').value.replace(/\s/g, '');
+    const exp = document.getElementById('cardExpiry').value;
+    const cvv = document.getElementById('cardCvv').value.trim();
+    if (!name) { toast('Please enter the cardholder name', true); return null; }
+    if (num.length < 16) { toast('Please enter a valid 16-digit card number', true); return null; }
+    if (exp.replace(/[\s/]/g, '').length < 4) { toast('Please enter a valid expiry date', true); return null; }
+    if (cvv.length < 3) { toast('Please enter a valid CVV', true); return null; }
+    return { name, number: num, expiry: exp, cvv };
   }
-  observeAuthState(() => loadAndRenderCheckout());
+
+  /* TOAST */
+  function toast(msg, isError = false) {
+    const t = document.getElementById('toast');
+    t.innerHTML = `<i class="${isError ? 'fa-regular fa-circle-exclamation' : 'fa-regular fa-circle-check'}" style="color:${isError ? '#ef4444' : '#00bcd4'};"></i> ${msg}`;
+    t.classList.add('show');
+    clearTimeout(t._t);
+    t._t = setTimeout(() => t.classList.remove('show'), 4000);
+  }
+
+  /* LOAD */
+  async function load(user) {
+    if (!user) {
+      document.getElementById('loadingMsg').innerHTML = '<p>Please <a href="login.html" style="color:var(--primary);font-weight:600;">log in</a> to checkout.</p>';
+      return;
+    }
+    const snap = await getDoc(doc(db, "users", user.uid));
+    cart = snap.data()?.cart || [];
+    if (!cart.length) {
+      document.getElementById('loadingMsg').innerHTML = '<p>Your cart is empty. <a href="store.html" style="color:var(--primary);font-weight:600;">Continue shopping</a></p>';
+      return;
+    }
+    orderSubtotal = 0;
+    cart.forEach(i => { i._qty = i.qty ?? 1; orderSubtotal += i.price * i._qty; });
+    orderTax = Math.round(orderSubtotal * 0.16);
+    orderTotal = orderSubtotal + orderShipping + orderTax;
+
+    // Order items – always show image
+    document.getElementById('orderItemsList').innerHTML = cart.map(i => {
+      const imgEl = i.img
+        ? `<img class="oi-img" src="${i.img}" alt="">`
+        : `<div class="oi-img-ph">📦</div>`;
+      return `<div class="order-item">${imgEl}<div class="oi-info"><div class="oi-name">${esc(i.name)}</div><div class="oi-meta">Qty: ${i._qty}${i.storage ? ' · ' + i.storage : ''}${i.color ? ' · ' + i.color : ''}</div></div><div class="oi-price">K${(i.price * i._qty).toLocaleString()}</div></div>`;
+    }).join('');
+
+    // Summary
+    document.getElementById('summaryRows').innerHTML = `
+      <div class="sum-row"><span>Subtotal</span><span>K${orderSubtotal.toLocaleString()}</span></div>
+      <div class="sum-row"><span>Shipping</span><span>K${orderShipping}</span></div>
+      <div class="sum-row"><span>Tax (16%)</span><span>K${orderTax.toLocaleString()}</span></div>
+      <div class="sum-row total"><span>Total</span><span>K${orderTotal.toLocaleString()}</span></div>`;
+
+    document.getElementById('loadingMsg').style.display = 'none';
+    document.getElementById('checkoutGrid').style.display = 'grid';
+    syncPayBtn();
+  }
+
+  function esc(s) { return s?.replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])) || ''; }
+
+  /* PAY */
+  window.handlePay = async () => {
+    const btn = document.getElementById('payBtn');
+    if (selectedMethod === 'momo') {
+      const num = validateMomoPhone();
+      if (!num) { toast('Please enter a valid mobile number', true); return; }
+      await doMomoPay(num, btn);
+    } else {
+      const card = validateCard();
+      if (!card) return;
+      await doCardPay(card, btn);
+    }
+  };
+
+  function setPayLoading(label) {
+    const btn = document.getElementById('payBtn');
+    btn.disabled = true;
+    btn.innerHTML = `<span class="spin"></span> ${label}`;
+  }
+  function resetPayBtn() {
+    const btn = document.getElementById('payBtn');
+    btn.disabled = false;
+    const icon = selectedMethod === 'momo' ? 'fa-mobile-screen-button' : 'fa-credit-card';
+    btn.innerHTML = `<i class="fa-solid ${icon}" style="font-size:0.8rem;"></i> Pay K${orderTotal.toLocaleString()}`;
+  }
+
+  async function doMomoPay(payerNumber, btn) {
+    setPayLoading('Sending request…');
+    const narration = `BMB Order: ${cart.map(i => `${i.name} x${i._qty}`).join(', ').substring(0, 80)}`;
+    const extRef = `BMB_${Date.now()}_${Math.random().toString(36).substring(2, 10)}`;
+    try {
+      const orderRef = await addDoc(collection(db, "orders"), {
+        userId: auth.currentUser.uid,
+        items: cart.map(i => ({ id: i.id, name: i.name, price: i.price, qty: i._qty, storage: i.storage || null, color: i.color || null })),
+        subtotal: orderSubtotal, shipping: orderShipping, tax: orderTax, totalAmount: orderTotal,
+        payerNumber, narration, paymentMethod: 'mobile_money',
+        status: 'pending_payment', createdAt: serverTimestamp(), externalReference: extRef
+      });
+      const orderId = orderRef.id;
+      const functions = getFunctions();
+      const result = await httpsCallable(functions, 'initiatePayment')({ payer_number: payerNumber, amount: orderTotal, external_reference: extRef, payment_narration: narration, orderId });
+      if (result.data.success) {
+        await updateDoc(doc(db, "orders", orderId), { status: 'awaiting_callback', primenetTransactionId: result.data.transactionId });
+        await updateDoc(doc(db, "users", auth.currentUser.uid), { cart: [] });
+        sessionStorage.setItem('pendingOrder', JSON.stringify({ externalRef: extRef, transactionId: result.data.transactionId, amount: orderTotal, payerNumber }));
+        toast(`Request sent to ${payerNumber} — approve on your phone`);
+        setTimeout(() => window.location.href = `order-confirmation.html?order=${orderId}`, 2200);
+      } else {
+        await updateDoc(doc(db, "orders", orderId), { status: 'failed', error: result.data.error });
+        toast(`Payment failed: ${result.data.error}`, true);
+        resetPayBtn();
+      }
+    } catch (e) { console.error(e); toast('Network error. Please try again.', true); resetPayBtn(); }
+  }
+
+  async function doCardPay(cardData, btn) {
+    setPayLoading('Processing card…');
+    const extRef = `BMB_CARD_${Date.now()}_${Math.random().toString(36).substring(2, 10)}`;
+    try {
+      const orderRef = await addDoc(collection(db, "orders"), {
+        userId: auth.currentUser.uid,
+        items: cart.map(i => ({ id: i.id, name: i.name, price: i.price, qty: i._qty, storage: i.storage || null, color: i.color || null })),
+        subtotal: orderSubtotal, shipping: orderShipping, tax: orderTax, totalAmount: orderTotal,
+        paymentMethod: 'card', cardholderName: cardData.name, cardLastFour: cardData.number.slice(-4),
+        status: 'pending_payment', createdAt: serverTimestamp(), externalReference: extRef
+      });
+      const orderId = orderRef.id;
+      const functions = getFunctions();
+      const result = await httpsCallable(functions, 'initiateCardPayment')({ amount: orderTotal, external_reference: extRef, orderId, card: cardData });
+      if (result.data.success) {
+        await updateDoc(doc(db, "orders", orderId), { status: result.data.status || 'successful', transactionId: result.data.transactionId });
+        await updateDoc(doc(db, "users", auth.currentUser.uid), { cart: [] });
+        sessionStorage.setItem('confirmedOrder', JSON.stringify({ externalRef: extRef, transactionId: result.data.transactionId, amount: orderTotal, payerNumber: `Card ····${cardData.number.slice(-4)}` }));
+        toast('Payment successful! Redirecting…');
+        setTimeout(() => window.location.href = 'confirmation.html', 1800);
+      } else {
+        await updateDoc(doc(db, "orders", orderId), { status: 'failed', error: result.data.error });
+        toast(`Card declined: ${result.data.error || 'Please try again.'}`, true);
+        resetPayBtn();
+      }
+    } catch (e) { console.error(e); toast('Network error. Please try again.', true); resetPayBtn(); }
+  }
+
+  /* Account nav */
+  function handleAccount() {
+    if (auth.currentUser) window.location.href = 'profile.html';
+    else { if (confirm('Please log in.')) window.location.href = 'login.html'; }
+  }
+  document.getElementById('accountLink').onclick = e => { e.preventDefault(); handleAccount(); };
+  document.getElementById('accountIcon').onclick = e => { e.preventDefault(); handleAccount(); };
+
+  observeAuthState(user => {
+    document.querySelector('#accountIcon i').className = user ? 'fa-solid fa-circle-user' : 'fa-regular fa-circle-user';
+    load(user);
+  });
 </script>
 </body>
 </html>
