@@ -60,23 +60,20 @@
     .oi-price { font-weight: 800; font-size: 0.9rem; white-space: nowrap; }
 
     /* PAYMENT METHOD */
-    .method-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 1.25rem; }
+    .method-grid { display: grid; grid-template-columns: 1fr; gap: 0.75rem; margin-bottom: 1.25rem; }
     .method-card { border: 2px solid var(--gray-200); border-radius: var(--radius-md); padding: 1rem; cursor: pointer; transition: all 0.2s; background: white; position: relative; }
     .method-card:hover { border-color: rgba(0,188,212,0.5); background: rgba(0,188,212,0.03); }
     .method-card.selected { border-color: var(--primary); background: rgba(0,188,212,0.05); }
     .method-card input[type=radio] { position: absolute; opacity: 0; pointer-events: none; }
     .method-icon-wrap { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1rem; margin-bottom: 0.6rem; }
     .method-icon-wrap.momo { background: #fff3e0; color: #e65100; }
-    .method-icon-wrap.card-pay { background: #e8f5e9; color: #2e7d32; }
     .method-title { font-size: 0.88rem; font-weight: 700; margin-bottom: 2px; }
     .method-desc { font-size: 0.72rem; color: var(--gray-400); }
     .method-check { position: absolute; top: 10px; right: 10px; width: 18px; height: 18px; border-radius: 50%; background: var(--primary); color: white; display: none; align-items: center; justify-content: center; font-size: 0.6rem; }
     .method-card.selected .method-check { display: flex; }
 
     /* PANELS */
-    .pay-panel { display: none; }
-    .pay-panel.active { display: block; animation: fadeUp 0.22s ease; }
-    @keyframes fadeUp { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+    .pay-panel { display: block; }
 
     /* PHONE INPUT */
     .field-label { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; color: var(--gray-400); display: block; margin-bottom: 0.45rem; }
@@ -90,15 +87,6 @@
     .error-text.show { display: block; }
     .info-note { display: flex; align-items: flex-start; gap: 9px; background: var(--gray-100); border-radius: var(--radius-md); padding: 0.75rem 1rem; font-size: 0.78rem; color: var(--gray-400); margin-top: 0.75rem; line-height: 1.5; }
     .info-note i { color: var(--primary); margin-top: 1px; flex-shrink: 0; }
-
-    /* CARD REDIRECT PANEL */
-    .card-redirect-info { background: linear-gradient(135deg, rgba(0,188,212,0.06), rgba(0,151,167,0.04)); border: 1.5px solid rgba(0,188,212,0.2); border-radius: var(--radius-md); padding: 1.25rem; text-align: center; }
-    .cri-icon { width: 52px; height: 52px; border-radius: 50%; background: rgba(0,188,212,0.1); color: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 1.3rem; margin: 0 auto 0.75rem; }
-    .card-redirect-info h4 { font-size: 0.95rem; font-weight: 700; margin-bottom: 0.4rem; }
-    .card-redirect-info p { font-size: 0.8rem; color: var(--gray-400); line-height: 1.55; margin-bottom: 0.75rem; }
-    .card-redirect-steps { display: flex; flex-direction: column; gap: 0.4rem; text-align: left; }
-    .crs-item { display: flex; align-items: center; gap: 9px; font-size: 0.78rem; color: var(--gray-400); }
-    .crs-num { width: 20px; height: 20px; border-radius: 50%; background: var(--primary); color: white; font-size: 0.65rem; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 
     /* SUMMARY */
     .sum-row { display: flex; justify-content: space-between; font-size: 0.88rem; color: var(--gray-400); padding: 0.3rem 0; }
@@ -137,7 +125,6 @@
       .nav-links { display: none; position: absolute; top: 100%; left: 0; right: 0; background: white; flex-direction: column; padding: 1rem; border-bottom: 1px solid var(--gray-200); }
       .nav-links.show { display: flex; }
     }
-    @media (max-width: 480px) { .method-grid { grid-template-columns: 1fr; } }
   </style>
 </head>
 <body>
@@ -199,19 +186,13 @@
         </div>
         <div class="card-body">
 
+          <!-- Only Mobile Money option kept; card option removed -->
           <div class="method-grid">
-            <label class="method-card selected" id="momoCard" onclick="selectMethod('momo')">
+            <label class="method-card selected" id="momoCard">
               <input type="radio" name="payMethod" value="momo" checked>
               <div class="method-icon-wrap momo"><i class="fa-solid fa-mobile-screen-button"></i></div>
               <div class="method-title">Mobile Money</div>
               <div class="method-desc">Airtel · MTN · Zamtel</div>
-              <div class="method-check"><i class="fa-solid fa-check"></i></div>
-            </label>
-            <label class="method-card" id="cardMethodCard" onclick="selectMethod('card')">
-              <input type="radio" name="payMethod" value="card">
-              <div class="method-icon-wrap card-pay"><i class="fa-solid fa-credit-card"></i></div>
-              <div class="method-title">Debit / Credit Card</div>
-              <div class="method-desc">Visa · Mastercard</div>
               <div class="method-check"><i class="fa-solid fa-check"></i></div>
             </label>
           </div>
@@ -233,24 +214,6 @@
             <div class="info-note">
               <i class="fa-solid fa-circle-info"></i>
               After tapping Pay, you'll get a prompt on your phone — approve it to complete the payment.
-            </div>
-          </div>
-
-          <!-- CARD PANEL -->
-          <div class="pay-panel" id="cardPanel">
-            <div class="card-redirect-info">
-              <div class="cri-icon"><i class="fa-solid fa-shield-halved"></i></div>
-              <h4>Secure Card Checkout</h4>
-              <p>You'll be taken to PrimeNet's secure page to enter your card details, then redirected back once payment is complete.</p>
-              <div class="card-redirect-steps">
-                <div class="crs-item"><div class="crs-num">1</div>Tap "Pay by Card" below</div>
-                <div class="crs-item"><div class="crs-num">2</div>Enter your card details on the PrimeNet page</div>
-                <div class="crs-item"><div class="crs-num">3</div>You'll be redirected back once complete</div>
-              </div>
-            </div>
-            <div class="info-note" style="margin-top:0.85rem;">
-              <i class="fa-brands fa-cc-visa" style="font-size:1rem;"></i>
-              Accepts Visa and Mastercard debit / credit cards.
             </div>
           </div>
 
@@ -283,7 +246,7 @@
   </div><!-- /checkout-grid -->
 </div>
 
-<!-- MOMO WAITING OVERLAY -->
+<!-- MOMO WAITING OVERLAY (mock) -->
 <div class="wait-overlay" id="waitOverlay">
   <div class="wait-box">
     <div class="wait-spinner"></div>
@@ -305,98 +268,18 @@
 
 <div class="toast" id="toast"></div>
 
-<!--
-  ═══════════════════════════════════════════════════════════════════════════════════════════════════
-  REQUIRED BACKEND: Firebase Cloud Function (deploy to your Firebase project)
-  ═══════════════════════════════════════════════════════════════════════════════════════════════════
-  
-  Create a file `functions/index.js` with the following content (or add to existing functions):
-
-  const functions = require('firebase-functions');
-  const admin = require('firebase-admin');
-  admin.initializeApp();
-
-  exports.initiatePayment = functions.https.onCall(async (data, context) => {
-    // Ensure user is authenticated
-    if (!context.auth) {
-      throw new functions.https.HttpsError('unauthenticated', 'You must be logged in.');
-    }
-
-    const { payer_number, amount, external_reference, payment_narration, orderId } = data;
-
-    // Your PrimeNet credentials – KEEP THESE SECRET!
-    const PRIMENET_API_KEY = '7XyHpDXvuxNCLPtZHf71F7xb3b4u1fhfmHLF7fuE9twQ5LUalCTwYC5Yq0J2ONRo';
-    const PRIMENET_ACCOUNT_NUMBER = 'TEST511'; // Replace with your actual PrimeNet account number
-
-    const payload = {
-      payer_number: payer_number,          // e.g. "260976719454"
-      external_reference: external_reference,
-      payment_narration: payment_narration,
-      currency: "ZMW",
-      amount: amount.toString(),           // PrimeNet expects string
-      account_number: PRIMENET_ACCOUNT_NUMBER
-    };
-
-    try {
-      const fetch = (await import('node-fetch')).default; // if using Node 18+, you can use global fetch
-      const response = await fetch('https://api.primenetpay.com:9001/api/v2/transaction/collect', {
-        method: 'POST',
-        headers: {
-          'X-Authorization': PRIMENET_API_KEY,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(payload)
-      });
-
-      const result = await response.json();
-      console.log('PrimeNet response:', result);
-
-      // PrimeNet typical success response: { "status": "success", "transaction_id": "..." }
-      if (result.status === 'success') {
-        // Update Firestore order with transaction ID (optional but recommended)
-        await admin.firestore().collection('orders').doc(orderId).update({
-          primenetTransactionId: result.transaction_id,
-          status: 'awaiting_payment'
-        });
-        return { success: true, transactionId: result.transaction_id };
-      } else {
-        await admin.firestore().collection('orders').doc(orderId).update({
-          status: 'failed',
-          error: result.message || 'Payment rejected by network'
-        });
-        return { success: false, error: result.message || 'Payment failed' };
-      }
-    } catch (error) {
-      console.error('PrimeNet API error:', error);
-      await admin.firestore().collection('orders').doc(orderId).update({
-        status: 'failed',
-        error: error.message
-      });
-      throw new functions.https.HttpsError('internal', 'Payment service unavailable');
-    }
-  });
-
-  // Deploy with: firebase deploy --only functions
-  ═══════════════════════════════════════════════════════════════════════════════════════════════════
--->
-
 <script type="module">
   import { auth, db } from './js/firebase-config.js';
-  import {
-    doc, getDoc, addDoc, collection, serverTimestamp, updateDoc
-  } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-  import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-functions.js";
+  import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
   import { observeAuthState } from './js/auth.js';
 
-  /* ─────────────────────────────────────────────────────────────────
-     PRIMENET CONFIG — replace with your actual values
-  ───────────────────────────────────────────────────────────────── */
-  const PRIMENET_CLIENT_ID = 'YOUR_CLIENT_ID';   // ← Provided by PrimeNet for card redirects
-  const PRIMENET_CARD_BASE = 'https://checkout.primenetpay.com/payment-checkout';
+  // =============================================
+  // SIMPLIFIED CHECKOUT – NO BACKEND INTEGRATION
+  // =============================================
+  // This version only handles the UI and shows a mock payment prompt.
+  // The actual mobile money API integration will be added later.
 
   let cart = [], orderSubtotal = 0, orderShipping = 50, orderTax = 0, orderTotal = 0;
-  let selectedMethod = 'momo';
-  let currentOrderId = null; // Store the Firestore order ID for possible retry
 
   /* ── UTILS ── */
   function esc(s) {
@@ -415,25 +298,9 @@
     t._tid = setTimeout(() => t.classList.remove('show'), 4500);
   }
 
-  /* ── METHOD SWITCH ── */
-  window.selectMethod = (method) => {
-    selectedMethod = method;
-    document.getElementById('momoCard').classList.toggle('selected', method === 'momo');
-    document.getElementById('cardMethodCard').classList.toggle('selected', method === 'card');
-    document.getElementById('momoPanel').classList.toggle('active', method === 'momo');
-    document.getElementById('cardPanel').classList.toggle('active', method === 'card');
-    updatePayBtn();
-  };
-
   function updatePayBtn() {
     const btn = document.getElementById('payBtn');
-    btn.disabled = false;
-    btn.onclick = handlePay;
-    if (selectedMethod === 'momo') {
-      btn.innerHTML = `<i class="fa-solid fa-mobile-screen-button" style="font-size:0.8rem;"></i> Pay K${orderTotal.toLocaleString()} via Mobile Money`;
-    } else {
-      btn.innerHTML = `<i class="fa-solid fa-credit-card" style="font-size:0.8rem;"></i> Pay K${orderTotal.toLocaleString()} by Card`;
-    }
+    btn.innerHTML = `<i class="fa-solid fa-mobile-screen-button" style="font-size:0.8rem;"></i> Pay K${orderTotal.toLocaleString()} via Mobile Money`;
   }
 
   function setBtnLoading(label) {
@@ -508,146 +375,31 @@
   }
 
   /* ── MAIN HANDLER ── */
-  window.handlePay = async () => {
-    if (selectedMethod === 'momo') {
-      const num = validateMomoPhone();
-      if (!num) { showToast('Please enter a valid Zambian mobile number', true); return; }
-      await doMomoPay(num);
-    } else {
-      await doCardPay();
+  window.handlePay = () => {
+    const num = validateMomoPhone();
+    if (!num) {
+      showToast('Please enter a valid Zambian mobile number', true);
+      return;
     }
+
+    // SIMULATION: Show waiting overlay with the entered number
+    setBtnLoading('Sending request…');
+    setTimeout(() => {
+      document.getElementById('waitNumber').textContent = `+${num}`;
+      document.getElementById('waitOverlay').classList.add('show');
+      // Re-enable button after overlay closes (if needed)
+      updatePayBtn();
+      document.getElementById('payBtn').disabled = false;
+    }, 800);
   };
 
-  /* ══════════════════════════════════════════════════════════════════
-     MOBILE MONEY
-     Calls your Firebase Cloud Function "initiatePayment" which proxies
-     to PrimeNet server-side.
-  ══════════════════════════════════════════════════════════════════ */
-  async function doMomoPay(payerNumber) {
-    setBtnLoading('Sending payment request…');
-
-    const extRef    = `BMB_${Date.now()}_${Math.random().toString(36).substr(2,6).toUpperCase()}`;
-    const narration = `BMB Order: ${cart.map(i=>`${i.name} x${i._qty}`).join(', ').substring(0,80)}`;
-
-    // 1. Create Firestore order
-    try {
-      const ref = await addDoc(collection(db, 'orders'), {
-        userId:            auth.currentUser.uid,
-        items:             cart.map(i=>({ id:i.id, name:i.name, price:i.price, qty:i._qty, storage:i.storage||null, color:i.color||null })),
-        subtotal: orderSubtotal, shipping: orderShipping, tax: orderTax, totalAmount: orderTotal,
-        payerNumber, narration, paymentMethod: 'mobile_money',
-        externalReference: extRef, status: 'pending_payment', createdAt: serverTimestamp(),
-      });
-      currentOrderId = ref.id;
-    } catch(e) {
-      console.error('Firestore:', e);
-      showToast('Could not save order. Please try again.', true);
-      updatePayBtn(); return;
-    }
-
-    // 2. Call Firebase Function
-    try {
-      const fn     = getFunctions();
-      const initPay = httpsCallable(fn, 'initiatePayment');
-      const result  = await initPay({
-        payer_number:       payerNumber,
-        amount:             orderTotal,
-        external_reference: extRef,
-        payment_narration:  narration,
-        orderId:            currentOrderId,
-      });
-
-      const d = result.data;
-      console.log('MoMo response:', d);
-
-      if (d.success) {
-        // Update order with transaction ID
-        await updateDoc(doc(db,'orders', currentOrderId), {
-          status: 'awaiting_payment',
-          primenetTransactionId: d.transactionId || '',
-        });
-        // Clear cart
-        await updateDoc(doc(db,'users', auth.currentUser.uid), { cart: [] });
-        // Save for confirmation page
-        sessionStorage.setItem('pendingOrder', JSON.stringify({
-          externalRef:   extRef,
-          transactionId: d.transactionId || '',
-          amount:        orderTotal,
-          payerNumber,
-        }));
-        // Show "check your phone" overlay
-        document.getElementById('waitNumber').textContent = `+${payerNumber}`;
-        document.getElementById('waitOverlay').classList.add('show');
-
-      } else {
-        await updateDoc(doc(db,'orders', currentOrderId), { status:'failed', error: d.error||'rejected' });
-        showToast(`Payment failed: ${d.error || 'Request rejected by network'}`, true);
-        updatePayBtn();
-      }
-
-    } catch(e) {
-      console.error('Function error:', e);
-      const msg = e.code === 'functions/not-found'
-        ? 'Payment function not deployed. Please deploy the "initiatePayment" Cloud Function.'
-        : 'Could not reach payment network. Please try again.';
-      await updateDoc(doc(db,'orders', currentOrderId), { status:'failed', error: e.message });
-      showToast(msg, true);
-      updatePayBtn();
-    }
-  }
-
-  /* Go to confirmation after user approves on phone */
+  /* Go to confirmation after user "approves" (mock) */
   window.goToConfirmation = () => {
     document.getElementById('waitOverlay').classList.remove('show');
-    window.location.href = 'confirmation.html';
+    // For now, just go to a dummy confirmation or back to home
+    // In a real implementation, this would redirect to confirmation.html
+    window.location.href = 'store.html'; // placeholder
   };
-
-  /* ══════════════════════════════════════════════════════════════════
-     CARD PAYMENT
-     Redirects to PrimeNet's hosted checkout page.
-     URL: {PRIMENET_CARD_BASE}/{clientId}/{amount}/{extRef}/card/ZMW
-  ══════════════════════════════════════════════════════════════════ */
-  async function doCardPay() {
-    setBtnLoading('Preparing card checkout…');
-
-    const extRef = `BMB_CARD_${Date.now()}_${Math.random().toString(36).substr(2,6).toUpperCase()}`;
-
-    // 1. Create Firestore order
-    try {
-      const ref = await addDoc(collection(db, 'orders'), {
-        userId:            auth.currentUser.uid,
-        items:             cart.map(i=>({ id:i.id, name:i.name, price:i.price, qty:i._qty, storage:i.storage||null, color:i.color||null })),
-        subtotal: orderSubtotal, shipping: orderShipping, tax: orderTax, totalAmount: orderTotal,
-        paymentMethod: 'card', externalReference: extRef,
-        status: 'pending_payment', createdAt: serverTimestamp(),
-      });
-      currentOrderId = ref.id;
-    } catch(e) {
-      console.error('Firestore:', e);
-      showToast('Could not save order. Please try again.', true);
-      updatePayBtn(); return;
-    }
-
-    // 2. Clear cart before redirect
-    try {
-      await updateDoc(doc(db,'users', auth.currentUser.uid), { cart: [] });
-    } catch(e) { console.warn('Cart clear failed:', e); }
-
-    // 3. Save pending order for confirmation page
-    sessionStorage.setItem('pendingOrder', JSON.stringify({
-      externalRef: extRef,
-      amount:      orderTotal,
-      orderId:     currentOrderId,
-      payerNumber: 'Card payment',
-    }));
-
-    // 4. Redirect to PrimeNet card checkout
-    const cardUrl = `${PRIMENET_CARD_BASE}/${PRIMENET_CLIENT_ID}/${orderTotal}/${extRef}/card/ZMW`;
-    console.log('Redirecting to:', cardUrl);
-
-    showToast('Redirecting to secure card page…');
-    setTimeout(() => { window.location.href = cardUrl; }, 1200);
-  }
 
   /* ── ACCOUNT NAV ── */
   function handleAccount() {
