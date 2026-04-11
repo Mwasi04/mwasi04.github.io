@@ -119,6 +119,39 @@
     .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(120px); background: var(--dark); color: white; border-radius: 100px; padding: 0.85rem 1.4rem; font-size: 0.88rem; display: flex; align-items: center; gap: 9px; z-index: 9999; opacity: 0; white-space: nowrap; box-shadow: var(--shadow); transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1), opacity 0.3s; }
     .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
 
+    /* DEBUG PANEL */
+    .debug-panel {
+      background: #1e293b;
+      color: #e2e8f0;
+      border-radius: 8px;
+      margin-top: 20px;
+      padding: 12px 16px;
+      font-family: 'Monaco', 'Menlo', monospace;
+      font-size: 0.75rem;
+      max-height: 200px;
+      overflow-y: auto;
+      border: 1px solid #334155;
+    }
+    .debug-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      color: #94a3b8;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .debug-clear { cursor: pointer; color: #ef4444; font-size: 0.7rem; }
+    .debug-entry {
+      border-bottom: 1px solid #334155;
+      padding: 4px 0;
+      color: #cbd5e1;
+    }
+    .debug-entry.error { color: #f87171; }
+    .debug-entry.success { color: #4ade80; }
+    .debug-entry .time { color: #64748b; margin-right: 8px; }
+
     @media (max-width: 860px) { .checkout-grid { grid-template-columns: 1fr; } }
     @media (max-width: 768px) {
       .menu-toggle { display: block; }
@@ -244,9 +277,19 @@
     </div>
 
   </div><!-- /checkout-grid -->
+
+  <!-- DEBUG PANEL (visible only in development) -->
+  <div class="debug-panel" id="debugPanel">
+    <div class="debug-header">
+      <span><i class="fa-solid fa-bug"></i> Debug Log</span>
+      <span class="debug-clear" onclick="clearDebugLog()">Clear</span>
+    </div>
+    <div id="debugContent"></div>
+  </div>
+
 </div>
 
-<!-- MOMO WAITING OVERLAY (shown after API call) -->
+<!-- MOMO WAITING OVERLAY -->
 <div class="wait-overlay" id="waitOverlay">
   <div class="wait-box">
     <div class="wait-spinner"></div>
@@ -282,6 +325,41 @@
   let cart = [], orderSubtotal = 0, orderShipping = 50, orderTax = 0, orderTotal = 0;
   let currentOrderId = null;
 
+  /* ── DEBUG LOGGING ── */
+  function logDebug(message, type = 'info') {
+    const timestamp = new Date().toLocaleTimeString();
+    const consoleMsg = `[${timestamp}] ${message}`;
+    
+    // Console output
+    if (type === 'error') {
+      console.error(consoleMsg);
+    } else if (type === 'success') {
+      console.log('%c' + consoleMsg, 'color: #4ade80');
+    } else {
+      console.log(consoleMsg);
+    }
+
+    // On-screen debug panel
+    const debugContent = document.getElementById('debugContent');
+    if (debugContent) {
+      const entry = document.createElement('div');
+      entry.className = `debug-entry ${type}`;
+      entry.innerHTML = `<span class="time">${timestamp}</span> ${message}`;
+      debugContent.appendChild(entry);
+      debugContent.scrollTop = debugContent.scrollHeight;
+      
+      // Limit entries to avoid memory bloat
+      if (debugContent.children.length > 50) {
+        debugContent.removeChild(debugContent.children[0]);
+      }
+    }
+  }
+
+  window.clearDebugLog = () => {
+    document.getElementById('debugContent').innerHTML = '';
+    logDebug('Debug log cleared');
+  };
+
   /* ── UTILS ── */
   function esc(s) {
     return s?.replace(/[&<>"']/g,
@@ -289,6 +367,7 @@
   }
 
   function showToast(msg, isError = false) {
+    logDebug(`Toast: ${msg}`, isError ? 'error' : 'info');
     const t = document.getElementById('toast');
     t.innerHTML = `<i class="${isError
       ? 'fa-regular fa-circle-exclamation'
@@ -303,12 +382,14 @@
     const btn = document.getElementById('payBtn');
     btn.disabled = false;
     btn.innerHTML = `<i class="fa-solid fa-mobile-screen-button" style="font-size:0.8rem;"></i> Pay K${orderTotal.toLocaleString()} via Mobile Money`;
+    logDebug('Pay button updated, total: K' + orderTotal);
   }
 
   function setBtnLoading(label) {
     const btn = document.getElementById('payBtn');
     btn.disabled = true;
     btn.innerHTML = `<span class="spin"></span> ${label}`;
+    logDebug(`Button loading: ${label}`);
   }
 
   /* ── PHONE VALIDATION ── */
@@ -317,6 +398,7 @@
     const fmt = parsePhone(raw);
     document.getElementById('momoPhoneWrap').classList.toggle('error', !fmt);
     document.getElementById('momoPhoneErr').classList.toggle('show', !fmt);
+    logDebug(`Phone validation: ${raw} → ${fmt || 'invalid'}`);
     return fmt;
   };
 
@@ -333,29 +415,43 @@
    * First three letters of first item (only letters/numbers) + timestamp.
    */
   function generateExternalReference() {
-    if (!cart || cart.length === 0) return `BMB_${Date.now()}`;
+    if (!cart || cart.length === 0) {
+      const fallback = `BMB_${Date.now()}`;
+      logDebug(`External ref fallback: ${fallback}`);
+      return fallback;
+    }
 
     const firstItemName = cart[0].name || '';
     let prefix = firstItemName.trim().substring(0, 3).toUpperCase();
     if (prefix.length < 3) prefix = prefix.padEnd(3, 'X');
     // Remove any non-alphanumeric characters (only letters and numbers allowed)
-    prefix = prefix.replace(/[^A-Z0-9]/g, 'X');
+    const cleaned = prefix.replace(/[^A-Z0-9]/g, 'X');
     const timestamp = Date.now();
-    return `${prefix}_${timestamp}`;
+    const ref = `${cleaned}_${timestamp}`;
+    
+    logDebug(`Generated external reference: ${ref} (from item: "${firstItemName}")`);
+    return ref;
   }
 
   /* ── LOAD CART ── */
   async function load(user) {
+    logDebug(`Loading cart for user: ${user?.uid || 'none'}`);
+    
     if (!user) {
       document.getElementById('loadingMsg').innerHTML =
         '<p>Please <a href="login.html" style="color:var(--primary);font-weight:600;">log in</a> to checkout.</p>';
+      logDebug('No user logged in', 'error');
       return;
     }
+    
     const snap = await getDoc(doc(db, 'users', user.uid));
     cart = snap.data()?.cart || [];
+    logDebug(`Cart loaded: ${cart.length} items`);
+    
     if (!cart.length) {
       document.getElementById('loadingMsg').innerHTML =
         '<p>Your cart is empty. <a href="store.html" style="color:var(--primary);font-weight:600;">Continue shopping</a></p>';
+      logDebug('Empty cart', 'error');
       return;
     }
 
@@ -363,6 +459,8 @@
     cart.forEach(i => { i._qty = i.qty ?? 1; orderSubtotal += i.price * i._qty; });
     orderTax   = Math.round(orderSubtotal * 0.16);
     orderTotal = orderSubtotal + orderShipping + orderTax;
+
+    logDebug(`Order totals - Subtotal: K${orderSubtotal}, Tax: K${orderTax}, Total: K${orderTotal}`);
 
     document.getElementById('orderItemsList').innerHTML = cart.map(i => {
       const img = i.img
@@ -390,28 +488,35 @@
     document.getElementById('loadingMsg').style.display = 'none';
     document.getElementById('checkoutGrid').style.display = 'grid';
     updatePayBtn();
+    logDebug('Checkout UI rendered', 'success');
   }
 
   /* ── MAIN PAYMENT HANDLER ── */
   window.handlePay = async () => {
+    logDebug('=== PAYMENT INITIATED ===');
+    
     const payerNumber = validateMomoPhone();
     if (!payerNumber) {
+      logDebug('Invalid phone number', 'error');
       showToast('Please enter a valid Zambian mobile number', true);
       return;
     }
+    logDebug(`Payer number: ${payerNumber}`);
 
     // 1. Generate external reference
     const externalRef = generateExternalReference();
-    console.log('External Reference:', externalRef);
+    logDebug(`External reference for PrimeNet: ${externalRef}`);
 
-    // 2. Create narration from cart items (max 80 chars as per PrimeNet typical limit)
+    // 2. Create narration from cart items
     const narration = `BMB Order: ${cart.map(i => `${i.name} x${i._qty}`).join(', ').substring(0, 80)}`;
+    logDebug(`Narration: ${narration}`);
 
     setBtnLoading('Sending payment request…');
 
-    // 3. Create order in Firestore first (optional but good practice)
+    // 3. Create order in Firestore
+    logDebug('Creating Firestore order...');
     try {
-      const orderRef = await addDoc(collection(db, 'orders'), {
+      const orderData = {
         userId: auth.currentUser.uid,
         items: cart.map(i => ({
           id: i.id,
@@ -431,16 +536,19 @@
         narration: narration,
         status: 'pending',
         createdAt: serverTimestamp()
-      });
+      };
+      
+      const orderRef = await addDoc(collection(db, 'orders'), orderData);
       currentOrderId = orderRef.id;
+      logDebug(`Order created with ID: ${currentOrderId}`, 'success');
     } catch (e) {
-      console.error('Firestore error:', e);
+      logDebug(`Firestore order creation failed: ${e.message}`, 'error');
       showToast('Could not save order. Please try again.', true);
       updatePayBtn();
       return;
     }
 
-    // 4. Call PrimeNet API directly
+    // 4. Prepare PrimeNet payload
     const payload = {
       payer_number: payerNumber,
       external_reference: externalRef,
@@ -449,6 +557,9 @@
       amount: orderTotal.toString(),
       account_number: PRIMENET_ACCOUNT_NUMBER
     };
+    
+    logDebug(`PrimeNet payload: ${JSON.stringify(payload, null, 2)}`);
+    logDebug(`Calling PrimeNet API: ${PRIMENET_API_URL}`);
 
     try {
       const response = await fetch(PRIMENET_API_URL, {
@@ -460,35 +571,46 @@
         body: JSON.stringify(payload)
       });
 
+      logDebug(`Response status: ${response.status} ${response.statusText}`);
+      
       const result = await response.json();
-      console.log('PrimeNet response:', result);
+      logDebug(`PrimeNet response: ${JSON.stringify(result, null, 2)}`);
 
-      // PrimeNet returns { "status": "success", "transaction_id": "..." } on success
       if (result.status === 'success') {
+        logDebug(`Payment request successful! Transaction ID: ${result.transaction_id}`, 'success');
+        
         // Update order with transaction ID
         await updateDoc(doc(db, 'orders', currentOrderId), {
           primenetTransactionId: result.transaction_id,
           status: 'awaiting_payment'
         });
+        logDebug(`Order ${currentOrderId} updated with transaction ID`);
 
         // Clear user's cart
         await updateDoc(doc(db, 'users', auth.currentUser.uid), { cart: [] });
+        logDebug('User cart cleared');
 
         // Show waiting overlay
         document.getElementById('waitNumber').textContent = `+${payerNumber}`;
         document.getElementById('waitOverlay').classList.add('show');
-        updatePayBtn(); // Reset button state (overlay is open, but button may be re-enabled later)
+        logDebug('Waiting overlay displayed');
+        updatePayBtn();
       } else {
         // Payment request failed
+        const errorMsg = result.message || 'Payment request rejected';
+        logDebug(`PrimeNet returned failure: ${errorMsg}`, 'error');
+        
         await updateDoc(doc(db, 'orders', currentOrderId), {
           status: 'failed',
-          error: result.message || 'Payment request rejected'
+          error: errorMsg
         });
-        showToast(`Payment failed: ${result.message || 'Request rejected'}`, true);
+        showToast(`Payment failed: ${errorMsg}`, true);
         updatePayBtn();
       }
     } catch (error) {
-      console.error('API error:', error);
+      logDebug(`API network error: ${error.message}`, 'error');
+      console.error('Full error:', error);
+      
       await updateDoc(doc(db, 'orders', currentOrderId), {
         status: 'failed',
         error: error.message
@@ -496,28 +618,39 @@
       showToast('Network error. Please try again.', true);
       updatePayBtn();
     }
+    
+    logDebug('=== PAYMENT HANDLER COMPLETED ===');
   };
 
-  /* Go to confirmation after user approves (mock) */
+  /* Go to confirmation after user approves */
   window.goToConfirmation = () => {
+    logDebug('User clicked "I\'ve Approved", redirecting to confirmation.html');
     document.getElementById('waitOverlay').classList.remove('show');
-    // In a real app, redirect to confirmation page with order details
     window.location.href = 'confirmation.html';
   };
 
   /* ── ACCOUNT NAV ── */
   function handleAccount() {
-    if (auth.currentUser) window.location.href = 'profile.html';
-    else if (confirm('Please log in to continue.')) window.location.href = 'login.html';
+    if (auth.currentUser) {
+      logDebug('Navigating to profile');
+      window.location.href = 'profile.html';
+    } else {
+      logDebug('Login required');
+      if (confirm('Please log in to continue.')) window.location.href = 'login.html';
+    }
   }
   document.getElementById('accountLink').onclick = e => { e.preventDefault(); handleAccount(); };
   document.getElementById('accountIcon').onclick  = e => { e.preventDefault(); handleAccount(); };
 
   observeAuthState(user => {
+    logDebug(`Auth state changed: ${user ? 'logged in' : 'logged out'}`);
     document.querySelector('#accountIcon i').className =
       user ? 'fa-solid fa-circle-user' : 'fa-regular fa-circle-user';
     load(user);
   });
+
+  // Initial log
+  logDebug('Checkout page initialized');
 </script>
 </body>
 </html>
