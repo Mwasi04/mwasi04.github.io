@@ -313,10 +313,14 @@
 <script type="module">
   import { auth, db } from './js/firebase-config.js';
   import { doc, getDoc, addDoc, collection, serverTimestamp, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-  import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-functions.js";
   import { observeAuthState } from './js/auth.js';
 
-  const PRIMENET_ACCOUNT_NUMBER = 'TEST511'; // Replace with your real account number
+  // =============================================
+  // PRIMENET CONFIGURATION (DIRECT CALL)
+  // =============================================
+  const PRIMENET_API_KEY = '7XyHpDXvuxNCLPtZHf71F7xb3b4u1fhfmHLF7fuE9twQ5LUalCTwYC5Yq0J2ONRo';
+  const PRIMENET_ACCOUNT_NUMBER = 'TEST511'; // Replace with your actual account number
+  const PRIMENET_API_URL = 'https://api.primenetpay.com:9001/api/v2/transaction/collect';
 
   let cart = [], orderSubtotal = 0, orderShipping = 50, orderTax = 0, orderTotal = 0;
   let currentOrderId = null;
@@ -436,6 +440,51 @@
     logDebug('Checkout UI rendered', 'success');
   }
 
+  /* ── DIRECT PRIMENET API CALL ── */
+  async function callPrimeNetAPI(payload) {
+    const jsonBody = JSON.stringify(payload);
+    logDebug(`Direct API call to: ${PRIMENET_API_URL}`);
+    logDebug(`Payload: ${jsonBody}`);
+
+    // First attempt: JSON
+    let response = await fetch(PRIMENET_API_URL, {
+      method: 'POST',
+      mode: 'cors',
+      headers: {
+        'X-Authorization': PRIMENET_API_KEY,
+        'Content-Type': 'application/json'
+      },
+      body: jsonBody
+    });
+
+    logDebug(`Response status: ${response.status}`);
+    let result = await response.json();
+    logDebug(`PrimeNet response: ${JSON.stringify(result)}`);
+
+    if (result.status === 'success') {
+      return result;
+    }
+
+    // If JSON fails with "non blank fields", try form-urlencoded as fallback
+    if (result.message && result.message.includes('non blank')) {
+      logDebug('JSON attempt failed, trying form-urlencoded...');
+      const formBody = new URLSearchParams(payload).toString();
+      response = await fetch(PRIMENET_API_URL, {
+        method: 'POST',
+        mode: 'cors',
+        headers: {
+          'X-Authorization': PRIMENET_API_KEY,
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: formBody
+      });
+      result = await response.json();
+      logDebug(`Fallback response: ${JSON.stringify(result)}`);
+    }
+
+    return result;
+  }
+
   /* ── MAIN PAYMENT HANDLER ── */
   window.handlePay = async () => {
     logDebug('=== PAYMENT INITIATED ===');
@@ -469,7 +518,7 @@
       return;
     }
 
-    // Trim ALL string fields before sending (extra safety)
+    // Trim ALL string fields
     const payload = {
       payer_number: payerNumber.trim(),
       external_reference: externalRef.trim(),
@@ -479,7 +528,7 @@
       account_number: PRIMENET_ACCOUNT_NUMBER.trim()
     };
 
-    // Log each field individually for debugging
+    // Log trimmed fields
     logDebug(`Trimmed payer_number: "${payload.payer_number}"`);
     logDebug(`Trimmed external_reference: "${payload.external_reference}"`);
     logDebug(`Trimmed payment_narration: "${payload.payment_narration}"`);
@@ -488,17 +537,12 @@
     logDebug(`Trimmed account_number: "${payload.account_number}"`);
 
     try {
-      const functions = getFunctions();
-      const initiatePayment = httpsCallable(functions, 'initiatePayment');
-      const result = await initiatePayment(payload);
-      const data = result.data;
+      const result = await callPrimeNetAPI(payload);
 
-      logDebug(`Cloud Function response: ${JSON.stringify(data)}`);
-
-      if (data.success) {
-        logDebug(`Success! Transaction ID: ${data.transactionId}`, 'success');
+      if (result.status === 'success') {
+        logDebug(`Success! Transaction ID: ${result.transaction_id}`, 'success');
         await updateDoc(doc(db, 'orders', currentOrderId), {
-          primenetTransactionId: data.transactionId,
+          primenetTransactionId: result.transaction_id,
           status: 'awaiting_payment'
         });
         await updateDoc(doc(db, 'users', auth.currentUser.uid), { cart: [] });
@@ -506,7 +550,7 @@
         document.getElementById('waitOverlay').classList.add('show');
         updatePayBtn();
       } else {
-        throw new Error(data.error || 'Payment request rejected');
+        throw new Error(result.message || 'Payment request rejected');
       }
     } catch (error) {
       logDebug(`Payment error: ${error.message}`, 'error');
