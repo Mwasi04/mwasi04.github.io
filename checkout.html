@@ -278,7 +278,7 @@
 
   </div><!-- /checkout-grid -->
 
-  <!-- DEBUG PANEL (visible only in development) -->
+  <!-- DEBUG PANEL -->
   <div class="debug-panel" id="debugPanel">
     <div class="debug-header">
       <span><i class="fa-solid fa-bug"></i> Debug Log</span>
@@ -319,7 +319,7 @@
   // PRIMENET CONFIGURATION
   // =============================================
   const PRIMENET_API_KEY = '7XyHpDXvuxNCLPtZHf71F7xb3b4u1fhfmHLF7fuE9twQ5LUalCTwYC5Yq0J2ONRo';
-  const PRIMENET_ACCOUNT_NUMBER = 'TEST511'; // Replace with your actual account number
+  const PRIMENET_ACCOUNT_NUMBER = 'TEST511';
   const PRIMENET_API_URL = 'https://api.primenetpay.com:9001/api/v2/transaction/collect';
 
   let cart = [], orderSubtotal = 0, orderShipping = 50, orderTax = 0, orderTotal = 0;
@@ -330,7 +330,6 @@
     const timestamp = new Date().toLocaleTimeString();
     const consoleMsg = `[${timestamp}] ${message}`;
     
-    // Console output
     if (type === 'error') {
       console.error(consoleMsg);
     } else if (type === 'success') {
@@ -339,7 +338,6 @@
       console.log(consoleMsg);
     }
 
-    // On-screen debug panel
     const debugContent = document.getElementById('debugContent');
     if (debugContent) {
       const entry = document.createElement('div');
@@ -347,8 +345,6 @@
       entry.innerHTML = `<span class="time">${timestamp}</span> ${message}`;
       debugContent.appendChild(entry);
       debugContent.scrollTop = debugContent.scrollHeight;
-      
-      // Limit entries to avoid memory bloat
       if (debugContent.children.length > 50) {
         debugContent.removeChild(debugContent.children[0]);
       }
@@ -410,25 +406,18 @@
     return null;
   }
 
-  /**
-   * Generates a unique external reference:
-   * First three letters of first item (only letters/numbers) + timestamp.
-   */
   function generateExternalReference() {
     if (!cart || cart.length === 0) {
       const fallback = `BMB_${Date.now()}`;
       logDebug(`External ref fallback: ${fallback}`);
       return fallback;
     }
-
     const firstItemName = cart[0].name || '';
     let prefix = firstItemName.trim().substring(0, 3).toUpperCase();
     if (prefix.length < 3) prefix = prefix.padEnd(3, 'X');
-    // Remove any non-alphanumeric characters (only letters and numbers allowed)
     const cleaned = prefix.replace(/[^A-Z0-9]/g, 'X');
     const timestamp = Date.now();
     const ref = `${cleaned}_${timestamp}`;
-    
     logDebug(`Generated external reference: ${ref} (from item: "${firstItemName}")`);
     return ref;
   }
@@ -436,32 +425,26 @@
   /* ── LOAD CART ── */
   async function load(user) {
     logDebug(`Loading cart for user: ${user?.uid || 'none'}`);
-    
     if (!user) {
       document.getElementById('loadingMsg').innerHTML =
         '<p>Please <a href="login.html" style="color:var(--primary);font-weight:600;">log in</a> to checkout.</p>';
       logDebug('No user logged in', 'error');
       return;
     }
-    
     const snap = await getDoc(doc(db, 'users', user.uid));
     cart = snap.data()?.cart || [];
     logDebug(`Cart loaded: ${cart.length} items`);
-    
     if (!cart.length) {
       document.getElementById('loadingMsg').innerHTML =
         '<p>Your cart is empty. <a href="store.html" style="color:var(--primary);font-weight:600;">Continue shopping</a></p>';
       logDebug('Empty cart', 'error');
       return;
     }
-
     orderSubtotal = 0;
     cart.forEach(i => { i._qty = i.qty ?? 1; orderSubtotal += i.price * i._qty; });
     orderTax   = Math.round(orderSubtotal * 0.16);
     orderTotal = orderSubtotal + orderShipping + orderTax;
-
     logDebug(`Order totals - Subtotal: K${orderSubtotal}, Tax: K${orderTax}, Total: K${orderTotal}`);
-
     document.getElementById('orderItemsList').innerHTML = cart.map(i => {
       const img = i.img
         ? `<img class="oi-img" src="${i.img}" alt="">`
@@ -478,13 +461,11 @@
           <div class="oi-price">K${(i.price * i._qty).toLocaleString()}</div>
         </div>`;
     }).join('');
-
     document.getElementById('summaryRows').innerHTML = `
       <div class="sum-row"><span>Subtotal</span><span>K${orderSubtotal.toLocaleString()}</span></div>
       <div class="sum-row"><span>Shipping</span><span>K${orderShipping}</span></div>
       <div class="sum-row"><span>Tax (16%)</span><span>K${orderTax.toLocaleString()}</span></div>
       <div class="sum-row total"><span>Total</span><span>K${orderTotal.toLocaleString()}</span></div>`;
-
     document.getElementById('loadingMsg').style.display = 'none';
     document.getElementById('checkoutGrid').style.display = 'grid';
     updatePayBtn();
@@ -503,52 +484,35 @@
     }
     logDebug(`Payer number: ${payerNumber}`);
 
-    // 1. Generate external reference
     const externalRef = generateExternalReference();
-    logDebug(`External reference for PrimeNet: ${externalRef}`);
-
-    // 2. Create narration from cart items
     const narration = `BMB Order: ${cart.map(i => `${i.name} x${i._qty}`).join(', ').substring(0, 80)}`;
     logDebug(`Narration: ${narration}`);
 
     setBtnLoading('Sending payment request…');
 
-    // 3. Create order in Firestore
-    logDebug('Creating Firestore order...');
+    // Create Firestore order
     try {
-      const orderData = {
+      const orderRef = await addDoc(collection(db, 'orders'), {
         userId: auth.currentUser.uid,
         items: cart.map(i => ({
-          id: i.id,
-          name: i.name,
-          price: i.price,
-          qty: i._qty,
-          storage: i.storage || null,
-          color: i.color || null
+          id: i.id, name: i.name, price: i.price, qty: i._qty,
+          storage: i.storage || null, color: i.color || null
         })),
-        subtotal: orderSubtotal,
-        shipping: orderShipping,
-        tax: orderTax,
-        totalAmount: orderTotal,
-        payerNumber,
-        paymentMethod: 'mobile_money',
-        externalReference: externalRef,
-        narration: narration,
-        status: 'pending',
-        createdAt: serverTimestamp()
-      };
-      
-      const orderRef = await addDoc(collection(db, 'orders'), orderData);
+        subtotal: orderSubtotal, shipping: orderShipping, tax: orderTax,
+        totalAmount: orderTotal, payerNumber, paymentMethod: 'mobile_money',
+        externalReference: externalRef, narration: narration,
+        status: 'pending', createdAt: serverTimestamp()
+      });
       currentOrderId = orderRef.id;
-      logDebug(`Order created with ID: ${currentOrderId}`, 'success');
+      logDebug(`Order created: ${currentOrderId}`, 'success');
     } catch (e) {
-      logDebug(`Firestore order creation failed: ${e.message}`, 'error');
+      logDebug(`Order creation failed: ${e.message}`, 'error');
       showToast('Could not save order. Please try again.', true);
       updatePayBtn();
       return;
     }
 
-    // 4. Prepare PrimeNet payload
+    // Prepare PrimeNet payload
     const payload = {
       payer_number: payerNumber,
       external_reference: externalRef,
@@ -558,17 +522,20 @@
       account_number: PRIMENET_ACCOUNT_NUMBER
     };
     
-    logDebug(`PrimeNet payload: ${JSON.stringify(payload, null, 2)}`);
+    const bodyString = JSON.stringify(payload);
+    logDebug(`PrimeNet payload: ${bodyString}`);
     logDebug(`Calling PrimeNet API: ${PRIMENET_API_URL}`);
 
     try {
+      // Use fetch with explicit headers and mode: 'cors'
       const response = await fetch(PRIMENET_API_URL, {
         method: 'POST',
+        mode: 'cors',
         headers: {
           'X-Authorization': PRIMENET_API_KEY,
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(payload)
+        body: bodyString
       });
 
       logDebug(`Response status: ${response.status} ${response.statusText}`);
@@ -577,43 +544,29 @@
       logDebug(`PrimeNet response: ${JSON.stringify(result, null, 2)}`);
 
       if (result.status === 'success') {
-        logDebug(`Payment request successful! Transaction ID: ${result.transaction_id}`, 'success');
-        
-        // Update order with transaction ID
+        logDebug(`Success! Transaction ID: ${result.transaction_id}`, 'success');
         await updateDoc(doc(db, 'orders', currentOrderId), {
           primenetTransactionId: result.transaction_id,
           status: 'awaiting_payment'
         });
-        logDebug(`Order ${currentOrderId} updated with transaction ID`);
-
-        // Clear user's cart
         await updateDoc(doc(db, 'users', auth.currentUser.uid), { cart: [] });
-        logDebug('User cart cleared');
-
-        // Show waiting overlay
         document.getElementById('waitNumber').textContent = `+${payerNumber}`;
         document.getElementById('waitOverlay').classList.add('show');
-        logDebug('Waiting overlay displayed');
         updatePayBtn();
       } else {
-        // Payment request failed
         const errorMsg = result.message || 'Payment request rejected';
-        logDebug(`PrimeNet returned failure: ${errorMsg}`, 'error');
-        
+        logDebug(`PrimeNet failure: ${errorMsg}`, 'error');
         await updateDoc(doc(db, 'orders', currentOrderId), {
-          status: 'failed',
-          error: errorMsg
+          status: 'failed', error: errorMsg
         });
         showToast(`Payment failed: ${errorMsg}`, true);
         updatePayBtn();
       }
     } catch (error) {
-      logDebug(`API network error: ${error.message}`, 'error');
+      logDebug(`Network error: ${error.message}`, 'error');
       console.error('Full error:', error);
-      
       await updateDoc(doc(db, 'orders', currentOrderId), {
-        status: 'failed',
-        error: error.message
+        status: 'failed', error: error.message
       });
       showToast('Network error. Please try again.', true);
       updatePayBtn();
@@ -622,20 +575,16 @@
     logDebug('=== PAYMENT HANDLER COMPLETED ===');
   };
 
-  /* Go to confirmation after user approves */
   window.goToConfirmation = () => {
-    logDebug('User clicked "I\'ve Approved", redirecting to confirmation.html');
+    logDebug('Redirecting to confirmation.html');
     document.getElementById('waitOverlay').classList.remove('show');
     window.location.href = 'confirmation.html';
   };
 
-  /* ── ACCOUNT NAV ── */
   function handleAccount() {
     if (auth.currentUser) {
-      logDebug('Navigating to profile');
       window.location.href = 'profile.html';
     } else {
-      logDebug('Login required');
       if (confirm('Please log in to continue.')) window.location.href = 'login.html';
     }
   }
@@ -643,13 +592,11 @@
   document.getElementById('accountIcon').onclick  = e => { e.preventDefault(); handleAccount(); };
 
   observeAuthState(user => {
-    logDebug(`Auth state changed: ${user ? 'logged in' : 'logged out'}`);
     document.querySelector('#accountIcon i').className =
       user ? 'fa-solid fa-circle-user' : 'fa-regular fa-circle-user';
     load(user);
   });
 
-  // Initial log
   logDebug('Checkout page initialized');
 </script>
 </body>
