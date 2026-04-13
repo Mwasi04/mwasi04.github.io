@@ -66,6 +66,7 @@
     .btn-secondary { background: var(--gray-200); color: var(--dark); }
     .btn-outline { background: transparent; border: 2px solid var(--gray-200); color: var(--dark); }
     .btn-outline:hover { border-color: var(--primary); color: var(--primary); }
+    .btn-danger { background: #fee2e2; color: #ef4444; }
     .page-actions { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
     .filters-section { background: white; border-radius: var(--radius-lg); padding: 1.5rem; margin-bottom: 2rem; box-shadow: var(--shadow); }
     .filters-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(200px,1fr)); gap: 1rem; }
@@ -124,14 +125,48 @@
     .add-storage-btn { margin: 0.5rem 0; }
     .variant-image { margin-top: 1rem; }
     .variant-image .current-image { max-width: 100px; border-radius: var(--radius-sm); margin-bottom: 0.5rem; }
-    .img-preview-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(80px,1fr)); gap: 8px; margin-top: 12px; }
-    .img-preview-item { position: relative; aspect-ratio: 1; border-radius: var(--radius-md); overflow: hidden; border: 2px solid var(--gray-200); background: var(--gray-100); }
-    .img-preview-item img { width: 100%; height: 100%; object-fit: cover; }
-    .img-preview-item .remove-img-btn { position: absolute; top: 4px; right: 4px; width: 22px; height: 22px; background: rgba(0,0,0,0.65); color: white; border: none; border-radius: 50%; cursor: pointer; }
-    .upload-zone { border: 2px dashed var(--gray-200); border-radius: var(--radius-lg); padding: 1rem; text-align: center; cursor: pointer; background: var(--gray-100); margin-top: 0.5rem; }
-    .toast { position: fixed; bottom: 30px; right: 30px; background: white; padding: 1rem 1.5rem; border-radius: 100px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); display: flex; align-items: center; gap: 10px; transform: translateX(400px); transition: 0.35s; z-index: 9999; }
+    .upload-zone {
+      border: 2px dashed var(--gray-200);
+      border-radius: var(--radius-lg);
+      padding: 0.8rem;
+      text-align: center;
+      cursor: pointer;
+      background: white;
+      margin-top: 0.5rem;
+      position: relative;
+    }
+    .upload-zone input {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+    }
+    .upload-status {
+      font-size: 0.75rem;
+      color: var(--primary);
+      margin-top: 0.5rem;
+    }
+    .toast {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background: white;
+      padding: 1rem 1.5rem;
+      border-radius: 100px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transform: translateX(400px);
+      transition: 0.35s;
+      z-index: 9999;
+    }
     .toast.show { transform: translateX(0); }
-    @media (max-width: 768px) { .admin-sidebar { display: none; } .admin-main { margin-left: 0; padding: 1rem; } .form-row { grid-template-columns: 1fr; } }
+    @media (max-width: 768px) {
+      .admin-sidebar { display: none; }
+      .admin-main { margin-left: 0; padding: 1rem; }
+      .form-row { grid-template-columns: 1fr; }
+    }
   </style>
 </head>
 <body>
@@ -184,6 +219,14 @@
   let colorVariants = []; // each: { color, imageFile, imageUrl, storageOptions: [{ storage, stock }] }
   let editingProductId = null;
 
+  // Helper: show toast message
+  function showToast(msg, isError = false) {
+    const toast = document.getElementById('toast');
+    toast.querySelector('span').textContent = msg;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 3000);
+  }
+
   observeAuthState(async user => {
     if (!user) { window.location.href = '../login.html'; return; }
     const admin = await isUserAdmin(user.uid);
@@ -195,10 +238,15 @@
   });
 
   async function loadProducts() {
-    const snap = await getDocs(query(collection(db, "products"), orderBy("createdAt", "desc")));
-    allProducts = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-    updateFilters();
-    displayProducts(allProducts);
+    try {
+      const snap = await getDocs(query(collection(db, "products"), orderBy("createdAt", "desc")));
+      allProducts = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      updateFilters();
+      displayProducts(allProducts);
+    } catch (err) {
+      console.error(err);
+      showToast('Failed to load products', true);
+    }
   }
   function updateFilters() {
     const cats = [...new Set(allProducts.map(p=>p.category).filter(Boolean))];
@@ -246,6 +294,7 @@
             <input type="file" accept="image/*" onchange="uploadVariantImage(${idx}, this.files[0])">
             <div><i class="fa-solid fa-cloud-upload-alt"></i> Click to upload image for this color</div>
           </div>
+          <div id="upload-status-${idx}" class="upload-status" style="display:none;">Uploading...</div>
         </div>
       `;
       container.appendChild(card);
@@ -289,19 +338,43 @@
     colorVariants[idx].storageOptions.splice(optIdx, 1);
     renderVariants();
   };
+
+  // Fixed upload function with proper authentication and error handling
   window.uploadVariantImage = async (idx, file) => {
     if (!file) return;
-    // Upload to Firebase Storage temporary? We'll upload during save or immediately? Better to upload immediately to get URL for preview.
-    const tempId = Date.now() + '_' + idx;
-    const path = `temp_products/${tempId}_${file.name}`;
+    if (!auth.currentUser) {
+      showToast('You must be logged in to upload images', true);
+      return;
+    }
+    const statusDiv = document.getElementById(`upload-status-${idx}`);
+    if (statusDiv) statusDiv.style.display = 'block';
+    const timestamp = Date.now();
+    const safeName = file.name.replace(/[^a-zA-Z0-9.]/g, '_');
+    const path = `temp_products/${timestamp}_${idx}_${safeName}`;
     const storageRef = ref(storage, path);
-    const task = uploadBytesResumable(storageRef, file);
-    task.on('state_changed', null, null, async () => {
-      const url = await getDownloadURL(task.snapshot.ref);
-      colorVariants[idx].imageUrl = url;
-      colorVariants[idx].imageFile = file; // keep for later if we need to move? Actually we already have URL, but we need to keep file ref to possibly delete temp later.
-      renderVariants();
-    });
+    const uploadTask = uploadBytesResumable(storageRef, file);
+    uploadTask.on('state_changed',
+      (snapshot) => {
+        const percent = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+        if (statusDiv) statusDiv.innerText = `Uploading... ${percent}%`;
+      },
+      (error) => {
+        console.error('Upload error:', error);
+        let errorMsg = 'Upload failed. ';
+        if (error.code === 'storage/unauthorized') errorMsg += 'Permission denied. Check Storage rules.';
+        else errorMsg += error.message;
+        showToast(errorMsg, true);
+        if (statusDiv) statusDiv.style.display = 'none';
+      },
+      async () => {
+        const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+        colorVariants[idx].imageUrl = downloadURL;
+        colorVariants[idx].imageFile = file;
+        renderVariants();
+        showToast(`Image uploaded for ${colorVariants[idx].color || 'variant'}`, false);
+        if (statusDiv) statusDiv.style.display = 'none';
+      }
+    );
   };
 
   window.showAddModal = () => {
@@ -325,7 +398,6 @@
     document.getElementById('f-oldprice').value = p.oldPrice || '';
     document.getElementById('f-desc').value = p.description || '';
     document.getElementById('f-shortdesc').value = p.shortDesc || '';
-    // Convert stored variants to colorVariants structure
     colorVariants = (p.variants || []).map(v => ({
       color: v.color,
       imageUrl: v.imageUrl || '',
@@ -344,7 +416,6 @@
       const name = document.getElementById('f-name').value.trim();
       const price = parseFloat(document.getElementById('f-price').value);
       if (!name || isNaN(price)) throw new Error('Name and price required');
-      // Validate variants: each must have color, at least one storage, and image
       for (let v of colorVariants) {
         if (!v.color.trim()) throw new Error('All color variants must have a color name');
         if (!v.imageUrl) throw new Error(`Please upload an image for color: ${v.color}`);
@@ -355,24 +426,6 @@
         }
       }
       if (colorVariants.length === 0) throw new Error('Add at least one color variant');
-      const productId = editingProductId || 'new_' + Date.now();
-      // For new images, we need to move temp images to permanent location
-      const finalVariants = [];
-      for (let v of colorVariants) {
-        let finalImageUrl = v.imageUrl;
-        // If image is still a temp URL (contains 'temp_products'), move it to permanent location
-        if (finalImageUrl && finalImageUrl.includes('temp_products')) {
-          // Re-upload the file from the stored file object? We didn't store File object. Alternative: copy via fetch? Simpler: re-upload from file input? 
-          // For simplicity, we'll keep the temp URL as permanent? Not ideal. Better: during image upload we should upload directly to product-specific path if productId known. But productId may not exist yet for new product.
-          // Workaround: for new product, we can upload after product creation. Let's handle by re-uploading from the file input's file object. We'll store the File in colorVariants when uploading.
-          // But we didn't store File. Let's modify uploadVariantImage to also store File object.
-        }
-        finalVariants.push({
-          color: v.color,
-          imageUrl: finalImageUrl,
-          storageOptions: v.storageOptions.map(opt => ({ storage: opt.storage, stock: opt.stock }))
-        });
-      }
       const productData = {
         name, brand: document.getElementById('f-brand').value.trim() || null,
         type: document.getElementById('f-type').value,
@@ -380,11 +433,14 @@
         price, oldPrice: parseFloat(document.getElementById('f-oldprice').value) || null,
         description: document.getElementById('f-desc').value.trim() || null,
         shortDesc: document.getElementById('f-shortdesc').value.trim() || null,
-        variants: finalVariants,
+        variants: colorVariants.map(v => ({
+          color: v.color,
+          imageUrl: v.imageUrl,
+          storageOptions: v.storageOptions.map(opt => ({ storage: opt.storage, stock: opt.stock }))
+        })),
         updatedAt: new Date().toISOString()
       };
       if (editingProductId) {
-        // Delete old images from storage if changed? Optional.
         await updateDoc(doc(db, "products", editingProductId), productData);
         showToast('Product updated');
       } else {
@@ -403,12 +459,6 @@
     showToast('Product deleted');
     await loadProducts();
   };
-  function showToast(msg, isError=false) {
-    const t = document.getElementById('toast');
-    t.querySelector('span').textContent = msg;
-    t.classList.add('show');
-    setTimeout(() => t.classList.remove('show'), 3000);
-  }
   window.handleLogout = async () => { await signOut(auth); window.location.href = '../login.html'; };
 </script>
 </body>
