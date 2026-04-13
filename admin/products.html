@@ -9,15 +9,9 @@
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     :root {
-      --primary: #00bcd4;
-      --primary-dark: #0097a7;
-      --dark: #0f172a;
-      --gray-100: #f1f5f9;
-      --gray-200: #e2e8f0;
-      --gray-400: #94a3b8;
-      --white: #ffffff;
-      --radius-lg: 1.5rem;
-      --radius-md: 1rem;
+      --primary: #00bcd4; --primary-dark: #0097a7; --dark: #0f172a;
+      --gray-100: #f1f5f9; --gray-200: #e2e8f0; --gray-400: #94a3b8;
+      --white: #ffffff; --radius-lg: 1.5rem; --radius-md: 1rem;
       --shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
     }
     body { font-family: 'Inter', sans-serif; background: var(--gray-100); color: var(--dark); }
@@ -66,113 +60,160 @@
     .btn-secondary { background: var(--gray-200); color: var(--dark); }
     .btn-outline { background: transparent; border: 2px solid var(--gray-200); color: var(--dark); }
     .btn-outline:hover { border-color: var(--primary); color: var(--primary); }
-    .btn-danger { background: #fee2e2; color: #ef4444; }
+    .btn-danger { background: #fee2e2; color: #ef4444; border: none; cursor: pointer; font-family: 'Inter', sans-serif; }
     .page-actions { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
     .filters-section { background: white; border-radius: var(--radius-lg); padding: 1.5rem; margin-bottom: 2rem; box-shadow: var(--shadow); }
-    .filters-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(200px,1fr)); gap: 1rem; }
+    .filters-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; }
     .filter-select, .filter-input { padding: 0.8rem 1rem; border: 2px solid var(--gray-200); border-radius: var(--radius-md); font-family: 'Inter', sans-serif; font-size: 0.9rem; outline: none; }
     .filter-select:focus, .filter-input:focus { border-color: var(--primary); }
     .search-box { display: flex; gap: 0.5rem; }
-    .search-box input { flex: 1; padding: 0.8rem 1rem; border: 2px solid var(--gray-200); border-radius: var(--radius-md); outline: none; }
+    .search-box input { flex: 1; padding: 0.8rem 1rem; border: 2px solid var(--gray-200); border-radius: var(--radius-md); outline: none; font-family: 'Inter', sans-serif; }
     .search-box button { padding: 0.8rem 1.5rem; background: var(--primary); color: white; border: none; border-radius: var(--radius-md); cursor: pointer; }
-    .products-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(280px,1fr)); gap: 1.5rem; }
+    .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; }
     .product-card { background: white; border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow); transition: 0.3s; }
     .product-card:hover { transform: translateY(-4px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
-    .product-image { height: 180px; background: var(--gray-100); display: flex; align-items: center; justify-content: center; padding: 1rem; position: relative; }
-    .product-image img { max-width: 100%; max-height: 100%; object-fit: cover; }
+    .product-image { height: 180px; background: var(--gray-100); display: flex; align-items: center; justify-content: center; padding: 1rem; }
+    .product-image img { max-width: 100%; max-height: 100%; object-fit: contain; }
     .product-info { padding: 1.2rem; }
     .product-name { font-size: 1rem; font-weight: 700; margin-bottom: 0.3rem; }
     .product-price { font-size: 1.2rem; font-weight: 800; color: var(--primary); }
-    .product-stock { font-size: 0.8rem; color: var(--gray-400); margin: 0.5rem 0; }
+    .product-meta { font-size: 0.8rem; color: var(--gray-400); margin: 0.3rem 0; }
     .product-actions { display: flex; gap: 0.5rem; margin-top: 0.8rem; }
-    .product-actions button { flex: 1; padding: 0.55rem; border: none; border-radius: var(--radius-sm); cursor: pointer; font-size: 0.8rem; }
+    .product-actions button { flex: 1; padding: 0.55rem; border: none; border-radius: var(--radius-md); cursor: pointer; font-size: 0.8rem; font-family: 'Inter', sans-serif; font-weight: 600; }
     .edit-btn { background: var(--primary); color: white; }
     .delete-btn { background: #fee2e2; color: #ef4444; }
-    .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(5px); align-items: center; justify-content: center; z-index: 1000; padding: 1rem; }
+
+    /* ── MODAL ── */
+    .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.55); backdrop-filter: blur(5px); align-items: center; justify-content: center; z-index: 1000; padding: 1rem; }
     .modal.show { display: flex; }
-    .modal-content { background: white; border-radius: var(--radius-lg); padding: 2rem; max-width: 800px; width: 95%; max-height: 90vh; overflow-y: auto; animation: slideIn 0.3s ease; }
+    .modal-content { background: white; border-radius: var(--radius-lg); max-width: 860px; width: 95%; max-height: 92vh; overflow-y: auto; animation: slideIn 0.3s ease; display: flex; flex-direction: column; }
     @keyframes slideIn { from { opacity:0; transform:translateY(30px); } to { opacity:1; transform:translateY(0); } }
-    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 2px solid var(--gray-200); }
-    .close-modal { font-size: 1.4rem; cursor: pointer; color: var(--gray-400); transition: 0.3s; width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; border-radius: 50%; }
+
+    /* ── STEPPER ── */
+    .stepper-header { padding: 1.5rem 2rem 0; border-bottom: 2px solid var(--gray-200); }
+    .stepper-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.2rem; }
+    .stepper-top h2 { font-size: 1.3rem; font-weight: 700; }
+    .close-modal { width: 36px; height: 36px; border: none; background: var(--gray-100); border-radius: 50%; cursor: pointer; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; color: var(--gray-400); transition: 0.2s; }
     .close-modal:hover { background: #fee2e2; color: #ef4444; }
-    .form-group { margin-bottom: 1rem; }
+    .step-indicators { display: flex; gap: 0; margin-bottom: -2px; }
+    .step-tab {
+      display: flex; align-items: center; gap: 0.5rem;
+      padding: 0.75rem 1.5rem; border-bottom: 3px solid transparent;
+      font-size: 0.88rem; font-weight: 600; color: var(--gray-400);
+      cursor: default; transition: 0.2s; white-space: nowrap;
+    }
+    .step-tab.active { color: var(--primary); border-bottom-color: var(--primary); }
+    .step-tab.done { color: #22c55e; border-bottom-color: transparent; }
+    .step-num {
+      width: 22px; height: 22px; border-radius: 50%; font-size: 0.72rem;
+      display: flex; align-items: center; justify-content: center; font-weight: 700;
+      background: var(--gray-200); color: var(--gray-400); flex-shrink: 0;
+    }
+    .step-tab.active .step-num { background: var(--primary); color: white; }
+    .step-tab.done .step-num { background: #22c55e; color: white; }
+
+    /* ── STEP PANELS ── */
+    .step-panels { padding: 2rem; flex: 1; }
+    .step-panel { display: none; }
+    .step-panel.active { display: block; }
+    .form-group { margin-bottom: 1.1rem; }
     .form-group label { display: block; margin-bottom: 0.4rem; font-weight: 600; font-size: 0.88rem; }
-    .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 0.8rem 1rem; border: 2px solid var(--gray-200); border-radius: var(--radius-md); font-family: 'Inter', sans-serif; font-size: 0.9rem; }
-    .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: var(--primary); }
-    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
-    .variants-section { margin: 1.5rem 0; border-top: 2px solid var(--gray-200); padding-top: 1.5rem; }
+    .form-group input, .form-group select, .form-group textarea {
+      width: 100%; padding: 0.8rem 1rem; border: 2px solid var(--gray-200);
+      border-radius: var(--radius-md); font-family: 'Inter', sans-serif; font-size: 0.9rem;
+      outline: none; transition: border-color 0.2s;
+    }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--primary); }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .form-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; }
+
+    /* ── STEP 1: TYPE SELECTION ── */
+    .type-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-top: 0.5rem; }
+    .type-card {
+      border: 2px solid var(--gray-200); border-radius: var(--radius-md);
+      padding: 1.5rem; cursor: pointer; transition: 0.2s; text-align: center;
+    }
+    .type-card:hover { border-color: var(--primary); }
+    .type-card.selected { border-color: var(--primary); background: rgba(0,188,212,0.06); }
+    .type-card .type-icon { font-size: 2rem; margin-bottom: 0.5rem; }
+    .type-card .type-name { font-weight: 700; font-size: 0.95rem; }
+    .type-card .type-desc { font-size: 0.8rem; color: var(--gray-400); margin-top: 0.25rem; }
+
+    /* ── VARIANT CARDS ── */
+    .variants-list { display: flex; flex-direction: column; gap: 1.2rem; margin-bottom: 1.2rem; }
     .variant-card {
-      background: var(--gray-100);
-      border-radius: var(--radius-md);
-      padding: 1rem;
-      margin-bottom: 1rem;
-      border: 1px solid var(--gray-200);
+      background: var(--gray-100); border-radius: var(--radius-md);
+      border: 1.5px solid var(--gray-200); overflow: hidden;
     }
-    .variant-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 1rem;
+    .variant-card-head {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0.9rem 1.2rem; background: white; border-bottom: 1.5px solid var(--gray-200);
     }
-    .variant-color-input { width: 200px; }
-    .storage-row {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      margin-bottom: 0.5rem;
+    .variant-card-head .color-badge {
+      display: flex; align-items: center; gap: 0.6rem; font-weight: 700; font-size: 0.9rem;
     }
-    .storage-row input { flex: 1; }
-    .add-storage-btn { margin: 0.5rem 0; }
-    .variant-image { margin-top: 1rem; }
-    .variant-image .current-image { max-width: 100px; border-radius: var(--radius-sm); margin-bottom: 0.5rem; }
+    .variant-card-body { padding: 1.2rem; display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
+    .variant-section-label { font-size: 0.78rem; font-weight: 700; text-transform: uppercase; color: var(--gray-400); letter-spacing: 0.04em; margin-bottom: 0.6rem; }
+
+    /* Storage rows */
+    .storage-list { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 0.6rem; }
+    .storage-row { display: flex; align-items: center; gap: 0.5rem; }
+    .storage-row input { padding: 0.55rem 0.75rem; border: 1.5px solid var(--gray-200); border-radius: var(--radius-md); font-family: 'Inter', sans-serif; font-size: 0.85rem; outline: none; }
+    .storage-row input:focus { border-color: var(--primary); }
+    .storage-row input.storage-name { flex: 1; }
+    .storage-row input.storage-qty { width: 90px; }
+    .storage-row .remove-storage { width: 28px; height: 28px; border: none; border-radius: 50%; background: #fee2e2; color: #ef4444; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; flex-shrink: 0; }
+    .btn-add-storage { display: flex; align-items: center; gap: 0.4rem; padding: 0.45rem 0.9rem; background: white; border: 1.5px dashed var(--gray-200); border-radius: 100px; font-size: 0.82rem; font-weight: 600; color: var(--gray-400); cursor: pointer; transition: 0.2s; font-family: 'Inter', sans-serif; }
+    .btn-add-storage:hover { border-color: var(--primary); color: var(--primary); }
+
+    /* Image upload */
     .upload-zone {
-      border: 2px dashed var(--gray-200);
-      border-radius: var(--radius-lg);
-      padding: 0.8rem;
-      text-align: center;
-      cursor: pointer;
-      background: white;
-      margin-top: 0.5rem;
-      position: relative;
+      border: 2px dashed var(--gray-200); border-radius: var(--radius-md);
+      padding: 1rem; text-align: center; cursor: pointer; background: white;
+      position: relative; transition: 0.2s; min-height: 100px;
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.4rem;
     }
-    .upload-zone input {
-      position: absolute;
-      inset: 0;
-      opacity: 0;
-      cursor: pointer;
+    .upload-zone:hover { border-color: var(--primary); }
+    .upload-zone input { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+    .upload-zone .uploaded-preview { width: 80px; height: 80px; object-fit: contain; border-radius: 8px; }
+    .upload-zone .upload-placeholder { font-size: 0.82rem; color: var(--gray-400); }
+    .upload-zone .upload-placeholder i { font-size: 1.4rem; margin-bottom: 0.3rem; display: block; }
+    .upload-progress { font-size: 0.75rem; color: var(--primary); font-weight: 600; margin-top: 0.3rem; }
+
+    /* Add color button */
+    .btn-add-color {
+      display: flex; align-items: center; justify-content: center; gap: 0.6rem;
+      width: 100%; padding: 0.85rem; border: 2px dashed var(--gray-200);
+      border-radius: var(--radius-md); background: white; cursor: pointer;
+      font-size: 0.9rem; font-weight: 600; color: var(--gray-400);
+      transition: 0.2s; font-family: 'Inter', sans-serif;
     }
-    .upload-status {
-      font-size: 0.75rem;
-      color: var(--primary);
-      margin-top: 0.5rem;
-    }
-    .toast {
-      position: fixed;
-      bottom: 30px;
-      right: 30px;
-      background: white;
-      padding: 1rem 1.5rem;
-      border-radius: 100px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      transform: translateX(400px);
-      transition: 0.35s;
-      z-index: 9999;
-    }
+    .btn-add-color:hover { border-color: var(--primary); color: var(--primary); background: rgba(0,188,212,0.04); }
+
+    /* ── STEP FOOTER ── */
+    .step-footer { padding: 1.2rem 2rem; border-top: 2px solid var(--gray-200); display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
+    .step-footer-right { display: flex; gap: 0.8rem; }
+    .step-hint { font-size: 0.82rem; color: var(--gray-400); }
+
+    /* ── TOAST ── */
+    .toast { position: fixed; bottom: 30px; right: 30px; background: var(--dark); color: white; padding: 0.9rem 1.5rem; border-radius: 100px; display: flex; align-items: center; gap: 10px; transform: translateX(420px); transition: 0.35s; z-index: 9999; font-size: 0.9rem; }
     .toast.show { transform: translateX(0); }
+    .toast.error { background: #ef4444; }
+
     @media (max-width: 768px) {
       .admin-sidebar { display: none; }
       .admin-main { margin-left: 0; padding: 1rem; }
-      .form-row { grid-template-columns: 1fr; }
+      .form-row, .form-row-3, .type-grid, .variant-card-body { grid-template-columns: 1fr; }
+      .step-tab span.step-label { display: none; }
     }
   </style>
 </head>
 <body>
 <div class="admin-container">
   <aside class="admin-sidebar">
-    <div class="sidebar-header"><a href="dashboard.html"><img src="../photos/logo.png" alt="logo"><h2>BMB<span>Admin</span></h2></a></div>
+    <div class="sidebar-header">
+      <a href="dashboard.html"><img src="../photos/logo.png" alt="logo"><h2>BMB<span>Admin</span></h2></a>
+    </div>
     <div class="sidebar-menu">
       <div class="menu-item"><a href="dashboard.html"><i class="fa-solid fa-gauge"></i> Dashboard</a></div>
       <div class="menu-item"><a href="users.html"><i class="fa-solid fa-users"></i> Users</a></div>
@@ -181,285 +222,516 @@
       <div class="menu-item logout"><a href="#" onclick="handleLogout()"><i class="fa-solid fa-sign-out"></i> Logout</a></div>
     </div>
   </aside>
+
   <main class="admin-main">
-    <header class="admin-header"><div class="header-title"><h1>Products</h1><p>Manage products with color variants and storage options</p></div><div class="header-profile"><div class="profile-avatar" id="adminInitials">A</div><div><div style="font-weight:600" id="adminName">Admin</div><div style="font-size:0.8rem;">Administrator</div></div></div></header>
-    <div class="page-actions"><h2>All Products</h2><button class="btn btn-primary" onclick="showAddModal()"><i class="fa-solid fa-plus"></i> Add New Product</button></div>
-    <div class="filters-section"><div class="filters-grid"><select class="filter-select" id="categoryFilter" onchange="filterProducts()"><option value="all">All Categories</option></select><select class="filter-select" id="brandFilter" onchange="filterProducts()"><option value="all">All Brands</option></select><div class="search-box"><input type="text" id="searchInput" placeholder="Search..."><button onclick="filterProducts()"><i class="fa-solid fa-search"></i></button></div></div></div>
-    <div class="products-grid" id="productsGrid"><div style="grid-column:1/-1;text-align:center;padding:3rem"><div class="loading-spinner"></div><p>Loading...</p></div></div>
+    <header class="admin-header">
+      <div class="header-title"><h1>Products</h1><p>Manage products with color variants and storage options</p></div>
+      <div class="header-profile">
+        <div class="profile-avatar" id="adminInitials">A</div>
+        <div><div style="font-weight:600" id="adminName">Admin</div><div style="font-size:0.8rem;">Administrator</div></div>
+      </div>
+    </header>
+
+    <div class="page-actions">
+      <h2>All Products</h2>
+      <button class="btn btn-primary" onclick="showAddModal()"><i class="fa-solid fa-plus"></i> Add New Product</button>
+    </div>
+
+    <div class="filters-section">
+      <div class="filters-grid">
+        <select class="filter-select" id="categoryFilter" onchange="filterProducts()"><option value="all">All Categories</option></select>
+        <select class="filter-select" id="brandFilter" onchange="filterProducts()"><option value="all">All Brands</option></select>
+        <div class="search-box">
+          <input type="text" id="searchInput" placeholder="Search products...">
+          <button onclick="filterProducts()"><i class="fa-solid fa-search"></i></button>
+        </div>
+      </div>
+    </div>
+
+    <div class="products-grid" id="productsGrid">
+      <div style="grid-column:1/-1;text-align:center;padding:3rem;color:var(--gray-400)">
+        <i class="fa-solid fa-spinner fa-spin" style="font-size:2rem;margin-bottom:1rem;display:block"></i>Loading products…
+      </div>
+    </div>
   </main>
 </div>
 
-<!-- Modal -->
-<div id="productModal" class="modal"><div class="modal-content"><div class="modal-header"><h2 id="modalTitle">Add Product</h2><span class="close-modal" onclick="closeModal()">&times;</span></div><form id="productForm" onsubmit="handleSubmit(event)"><input type="hidden" id="editProductId">
-  <div class="form-group"><label>Product Name *</label><input type="text" id="f-name" required></div>
-  <div class="form-row"><div class="form-group"><label>Brand</label><input type="text" id="f-brand"></div><div class="form-group"><label>Product Type *</label><select id="f-type" required><option value="">Select type</option><option value="Smartphone">Smartphone</option><option value="Laptop">Laptop</option><option value="Tablet">Tablet</option><option value="Accessory">Accessory</option></select></div><div class="form-group"><label>Category</label><select id="f-category"><option value="phones">Phones</option><option value="laptops">Laptops</option><option value="accessories">Accessories</option><option value="tablets">Tablets</option></select></div></div>
-  <div class="form-row"><div class="form-group"><label>Price (K) *</label><input type="number" id="f-price" step="0.01" required></div><div class="form-group"><label>Old Price (K)</label><input type="number" id="f-oldprice" step="0.01"></div></div>
-  <div class="form-group"><label>Description</label><textarea id="f-desc" rows="3"></textarea></div>
-  <div class="form-group"><label>Short Description</label><textarea id="f-shortdesc" rows="2"></textarea></div>
+<!-- ═══════════════ MODAL ═══════════════ -->
+<div id="productModal" class="modal">
+  <div class="modal-content">
 
-  <!-- Color Variants Section -->
-  <div class="variants-section"><h3>Color Variants</h3><p style="font-size:0.8rem;color:var(--gray-400);margin-bottom:1rem;">Each color has its own image and storage options with quantities.</p>
-    <div id="variantsContainer"></div>
-    <button type="button" class="btn btn-outline" onclick="addColorVariant()"><i class="fa-solid fa-plus"></i> Add Color</button>
+    <!-- Stepper Header -->
+    <div class="stepper-header">
+      <div class="stepper-top">
+        <h2 id="modalTitle">Add New Product</h2>
+        <button class="close-modal" onclick="closeModal()"><i class="fa-solid fa-times"></i></button>
+      </div>
+      <div class="step-indicators">
+        <div class="step-tab active" id="tab-1">
+          <div class="step-num">1</div><span class="step-label">Product Type</span>
+        </div>
+        <div class="step-tab" id="tab-2">
+          <div class="step-num">2</div><span class="step-label">Details</span>
+        </div>
+        <div class="step-tab" id="tab-3">
+          <div class="step-num">3</div><span class="step-label">Colors &amp; Variants</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── STEP 1: Product Type ── -->
+    <div class="step-panels">
+      <div class="step-panel active" id="panel-1">
+        <p style="color:var(--gray-400);font-size:0.9rem;margin-bottom:1.2rem">Select the type of product you are adding.</p>
+        <div class="type-grid" id="typeGrid">
+          <div class="type-card" data-type="Smartphone" onclick="selectType(this)">
+            <div class="type-icon">📱</div>
+            <div class="type-name">Smartphone</div>
+            <div class="type-desc">Mobile phones &amp; handsets</div>
+          </div>
+          <div class="type-card" data-type="Laptop" onclick="selectType(this)">
+            <div class="type-icon">💻</div>
+            <div class="type-name">Laptop</div>
+            <div class="type-desc">Notebooks &amp; ultrabooks</div>
+          </div>
+          <div class="type-card" data-type="Tablet" onclick="selectType(this)">
+            <div class="type-icon">📟</div>
+            <div class="type-name">Tablet</div>
+            <div class="type-desc">iPads &amp; Android tablets</div>
+          </div>
+          <div class="type-card" data-type="Accessory" onclick="selectType(this)">
+            <div class="type-icon">🎧</div>
+            <div class="type-name">Accessory</div>
+            <div class="type-desc">Cables, cases, earbuds &amp; more</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── STEP 2: Product Details ── -->
+      <div class="step-panel" id="panel-2">
+        <div class="form-row">
+          <div class="form-group"><label>Product Name *</label><input type="text" id="f-name" placeholder="e.g. Samsung Galaxy S24"></div>
+          <div class="form-group"><label>Brand</label><input type="text" id="f-brand" placeholder="e.g. Samsung"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Price (K) *</label><input type="number" id="f-price" step="0.01" placeholder="0.00"></div>
+          <div class="form-group"><label>Old / Compare Price (K)</label><input type="number" id="f-oldprice" step="0.01" placeholder="0.00"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Category</label>
+            <select id="f-category">
+              <option value="phones">Phones</option>
+              <option value="laptops">Laptops</option>
+              <option value="tablets">Tablets</option>
+              <option value="accessories">Accessories</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Product Type</label>
+            <input type="text" id="f-type-display" readonly style="background:var(--gray-100);cursor:not-allowed;">
+          </div>
+        </div>
+        <div class="form-group"><label>Description</label><textarea id="f-desc" rows="3" placeholder="Full product description…"></textarea></div>
+        <div class="form-group"><label>Short Description</label><textarea id="f-shortdesc" rows="2" placeholder="Brief summary shown on listing cards…"></textarea></div>
+      </div>
+
+      <!-- ── STEP 3: Colors & Variants ── -->
+      <div class="step-panel" id="panel-3">
+        <p style="color:var(--gray-400);font-size:0.88rem;margin-bottom:1.2rem">
+          Each color variant has its <strong>own image</strong> and <strong>storage options with quantities</strong>.
+        </p>
+        <div class="variants-list" id="variantsList"></div>
+        <button class="btn-add-color" onclick="addColorVariant()">
+          <i class="fa-solid fa-plus"></i> Add Color Variant
+        </button>
+      </div>
+    </div>
+
+    <!-- Step Footer -->
+    <div class="step-footer">
+      <div class="step-hint" id="stepHint">Choose a product type to continue.</div>
+      <div class="step-footer-right">
+        <button class="btn btn-secondary" id="btnBack" onclick="goStep(-1)" style="display:none">← Back</button>
+        <button class="btn btn-primary" id="btnNext" onclick="goStep(1)">Next →</button>
+        <button class="btn btn-primary" id="btnSave" onclick="handleSubmit()" style="display:none">
+          <i class="fa-solid fa-floppy-disk"></i> Save Product
+        </button>
+      </div>
+    </div>
+
   </div>
-
-  <div style="display:flex;gap:1rem;margin-top:2rem;"><button type="submit" class="btn btn-primary" style="flex:1">Save Product</button><button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button></div>
-</form></div></div>
+</div>
 
 <div class="toast" id="toast"><i class="fa-regular fa-circle-check"></i><span>Done!</span></div>
 
+<!-- ═══════════════ SCRIPT ═══════════════ -->
 <script type="module">
-  import { auth, db, storage } from '../js/firebase-config.js';
-  import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc, query, orderBy, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-  import { ref, uploadBytesResumable, getDownloadURL, deleteObject } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
-  import { signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-  import { observeAuthState, isUserAdmin } from '../js/auth.js';
+import { auth, db, storage } from '../js/firebase-config.js';
+import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc, query, orderBy, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
+import { signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+import { observeAuthState, isUserAdmin } from '../js/auth.js';
 
-  let allProducts = [];
-  let colorVariants = []; // each: { color, imageFile, imageUrl, storageOptions: [{ storage, stock }] }
-  let editingProductId = null;
+/* ─── STATE ─── */
+let allProducts = [];
+let colorVariants = [];  // [{ color, imageUrl, imageFile, storageOptions: [{ storage, stock }] }]
+let currentStep = 1;
+let selectedType = '';
+let editingProductId = null;
 
-  // Helper: show toast message
-  function showToast(msg, isError = false) {
-    const toast = document.getElementById('toast');
-    toast.querySelector('span').textContent = msg;
-    toast.classList.add('show');
-    setTimeout(() => toast.classList.remove('show'), 3000);
+/* ─── TOAST ─── */
+function showToast(msg, isError = false) {
+  const t = document.getElementById('toast');
+  t.querySelector('span').textContent = msg;
+  t.className = 'toast show' + (isError ? ' error' : '');
+  setTimeout(() => t.classList.remove('show'), 3200);
+}
+
+/* ─── AUTH ─── */
+observeAuthState(async user => {
+  if (!user) { window.location.href = '../login.html'; return; }
+  const admin = await isUserAdmin(user.uid);
+  if (!admin) { alert('Access denied.'); window.location.href = '../index.html'; return; }
+  const ud = await getDoc(doc(db, 'users', user.uid));
+  document.getElementById('adminName').textContent = ud.data()?.name || 'Admin';
+  document.getElementById('adminInitials').textContent = (ud.data()?.name || 'A').charAt(0).toUpperCase();
+  await loadProducts();
+});
+
+/* ─── LOAD / DISPLAY ─── */
+async function loadProducts() {
+  try {
+    const snap = await getDocs(query(collection(db, 'products'), orderBy('createdAt', 'desc')));
+    allProducts = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    updateFilters();
+    displayProducts(allProducts);
+  } catch (e) { showToast('Failed to load products', true); }
+}
+
+function updateFilters() {
+  const cats = [...new Set(allProducts.map(p => p.category).filter(Boolean))];
+  document.getElementById('categoryFilter').innerHTML = '<option value="all">All Categories</option>' + cats.map(c => `<option value="${c}">${c}</option>`).join('');
+  const brands = [...new Set(allProducts.map(p => p.brand).filter(Boolean))];
+  document.getElementById('brandFilter').innerHTML = '<option value="all">All Brands</option>' + brands.map(b => `<option value="${b}">${b}</option>`).join('');
+}
+
+function displayProducts(products) {
+  const grid = document.getElementById('productsGrid');
+  if (!products.length) {
+    grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:3rem;color:var(--gray-400)">No products found.</div>';
+    return;
   }
-
-  observeAuthState(async user => {
-    if (!user) { window.location.href = '../login.html'; return; }
-    const admin = await isUserAdmin(user.uid);
-    if (!admin) { alert('Access denied.'); window.location.href = '../index.html'; return; }
-    const userDoc = await getDoc(doc(db, "users", user.uid));
-    document.getElementById('adminName').textContent = userDoc.data()?.name || 'Admin';
-    document.getElementById('adminInitials').textContent = (userDoc.data()?.name || 'A').charAt(0);
-    await loadProducts();
-  });
-
-  async function loadProducts() {
-    try {
-      const snap = await getDocs(query(collection(db, "products"), orderBy("createdAt", "desc")));
-      allProducts = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-      updateFilters();
-      displayProducts(allProducts);
-    } catch (err) {
-      console.error(err);
-      showToast('Failed to load products', true);
-    }
-  }
-  function updateFilters() {
-    const cats = [...new Set(allProducts.map(p=>p.category).filter(Boolean))];
-    document.getElementById('categoryFilter').innerHTML = '<option value="all">All Categories</option>' + cats.map(c=>`<option value="${c}">${c}</option>`).join('');
-    const brands = [...new Set(allProducts.map(p=>p.brand).filter(Boolean))];
-    document.getElementById('brandFilter').innerHTML = '<option value="all">All Brands</option>' + brands.map(b=>`<option value="${b}">${b}</option>`).join('');
-  }
-  function displayProducts(products) {
-    const grid = document.getElementById('productsGrid');
-    if (!products.length) { grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:3rem">No products found.</div>'; return; }
-    grid.innerHTML = products.map(p => {
-      const imgSrc = p.variants?.[0]?.imageUrl || '';
-      const totalStock = p.variants?.reduce((sum, v) => sum + (v.storageOptions?.reduce((s, opt) => s + (opt.stock || 0), 0) || 0), 0) || 0;
-      return `<div class="product-card"><div class="product-image">${imgSrc ? `<img src="${imgSrc}">` : '<span style="font-size:56px">📦</span>'}</div><div class="product-info"><div class="product-name">${p.name}</div><div class="product-price">K${(p.price||0).toLocaleString()}</div><div class="product-stock">Total stock: ${totalStock}</div><div class="product-actions"><button class="edit-btn" onclick="editProduct('${p.id}')">Edit</button><button class="delete-btn" onclick="deleteProduct('${p.id}')">Delete</button></div></div></div>`;
-    }).join('');
-  }
-  window.filterProducts = () => {
-    const cat = document.getElementById('categoryFilter').value;
-    const brand = document.getElementById('brandFilter').value;
-    const search = document.getElementById('searchInput').value.toLowerCase();
-    let f = allProducts.filter(p => (cat==='all'||p.category===cat) && (brand==='all'||p.brand===brand) && (!search||p.name?.toLowerCase().includes(search)));
-    displayProducts(f);
-  };
-
-  // Variant management
-  function renderVariants() {
-    const container = document.getElementById('variantsContainer');
-    if (!container) return;
-    container.innerHTML = '';
-    colorVariants.forEach((variant, idx) => {
-      const card = document.createElement('div');
-      card.className = 'variant-card';
-      card.innerHTML = `
-        <div class="variant-header">
-          <input type="text" class="variant-color-input" placeholder="Color name e.g. Midnight Black" value="${variant.color || ''}" onchange="updateColor(${idx}, this.value)">
-          <button type="button" class="btn-danger" style="background:#fee2e2;border:none;padding:0.3rem 0.8rem;border-radius:100px;" onclick="removeColorVariant(${idx})"><i class="fa-regular fa-trash-can"></i> Remove</button>
+  grid.innerHTML = products.map(p => {
+    const img = p.variants?.[0]?.imageUrl || '';
+    const totalStock = p.variants?.reduce((s, v) => s + (v.storageOptions?.reduce((ss, o) => ss + (o.stock || 0), 0) || 0), 0) || 0;
+    const colors = [...new Set((p.variants || []).map(v => v.color))];
+    return `<div class="product-card">
+      <div class="product-image">${img ? `<img src="${img}" onerror="this.style.display='none'">` : '<span style="font-size:3rem">📦</span>'}</div>
+      <div class="product-info">
+        <div class="product-name">${p.name}</div>
+        <div class="product-meta">${p.brand || ''} · ${p.type || ''}</div>
+        <div class="product-price">K${(p.price || 0).toLocaleString()}</div>
+        <div class="product-meta">Colors: ${colors.join(', ') || '—'} · Stock: ${totalStock}</div>
+        <div class="product-actions">
+          <button class="edit-btn" onclick="editProduct('${p.id}')"><i class="fa-solid fa-pen"></i> Edit</button>
+          <button class="delete-btn" onclick="deleteProduct('${p.id}')"><i class="fa-regular fa-trash-can"></i> Delete</button>
         </div>
-        <div><strong>Storage Options & Quantities</strong></div>
-        <div id="storage-list-${idx}"></div>
-        <button type="button" class="btn-outline add-storage-btn" onclick="addStorageOption(${idx})"><i class="fa-solid fa-plus"></i> Add Storage</button>
-        <div class="variant-image">
-          <strong>Color Image</strong>
-          ${variant.imageUrl ? `<div><img class="current-image" src="${variant.imageUrl}"></div>` : ''}
-          <div class="upload-zone" data-idx="${idx}">
-            <input type="file" accept="image/*" onchange="uploadVariantImage(${idx}, this.files[0])">
-            <div><i class="fa-solid fa-cloud-upload-alt"></i> Click to upload image for this color</div>
-          </div>
-          <div id="upload-status-${idx}" class="upload-status" style="display:none;">Uploading...</div>
-        </div>
-      `;
-      container.appendChild(card);
-      // Render storage rows
-      const storageDiv = document.getElementById(`storage-list-${idx}`);
-      if (storageDiv) {
-        storageDiv.innerHTML = '';
-        (variant.storageOptions || []).forEach((opt, optIdx) => {
-          const row = document.createElement('div');
-          row.className = 'storage-row';
-          row.innerHTML = `
-            <input type="text" placeholder="Storage (e.g. 128GB)" value="${opt.storage || ''}" onchange="updateStorage(${idx}, ${optIdx}, 'storage', this.value)">
-            <input type="number" placeholder="Quantity" value="${opt.stock || 0}" style="width:100px" onchange="updateStorage(${idx}, ${optIdx}, 'stock', parseInt(this.value)||0)">
-            <button type="button" class="btn-danger" style="background:#fee2e2;border:none;padding:0.2rem 0.5rem;border-radius:50%;" onclick="removeStorageOption(${idx}, ${optIdx})"><i class="fa-solid fa-times"></i></button>
-          `;
-          storageDiv.appendChild(row);
-        });
-      }
-    });
+      </div>
+    </div>`;
+  }).join('');
+}
+
+window.filterProducts = () => {
+  const cat = document.getElementById('categoryFilter').value;
+  const brand = document.getElementById('brandFilter').value;
+  const q = document.getElementById('searchInput').value.toLowerCase();
+  displayProducts(allProducts.filter(p =>
+    (cat === 'all' || p.category === cat) &&
+    (brand === 'all' || p.brand === brand) &&
+    (!q || p.name?.toLowerCase().includes(q))
+  ));
+};
+
+/* ─── STEPPER NAVIGATION ─── */
+function setStep(n) {
+  currentStep = n;
+  for (let i = 1; i <= 3; i++) {
+    document.getElementById(`panel-${i}`).classList.toggle('active', i === n);
+    const tab = document.getElementById(`tab-${i}`);
+    tab.classList.remove('active', 'done');
+    if (i === n) tab.classList.add('active');
+    else if (i < n) tab.classList.add('done');
   }
+  document.getElementById('btnBack').style.display = n > 1 ? '' : 'none';
+  document.getElementById('btnNext').style.display = n < 3 ? '' : 'none';
+  document.getElementById('btnSave').style.display = n === 3 ? '' : 'none';
+  const hints = [
+    'Choose a product type to continue.',
+    'Fill in the product details.',
+    'Add at least one color variant with storage options.'
+  ];
+  document.getElementById('stepHint').textContent = hints[n - 1];
+}
 
-  window.addColorVariant = () => {
-    colorVariants.push({ color: '', imageFile: null, imageUrl: '', storageOptions: [] });
-    renderVariants();
-  };
-  window.removeColorVariant = (idx) => {
-    colorVariants.splice(idx, 1);
-    renderVariants();
-  };
-  window.updateColor = (idx, value) => { colorVariants[idx].color = value; };
-  window.addStorageOption = (idx) => {
-    if (!colorVariants[idx].storageOptions) colorVariants[idx].storageOptions = [];
-    colorVariants[idx].storageOptions.push({ storage: '', stock: 0 });
-    renderVariants();
-  };
-  window.updateStorage = (idx, optIdx, field, value) => {
-    if (!colorVariants[idx].storageOptions[optIdx]) return;
-    colorVariants[idx].storageOptions[optIdx][field] = value;
-  };
-  window.removeStorageOption = (idx, optIdx) => {
-    colorVariants[idx].storageOptions.splice(optIdx, 1);
-    renderVariants();
-  };
-
-  // Fixed upload function with proper authentication and error handling
-  window.uploadVariantImage = async (idx, file) => {
-    if (!file) return;
-    if (!auth.currentUser) {
-      showToast('You must be logged in to upload images', true);
-      return;
-    }
-    const statusDiv = document.getElementById(`upload-status-${idx}`);
-    if (statusDiv) statusDiv.style.display = 'block';
-    const timestamp = Date.now();
-    const safeName = file.name.replace(/[^a-zA-Z0-9.]/g, '_');
-    const path = `temp_products/${timestamp}_${idx}_${safeName}`;
-    const storageRef = ref(storage, path);
-    const uploadTask = uploadBytesResumable(storageRef, file);
-    uploadTask.on('state_changed',
-      (snapshot) => {
-        const percent = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
-        if (statusDiv) statusDiv.innerText = `Uploading... ${percent}%`;
-      },
-      (error) => {
-        console.error('Upload error:', error);
-        let errorMsg = 'Upload failed. ';
-        if (error.code === 'storage/unauthorized') errorMsg += 'Permission denied. Check Storage rules.';
-        else errorMsg += error.message;
-        showToast(errorMsg, true);
-        if (statusDiv) statusDiv.style.display = 'none';
-      },
-      async () => {
-        const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-        colorVariants[idx].imageUrl = downloadURL;
-        colorVariants[idx].imageFile = file;
-        renderVariants();
-        showToast(`Image uploaded for ${colorVariants[idx].color || 'variant'}`, false);
-        if (statusDiv) statusDiv.style.display = 'none';
-      }
-    );
-  };
-
-  window.showAddModal = () => {
-    document.getElementById('modalTitle').innerHTML = 'Add New Product';
-    document.getElementById('productForm').reset();
-    editingProductId = null;
-    colorVariants = [];
-    renderVariants();
-    document.getElementById('productModal').classList.add('show');
-  };
-  window.editProduct = async (id) => {
-    const p = allProducts.find(x => x.id === id);
-    if (!p) return;
-    editingProductId = id;
-    document.getElementById('modalTitle').innerHTML = 'Edit Product';
-    document.getElementById('f-name').value = p.name || '';
-    document.getElementById('f-brand').value = p.brand || '';
-    document.getElementById('f-type').value = p.type || 'Smartphone';
-    document.getElementById('f-category').value = p.category || 'phones';
-    document.getElementById('f-price').value = p.price || '';
-    document.getElementById('f-oldprice').value = p.oldPrice || '';
-    document.getElementById('f-desc').value = p.description || '';
-    document.getElementById('f-shortdesc').value = p.shortDesc || '';
-    colorVariants = (p.variants || []).map(v => ({
-      color: v.color,
-      imageUrl: v.imageUrl || '',
-      storageOptions: v.storageOptions || []
-    }));
-    renderVariants();
-    document.getElementById('productModal').classList.add('show');
-  };
-  window.closeModal = () => { document.getElementById('productModal').classList.remove('show'); };
-  window.handleSubmit = async (e) => {
-    e.preventDefault();
-    const btn = document.querySelector('#productForm button[type="submit"]');
-    const originalText = btn.innerHTML;
-    btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving...';
-    try {
+window.goStep = (dir) => {
+  const next = currentStep + dir;
+  if (dir > 0) {
+    // Validate current step before advancing
+    if (currentStep === 1 && !selectedType) { showToast('Please select a product type.', true); return; }
+    if (currentStep === 2) {
       const name = document.getElementById('f-name').value.trim();
       const price = parseFloat(document.getElementById('f-price').value);
-      if (!name || isNaN(price)) throw new Error('Name and price required');
-      for (let v of colorVariants) {
-        if (!v.color.trim()) throw new Error('All color variants must have a color name');
-        if (!v.imageUrl) throw new Error(`Please upload an image for color: ${v.color}`);
-        if (!v.storageOptions || v.storageOptions.length === 0) throw new Error(`Add at least one storage option for color: ${v.color}`);
-        for (let opt of v.storageOptions) {
-          if (!opt.storage.trim()) throw new Error(`Storage field empty for color ${v.color}`);
-          if (opt.stock < 0) throw new Error(`Invalid stock for ${v.color} - ${opt.storage}`);
-        }
-      }
-      if (colorVariants.length === 0) throw new Error('Add at least one color variant');
-      const productData = {
-        name, brand: document.getElementById('f-brand').value.trim() || null,
-        type: document.getElementById('f-type').value,
-        category: document.getElementById('f-category').value,
-        price, oldPrice: parseFloat(document.getElementById('f-oldprice').value) || null,
-        description: document.getElementById('f-desc').value.trim() || null,
-        shortDesc: document.getElementById('f-shortdesc').value.trim() || null,
-        variants: colorVariants.map(v => ({
-          color: v.color,
-          imageUrl: v.imageUrl,
-          storageOptions: v.storageOptions.map(opt => ({ storage: opt.storage, stock: opt.stock }))
-        })),
-        updatedAt: new Date().toISOString()
-      };
-      if (editingProductId) {
-        await updateDoc(doc(db, "products", editingProductId), productData);
-        showToast('Product updated');
-      } else {
-        productData.createdAt = new Date().toISOString();
-        await addDoc(collection(db, "products"), productData);
-        showToast('Product added');
-      }
-      closeModal();
-      await loadProducts();
-    } catch (err) { showToast(err.message, true); }
-    finally { btn.disabled = false; btn.innerHTML = originalText; }
+      if (!name) { showToast('Product name is required.', true); return; }
+      if (isNaN(price) || price <= 0) { showToast('Enter a valid price.', true); return; }
+    }
+  }
+  if (next < 1 || next > 3) return;
+  setStep(next);
+};
+
+/* ─── TYPE SELECTION ─── */
+window.selectType = (card) => {
+  document.querySelectorAll('.type-card').forEach(c => c.classList.remove('selected'));
+  card.classList.add('selected');
+  selectedType = card.dataset.type;
+  document.getElementById('f-type-display').value = selectedType;
+  // Auto-set category from type
+  const map = { Smartphone: 'phones', Laptop: 'laptops', Tablet: 'tablets', Accessory: 'accessories' };
+  if (map[selectedType]) document.getElementById('f-category').value = map[selectedType];
+};
+
+/* ─── VARIANTS RENDER ─── */
+function renderVariants() {
+  const list = document.getElementById('variantsList');
+  if (!list) return;
+  list.innerHTML = '';
+  colorVariants.forEach((v, idx) => {
+    const card = document.createElement('div');
+    card.className = 'variant-card';
+    card.innerHTML = `
+      <div class="variant-card-head">
+        <div class="color-badge">
+          <i class="fa-solid fa-circle" style="color:${v.color ? getCSSColor(v.color) : 'var(--gray-200)'}"></i>
+          <input type="text" value="${v.color || ''}" placeholder="Color name e.g. Midnight Black"
+            style="border:none;background:transparent;font-weight:700;font-size:0.9rem;outline:none;width:220px;"
+            oninput="updateVariantColor(${idx}, this.value)">
+        </div>
+        <button class="btn-danger" style="padding:0.3rem 0.9rem;border-radius:100px;font-size:0.8rem;font-weight:600"
+          onclick="removeVariant(${idx})"><i class="fa-regular fa-trash-can"></i> Remove</button>
+      </div>
+      <div class="variant-card-body">
+        <div>
+          <div class="variant-section-label">Storage Options &amp; Quantities</div>
+          <div class="storage-list" id="storage-list-${idx}"></div>
+          <button class="btn-add-storage" onclick="addStorageOption(${idx})">
+            <i class="fa-solid fa-plus"></i> Add Storage
+          </button>
+        </div>
+        <div>
+          <div class="variant-section-label">Color Image</div>
+          <div class="upload-zone" id="upload-zone-${idx}">
+            <input type="file" accept="image/*" onchange="uploadImage(${idx}, this.files[0])">
+            ${v.imageUrl
+              ? `<img class="uploaded-preview" src="${v.imageUrl}" alt="preview">`
+              : `<div class="upload-placeholder"><i class="fa-solid fa-cloud-arrow-up"></i>Click to upload image</div>`}
+          </div>
+          <div id="upload-prog-${idx}" class="upload-progress" style="display:none"></div>
+        </div>
+      </div>
+    `;
+    list.appendChild(card);
+
+    // Render storage rows
+    const storageList = document.getElementById(`storage-list-${idx}`);
+    (v.storageOptions || []).forEach((opt, oi) => {
+      const row = document.createElement('div');
+      row.className = 'storage-row';
+      row.innerHTML = `
+        <input class="storage-name" type="text" placeholder="e.g. 128GB" value="${opt.storage || ''}"
+          oninput="updateStorage(${idx},${oi},'storage',this.value)">
+        <input class="storage-qty" type="number" placeholder="Qty" value="${opt.stock || 0}" min="0"
+          oninput="updateStorage(${idx},${oi},'stock',parseInt(this.value)||0)">
+        <button class="remove-storage" onclick="removeStorageOption(${idx},${oi})"><i class="fa-solid fa-times"></i></button>
+      `;
+      storageList.appendChild(row);
+    });
+  });
+}
+
+/* Turn color names to approximate CSS colors for the icon */
+function getCSSColor(name) {
+  const map = {
+    black: '#1a1a1a', white: '#e5e5e5', gray: '#9ca3af', grey: '#9ca3af',
+    red: '#ef4444', blue: '#3b82f6', green: '#22c55e', yellow: '#eab308',
+    gold: '#d97706', silver: '#94a3b8', purple: '#a855f7', pink: '#ec4899',
+    orange: '#f97316', brown: '#92400e', midnight: '#1e293b', titanium: '#78716c',
+    graphite: '#4b5563', starlight: '#e2e8f0', coral: '#f87171', teal: '#14b8a6',
+    violet: '#7c3aed', indigo: '#6366f1', cyan: '#06b6d4'
   };
-  window.deleteProduct = async (id) => {
-    if (!confirm('Delete this product?')) return;
-    await deleteDoc(doc(db, "products", id));
-    showToast('Product deleted');
+  const lower = name.toLowerCase();
+  for (const key of Object.keys(map)) { if (lower.includes(key)) return map[key]; }
+  return 'var(--primary)';
+}
+
+/* ─── VARIANT ACTIONS ─── */
+window.addColorVariant = () => {
+  colorVariants.push({ color: '', imageUrl: '', imageFile: null, storageOptions: [] });
+  renderVariants();
+};
+window.removeVariant = (idx) => { colorVariants.splice(idx, 1); renderVariants(); };
+window.updateVariantColor = (idx, val) => { colorVariants[idx].color = val; };
+window.addStorageOption = (idx) => {
+  colorVariants[idx].storageOptions.push({ storage: '', stock: 0 });
+  renderVariants();
+};
+window.removeStorageOption = (idx, oi) => { colorVariants[idx].storageOptions.splice(oi, 1); renderVariants(); };
+window.updateStorage = (idx, oi, field, val) => {
+  if (colorVariants[idx]?.storageOptions[oi]) colorVariants[idx].storageOptions[oi][field] = val;
+};
+
+/* ─── IMAGE UPLOAD ─── */
+window.uploadImage = async (idx, file) => {
+  if (!file || !auth.currentUser) return;
+  const prog = document.getElementById(`upload-prog-${idx}`);
+  if (prog) { prog.style.display = 'block'; prog.textContent = 'Uploading…'; }
+
+  const path = `temp_products/${Date.now()}_${idx}_${file.name.replace(/[^a-zA-Z0-9.]/g, '_')}`;
+  const task = uploadBytesResumable(ref(storage, path), file);
+
+  task.on('state_changed',
+    snap => {
+      const pct = Math.round(snap.bytesTransferred / snap.totalBytes * 100);
+      if (prog) prog.textContent = `Uploading… ${pct}%`;
+    },
+    err => {
+      showToast('Upload failed: ' + err.message, true);
+      if (prog) prog.style.display = 'none';
+    },
+    async () => {
+      const url = await getDownloadURL(task.snapshot.ref);
+      colorVariants[idx].imageUrl = url;
+      if (prog) prog.style.display = 'none';
+      renderVariants();
+      showToast(`Image uploaded for ${colorVariants[idx].color || 'variant'}`);
+    }
+  );
+};
+
+/* ─── OPEN / CLOSE MODAL ─── */
+window.showAddModal = () => {
+  editingProductId = null;
+  selectedType = '';
+  colorVariants = [];
+  document.getElementById('modalTitle').textContent = 'Add New Product';
+  document.getElementById('productModal').classList.add('show');
+  // Reset form fields
+  ['f-name','f-brand','f-price','f-oldprice','f-desc','f-shortdesc','f-type-display'].forEach(id => {
+    const el = document.getElementById(id); if (el) el.value = '';
+  });
+  document.getElementById('f-category').value = 'phones';
+  document.querySelectorAll('.type-card').forEach(c => c.classList.remove('selected'));
+  renderVariants();
+  setStep(1);
+};
+
+window.editProduct = (id) => {
+  const p = allProducts.find(x => x.id === id);
+  if (!p) return;
+  editingProductId = id;
+  selectedType = p.type || '';
+  colorVariants = (p.variants || []).map(v => ({
+    color: v.color || '',
+    imageUrl: v.imageUrl || '',
+    imageFile: null,
+    storageOptions: (v.storageOptions || []).map(o => ({ storage: o.storage, stock: o.stock }))
+  }));
+  document.getElementById('modalTitle').textContent = 'Edit Product';
+  document.getElementById('f-name').value = p.name || '';
+  document.getElementById('f-brand').value = p.brand || '';
+  document.getElementById('f-price').value = p.price || '';
+  document.getElementById('f-oldprice').value = p.oldPrice || '';
+  document.getElementById('f-desc').value = p.description || '';
+  document.getElementById('f-shortdesc').value = p.shortDesc || '';
+  document.getElementById('f-category').value = p.category || 'phones';
+  document.getElementById('f-type-display').value = selectedType;
+  // Mark type card
+  document.querySelectorAll('.type-card').forEach(c => {
+    c.classList.toggle('selected', c.dataset.type === selectedType);
+  });
+  renderVariants();
+  document.getElementById('productModal').classList.add('show');
+  setStep(2); // Jump to details step since type is known
+};
+
+window.closeModal = () => { document.getElementById('productModal').classList.remove('show'); };
+
+/* ─── SAVE ─── */
+window.handleSubmit = async () => {
+  // Validate
+  const name = document.getElementById('f-name').value.trim();
+  const price = parseFloat(document.getElementById('f-price').value);
+  if (!name || isNaN(price)) { showToast('Name and price are required.', true); return; }
+  if (!selectedType) { showToast('Please select a product type.', true); return; }
+  if (!colorVariants.length) { showToast('Add at least one color variant.', true); return; }
+  for (const v of colorVariants) {
+    if (!v.color.trim()) { showToast('All color variants need a color name.', true); return; }
+    if (!v.imageUrl) { showToast(`Upload an image for color: ${v.color}`, true); return; }
+    if (!v.storageOptions.length) { showToast(`Add at least one storage option for: ${v.color}`, true); return; }
+    for (const o of v.storageOptions) {
+      if (!o.storage.trim()) { showToast(`Storage name missing for color: ${v.color}`, true); return; }
+      if (o.stock < 0) { showToast(`Invalid quantity for ${v.color} – ${o.storage}`, true); return; }
+    }
+  }
+
+  const btn = document.getElementById('btnSave');
+  btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving…';
+
+  const data = {
+    name,
+    brand: document.getElementById('f-brand').value.trim() || null,
+    type: selectedType,
+    category: document.getElementById('f-category').value,
+    price,
+    oldPrice: parseFloat(document.getElementById('f-oldprice').value) || null,
+    description: document.getElementById('f-desc').value.trim() || null,
+    shortDesc: document.getElementById('f-shortdesc').value.trim() || null,
+    variants: colorVariants.map(v => ({
+      color: v.color,
+      imageUrl: v.imageUrl,
+      storageOptions: v.storageOptions.map(o => ({ storage: o.storage, stock: Number(o.stock) }))
+    })),
+    updatedAt: new Date().toISOString()
+  };
+
+  try {
+    if (editingProductId) {
+      await updateDoc(doc(db, 'products', editingProductId), data);
+      showToast('Product updated successfully.');
+    } else {
+      data.createdAt = new Date().toISOString();
+      await addDoc(collection(db, 'products'), data);
+      showToast('Product added successfully.');
+    }
+    closeModal();
     await loadProducts();
-  };
-  window.handleLogout = async () => { await signOut(auth); window.location.href = '../login.html'; };
+  } catch (e) {
+    showToast(e.message, true);
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Save Product';
+  }
+};
+
+/* ─── DELETE ─── */
+window.deleteProduct = async (id) => {
+  if (!confirm('Delete this product? This cannot be undone.')) return;
+  await deleteDoc(doc(db, 'products', id));
+  showToast('Product deleted.');
+  await loadProducts();
+};
+
+window.handleLogout = async () => { await signOut(auth); window.location.href = '../login.html'; };
 </script>
 </body>
 </html>
