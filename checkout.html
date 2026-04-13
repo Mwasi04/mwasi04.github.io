@@ -7,7 +7,6 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
-    /* Same styles as original checkout.html – keep unchanged */
     * { margin: 0; padding: 0; box-sizing: border-box; }
     :root { --primary: #00bcd4; --primary-dark: #0097a7; --dark: #0f172a; --gray-100: #f1f5f9; --gray-200: #e2e8f0; --gray-400: #94a3b8; --radius-lg: 1.5rem; --radius-md: 1rem; --shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
     body { font-family: 'Inter', sans-serif; background: var(--gray-100); color: var(--dark); }
@@ -34,7 +33,7 @@
     .card-head h2 { font-size: 0.95rem; font-weight: 700; }
     .card-body { padding: 1.25rem 1.5rem; }
     .order-item { display: flex; align-items: center; gap: 12px; padding: 0.85rem 0; border-bottom: 1px solid var(--gray-200); }
-    .oi-img { width: 52px; height: 52px; border-radius: 8px; object-fit: contain; background: var(--gray-100); padding: 3px; }
+    .oi-img-ph { width: 52px; height: 52px; border-radius: 8px; background: var(--gray-100); display: flex; align-items: center; justify-content: center; font-size: 1.3rem; flex-shrink: 0; }
     .oi-info { flex: 1; min-width: 0; }
     .oi-name { font-size: 0.88rem; font-weight: 600; margin-bottom: 2px; }
     .oi-meta { font-size: 0.75rem; color: var(--gray-400); }
@@ -89,7 +88,7 @@
 
 <script type="module">
   import { auth, db } from './js/firebase-config.js';
-  import { doc, getDoc, addDoc, collection, serverTimestamp, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+  import { doc, getDoc, addDoc, collection, serverTimestamp, updateDoc, runTransaction } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
   import { observeAuthState } from './js/auth.js';
 
   const PRIMENET_API_KEY = '7XyHpDXvuxNCLPtZHf71F7xb3b4u1fhfmHLF7fuE9twQ5LUalCTwYC5Yq0J2ONRo';
@@ -107,6 +106,30 @@
   window.validateMomoPhone = () => { const raw=document.getElementById('momoPhone').value; const fmt=parsePhone(raw); document.getElementById('momoPhoneWrap').classList.toggle('error',!fmt); document.getElementById('momoPhoneErr').classList.toggle('show',!fmt); return fmt; };
   function parsePhone(raw){ let c=raw.replace(/\D/g,''); if(c.startsWith('0')&&c.length===10) c='260'+c.slice(1); if(c.startsWith('260')&&c.length===12) return c; if(c.length===9) return '260'+c; return null; }
   function generateExternalReference(){ return `BMB_${Date.now()}`; }
+
+  // Stock deduction using Firestore transaction
+  async function deductProductStock(orderItems) {
+    const productRefs = {};
+    for (const item of orderItems) {
+      if (!productRefs[item.id]) productRefs[item.id] = { item, productDocRef: doc(db, 'products', item.id) };
+    }
+    await runTransaction(db, async (transaction) => {
+      for (const pid in productRefs) {
+        const { item, productDocRef } = productRefs[pid];
+        const productSnap = await transaction.get(productDocRef);
+        if (!productSnap.exists()) throw new Error(`Product ${item.id} not found`);
+        const productData = productSnap.data();
+        const variants = productData.variants || [];
+        const variantIndex = variants.findIndex(v => v.attributes.color === item.color && v.attributes.storage === item.storage);
+        if (variantIndex === -1) throw new Error(`Variant ${item.color}/${item.storage} not found for product ${item.name}`);
+        const currentStock = variants[variantIndex].stock;
+        if (currentStock < item.qty) throw new Error(`Insufficient stock for ${item.name} (${item.color}, ${item.storage}). Available: ${currentStock}`);
+        variants[variantIndex].stock = currentStock - item.qty;
+        transaction.update(productDocRef, { variants: variants });
+      }
+    });
+    logDebug('Stock deducted successfully', 'success');
+  }
 
   async function load(user){
     if(!user){ document.getElementById('loadingMsg').innerHTML='<p>Please <a href="login.html">log in</a> to checkout.</p>'; return; }
@@ -140,27 +163,59 @@
     const narration=`BMB Order: ${cart.map(i=>`${i.name} x${i._qty}`).join(', ')}`.substring(0,80);
     setBtnLoading('Sending payment request…');
     try{
-      const orderRef=await addDoc(collection(db,'orders'),{
-        userId:auth.currentUser.uid,
-        items:cart.map(i=>({id:i.id,name:i.name,price:i.price,qty:i._qty,storage:i.storage,color:i.color})),
-        subtotal:orderSubtotal, shipping:orderShipping, tax:orderTax, totalAmount:orderTotal,
-        payerNumber, paymentMethod:'mobile_money', externalReference:externalRef, narration,
-        status:'pending', createdAt:serverTimestamp()
+      // First, check stock and create order in a transaction to prevent overselling
+      let orderId = null;
+      await runTransaction(db, async (transaction) => {
+        // Check stock for all items
+        for (const item of cart) {
+          const productRef = doc(db, 'products', item.id);
+          const productSnap = await transaction.get(productRef);
+          if (!productSnap.exists()) throw new Error(`Product ${item.name} not found`);
+          const variants = productSnap.data().variants || [];
+          const variant = variants.find(v => v.attributes.color === item.color && v.attributes.storage === item.storage);
+          if (!variant) throw new Error(`Variant ${item.color}/${item.storage} not found`);
+          if (variant.stock < item.qty) throw new Error(`Not enough stock for ${item.name} (${item.color}, ${item.storage}). Only ${variant.stock} left.`);
+        }
+        // Create order document
+        const orderRef = doc(collection(db, 'orders'));
+        transaction.set(orderRef, {
+          userId: auth.currentUser.uid,
+          items: cart.map(i=>({id:i.id,name:i.name,price:i.price,qty:i.qty,storage:i.storage,color:i.color})),
+          subtotal: orderSubtotal, shipping: orderShipping, tax: orderTax, totalAmount: orderTotal,
+          payerNumber, paymentMethod: 'mobile_money', externalReference: externalRef, narration,
+          status: 'pending', createdAt: serverTimestamp()
+        });
+        orderId = orderRef.id;
+        // Deduct stock
+        for (const item of cart) {
+          const productRef = doc(db, 'products', item.id);
+          const productSnap = await transaction.get(productRef);
+          const variants = productSnap.data().variants;
+          const idx = variants.findIndex(v => v.attributes.color === item.color && v.attributes.storage === item.storage);
+          variants[idx].stock -= item.qty;
+          transaction.update(productRef, { variants });
+        }
+        // Clear user's cart
+        const userRef = doc(db, 'users', auth.currentUser.uid);
+        transaction.update(userRef, { cart: [] });
       });
-      currentOrderId=orderRef.id;
-      const payload={ payer_number:payerNumber.trim(), external_reference:externalRef.trim(), payment_narration:narration.trim(), currency:"ZMW".trim(), amount:orderTotal.toString().trim(), account_number:PRIMENET_ACCOUNT_NUMBER.trim() };
-      const result=await callPrimeNetAPI(payload);
-      if(result.status==='success'){
-        await updateDoc(doc(db,'orders',currentOrderId),{ primenetTransactionId:result.transaction_id, status:'awaiting_payment' });
-        await updateDoc(doc(db,'users',auth.currentUser.uid),{ cart:[] });
-        document.getElementById('waitNumber').textContent=`+${payerNumber}`;
+      currentOrderId = orderId;
+      logDebug(`Order created and stock deducted: ${currentOrderId}`, 'success');
+
+      // Now call PrimeNet API for payment
+      const payload = { payer_number: payerNumber.trim(), external_reference: externalRef.trim(), payment_narration: narration.trim(), currency: "ZMW".trim(), amount: orderTotal.toString().trim(), account_number: PRIMENET_ACCOUNT_NUMBER.trim() };
+      const result = await callPrimeNetAPI(payload);
+      if (result.status === 'success') {
+        await updateDoc(doc(db, 'orders', currentOrderId), { primenetTransactionId: result.transaction_id, status: 'awaiting_payment' });
+        document.getElementById('waitNumber').textContent = `+${payerNumber}`;
         document.getElementById('waitOverlay').classList.add('show');
         updatePayBtn();
-      } else throw new Error(result.message||'Payment rejected');
-    }catch(error){
-      logDebug(`Payment error: ${error.message}`,'error');
-      if(currentOrderId) await updateDoc(doc(db,'orders',currentOrderId),{ status:'failed', error:error.message });
-      showToast(`Payment failed: ${error.message}`,true);
+      } else {
+        throw new Error(result.message || 'Payment rejected');
+      }
+    } catch (error) {
+      logDebug(`Payment/Stock error: ${error.message}`, 'error');
+      showToast(error.message, true);
       updatePayBtn();
     }
   };
