@@ -68,7 +68,6 @@
     .btn-outline { background: transparent; border: 2px solid var(--gray-200); color: var(--dark); }
     .btn-outline:hover { border-color: var(--primary); color: var(--primary); }
     .btn-danger { background: #fee2e2; color: #ef4444; }
-    .btn-danger:hover { background: #ef4444; color: white; }
     .page-actions { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
     .filters-section { background: white; border-radius: var(--radius-lg); padding: 1.5rem; margin-bottom: 2rem; box-shadow: var(--shadow); }
     .filters-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(200px,1fr)); gap: 1rem; }
@@ -92,7 +91,7 @@
     .delete-btn { background: #fee2e2; color: #ef4444; }
     .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(5px); align-items: center; justify-content: center; z-index: 1000; padding: 1rem; }
     .modal.show { display: flex; }
-    .modal-content { background: white; border-radius: var(--radius-lg); padding: 2rem; max-width: 900px; width: 95%; max-height: 90vh; overflow-y: auto; animation: slideIn 0.3s ease; }
+    .modal-content { background: white; border-radius: var(--radius-lg); padding: 2rem; max-width: 1000px; width: 95%; max-height: 90vh; overflow-y: auto; animation: slideIn 0.3s ease; }
     @keyframes slideIn { from { opacity:0; transform:translateY(30px); } to { opacity:1; transform:translateY(0); } }
     .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 2px solid var(--gray-200); }
     .close-modal { font-size: 1.4rem; cursor: pointer; color: var(--gray-400); transition: 0.3s; width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; border-radius: 50%; }
@@ -103,8 +102,8 @@
     .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: var(--primary); }
     .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
     .variants-section { margin: 1.5rem 0; border-top: 2px solid var(--gray-200); padding-top: 1.5rem; }
-    .variants-table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
-    .variants-table th, .variants-table td { padding: 0.75rem; border: 1px solid var(--gray-200); text-align: left; vertical-align: middle; }
+    .variants-table { width: 100%; border-collapse: collapse; margin: 1rem 0; overflow-x: auto; display: block; }
+    .variants-table th, .variants-table td { padding: 0.75rem; border: 1px solid var(--gray-200); text-align: left; }
     .variants-table th { background: var(--gray-100); font-weight: 700; }
     .variants-table td input, .variants-table td select { width: 100%; padding: 0.5rem; border: 1px solid var(--gray-200); border-radius: var(--radius-sm); }
     .remove-variant-btn { background: none; border: none; color: #ef4444; cursor: pointer; font-size: 1.2rem; }
@@ -116,7 +115,7 @@
     .upload-zone { border: 2px dashed var(--gray-200); border-radius: var(--radius-lg); padding: 1.5rem; text-align: center; cursor: pointer; background: var(--gray-100); }
     .toast { position: fixed; bottom: 30px; right: 30px; background: white; padding: 1rem 1.5rem; border-radius: 100px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); display: flex; align-items: center; gap: 10px; transform: translateX(400px); transition: 0.35s; z-index: 9999; }
     .toast.show { transform: translateX(0); }
-    @media (max-width: 768px) { .admin-sidebar { display: none; } .admin-main { margin-left: 0; padding: 1rem; } .form-row { grid-template-columns: 1fr; } .variants-table { display: block; overflow-x: auto; } }
+    @media (max-width: 768px) { .admin-sidebar { display: none; } .admin-main { margin-left: 0; padding: 1rem; } .form-row { grid-template-columns: 1fr; } }
   </style>
 </head>
 <body>
@@ -132,7 +131,7 @@
     </div>
   </aside>
   <main class="admin-main">
-    <header class="admin-header"><div class="header-title"><h1>Products</h1><p style="color:var(--gray-400);">Manage your catalog with variants</p></div><div class="header-profile"><div class="profile-avatar" id="adminInitials">A</div><div><div style="font-weight:600" id="adminName">Admin</div><div style="font-size:0.8rem;">Administrator</div></div></div></header>
+    <header class="admin-header"><div class="header-title"><h1>Products</h1><p style="color:var(--gray-400);">Manage your catalog with dynamic variants</p></div><div class="header-profile"><div class="profile-avatar" id="adminInitials">A</div><div><div style="font-weight:600" id="adminName">Admin</div><div style="font-size:0.8rem;">Administrator</div></div></div></header>
     <div class="page-actions"><h2>All Products</h2><button class="btn btn-primary" onclick="showAddModal()"><i class="fa-solid fa-plus"></i> Add New Product</button></div>
     <div class="filters-section"><div class="filters-grid"><select class="filter-select" id="categoryFilter" onchange="filterProducts()"><option value="all">All Categories</option></select><select class="filter-select" id="brandFilter" onchange="filterProducts()"><option value="all">All Brands</option></select><div class="search-box"><input type="text" id="searchInput" placeholder="Search..."><button onclick="filterProducts()"><i class="fa-solid fa-search"></i></button></div></div></div>
     <div class="products-grid" id="productsGrid"><div style="grid-column:1/-1;text-align:center;padding:3rem"><div class="loading-spinner"></div><p>Loading...</p></div></div>
@@ -142,14 +141,18 @@
 <!-- Modal -->
 <div id="productModal" class="modal"><div class="modal-content"><div class="modal-header"><h2 id="modalTitle">Add Product</h2><span class="close-modal" onclick="closeModal()">&times;</span></div><form id="productForm" onsubmit="handleSubmit(event)"><input type="hidden" id="editProductId">
   <div class="form-group"><label>Product Name *</label><input type="text" id="f-name" required></div>
-  <div class="form-row"><div class="form-group"><label>Brand</label><input type="text" id="f-brand"></div><div class="form-group"><label>Category</label><select id="f-category"><option value="phones">Phones</option><option value="laptops">Laptops</option><option value="accessories">Accessories</option><option value="tablets">Tablets</option></select></div></div>
+  <div class="form-row">
+    <div class="form-group"><label>Brand</label><input type="text" id="f-brand"></div>
+    <div class="form-group"><label>Product Type *</label><select id="f-type" onchange="onProductTypeChange()" required><option value="">Select type</option><option value="Smartphone">Smartphone</option><option value="Laptop">Laptop</option><option value="Tablet">Tablet</option><option value="Accessory">Accessory</option></select></div>
+    <div class="form-group"><label>Category</label><select id="f-category"><option value="phones">Phones</option><option value="laptops">Laptops</option><option value="accessories">Accessories</option><option value="tablets">Tablets</option></select></div>
+  </div>
   <div class="form-row"><div class="form-group"><label>Price (K) *</label><input type="number" id="f-price" step="0.01" required></div><div class="form-group"><label>Old Price (K)</label><input type="number" id="f-oldprice" step="0.01"></div></div>
   <div class="form-group"><label>Description</label><textarea id="f-desc" rows="3"></textarea></div>
   <div class="form-group"><label>Short Description</label><textarea id="f-shortdesc" rows="2"></textarea></div>
 
   <!-- Variants Section -->
-  <div class="variants-section"><h3 style="margin-bottom:0.5rem;">Product Variants</h3><p style="font-size:0.8rem;color:var(--gray-400);margin-bottom:1rem;">Add each color + storage combination with its own quantity.</p>
-    <table class="variants-table" id="variantsTable"><thead><tr><th>Color</th><th>Storage</th><th>Quantity</th><th style="width:50px"></th></tr></thead><tbody id="variantsTbody"></tbody></table>
+  <div class="variants-section"><h3 style="margin-bottom:0.5rem;">Product Variants</h3><p style="font-size:0.8rem;color:var(--gray-400);margin-bottom:1rem;" id="variantHint">Define each variant combination with its quantity.</p>
+    <div style="overflow-x: auto;"><table class="variants-table" id="variantsTable"><thead id="variantHeader"></thead><tbody id="variantsTbody"></tbody></table></div>
     <button type="button" class="btn btn-outline add-variant-btn" onclick="addVariantRow()"><i class="fa-solid fa-plus"></i> Add Variant</button>
   </div>
 
@@ -169,9 +172,10 @@
   import { observeAuthState, isUserAdmin } from '../js/auth.js';
 
   let allProducts = [];
-  let variants = []; // each variant = { color, storage, stock }
+  let variants = []; // each variant = object with attributes based on product type
   let pendingImages = [], existingImages = [];
   let editingProductId = null;
+  let currentProductType = 'Smartphone'; // default
 
   observeAuthState(async user => {
     if (!user) { window.location.href = '../login.html'; return; }
@@ -212,23 +216,67 @@
     displayProducts(f);
   };
 
-  // Variant table management
+  // Dynamic variant columns based on product type
+  function getVariantAttributes() {
+    const type = document.getElementById('f-type').value;
+    if (type === 'Laptop') return ['Color', 'RAM', 'Storage'];
+    if (type === 'Smartphone') return ['Color', 'Storage'];
+    if (type === 'Tablet') return ['Color', 'Storage']; // similar to phone
+    return ['Color']; // accessories maybe only color
+  }
+
   function renderVariantTable() {
+    const thead = document.getElementById('variantHeader');
     const tbody = document.getElementById('variantsTbody');
-    if (!tbody) return;
+    if (!thead || !tbody) return;
+    const attrs = getVariantAttributes();
+    // Build header
+    thead.innerHTML = '<tr>' + attrs.map(a => `<th>${a}</th>`).join('') + '<th>Quantity</th><th style="width:50px"></th></tr>';
+    // Build rows
     tbody.innerHTML = '';
-    variants.forEach((v, idx) => {
+    variants.forEach((variant, idx) => {
       const row = tbody.insertRow();
-      row.insertCell(0).innerHTML = `<input type="text" value="${v.color}" placeholder="e.g. Black" onchange="updateVariant(${idx},'color',this.value)">`;
-      row.insertCell(1).innerHTML = `<input type="text" value="${v.storage}" placeholder="e.g. 128GB" onchange="updateVariant(${idx},'storage',this.value)">`;
-      row.insertCell(2).innerHTML = `<input type="number" min="0" value="${v.stock}" style="width:100px" onchange="updateVariant(${idx},'stock',parseInt(this.value)||0)">`;
-      const delCell = row.insertCell(3);
+      // For each attribute, add input
+      attrs.forEach(attr => {
+        const key = attr.toLowerCase();
+        let value = variant[key] || '';
+        const cell = row.insertCell();
+        cell.innerHTML = `<input type="text" value="${value.replace(/"/g, '&quot;')}" placeholder="${attr}" onchange="updateVariant(${idx},'${key}',this.value)">`;
+      });
+      // Quantity cell
+      const qtyCell = row.insertCell();
+      qtyCell.innerHTML = `<input type="number" min="0" value="${variant.stock || 0}" style="width:100px" onchange="updateVariant(${idx},'stock',parseInt(this.value)||0)">`;
+      // Delete cell
+      const delCell = row.insertCell();
       delCell.innerHTML = `<button type="button" class="remove-variant-btn" onclick="removeVariant(${idx})"><i class="fa-solid fa-trash-can"></i></button>`;
     });
+    // Update hint text
+    const hint = document.getElementById('variantHint');
+    if (attrs.length === 2) hint.textContent = `Define each variant with ${attrs[0]} and ${attrs[1]}.`;
+    else if (attrs.length === 3) hint.textContent = `Define each variant with ${attrs[0]}, ${attrs[1]}, and ${attrs[2]}.`;
+    else hint.textContent = `Define each variant with ${attrs[0]}.`;
   }
-  window.updateVariant = (idx, field, value) => { variants[idx][field] = value; };
-  window.removeVariant = (idx) => { variants.splice(idx,1); renderVariantTable(); };
-  window.addVariantRow = () => { variants.push({ color: '', storage: '', stock: 0 }); renderVariantTable(); };
+
+  window.updateVariant = (idx, field, value) => {
+    if (!variants[idx]) return;
+    variants[idx][field] = value;
+  };
+  window.removeVariant = (idx) => {
+    variants.splice(idx, 1);
+    renderVariantTable();
+  };
+  window.addVariantRow = () => {
+    const attrs = getVariantAttributes();
+    const newVariant = { stock: 0 };
+    attrs.forEach(attr => { newVariant[attr.toLowerCase()] = ''; });
+    variants.push(newVariant);
+    renderVariantTable();
+  };
+  window.onProductTypeChange = () => {
+    // Clear existing variants when type changes (they won't match new schema)
+    variants = [];
+    renderVariantTable();
+  };
 
   // Image handling
   function setupImageInput() {
@@ -264,10 +312,12 @@
   window.showAddModal = () => {
     document.getElementById('modalTitle').innerHTML = 'Add New Product';
     document.getElementById('productForm').reset();
+    document.getElementById('f-type').value = 'Smartphone';
     editingProductId = null;
     variants = [];
     pendingImages = [];
     existingImages = [];
+    currentProductType = 'Smartphone';
     renderVariantTable();
     renderImagePreviews();
     setupImageInput();
@@ -280,12 +330,22 @@
     document.getElementById('modalTitle').innerHTML = 'Edit Product';
     document.getElementById('f-name').value = p.name || '';
     document.getElementById('f-brand').value = p.brand || '';
+    document.getElementById('f-type').value = p.type || 'Smartphone';
     document.getElementById('f-category').value = p.category || 'phones';
     document.getElementById('f-price').value = p.price || '';
     document.getElementById('f-oldprice').value = p.oldPrice || '';
     document.getElementById('f-desc').value = p.description || '';
     document.getElementById('f-shortdesc').value = p.shortDesc || '';
-    variants = (p.variants || []).map(v => ({ color: v.attributes.color, storage: v.attributes.storage, stock: v.stock }));
+    currentProductType = p.type || 'Smartphone';
+    // Convert stored variants to current format
+    variants = (p.variants || []).map(v => {
+      const attrs = v.attributes;
+      const variantObj = { stock: v.stock };
+      if (attrs.color) variantObj.color = attrs.color;
+      if (attrs.storage) variantObj.storage = attrs.storage;
+      if (attrs.ram) variantObj.ram = attrs.ram;
+      return variantObj;
+    });
     existingImages = p.images || [];
     pendingImages = [];
     renderVariantTable();
@@ -296,25 +356,42 @@
   window.closeModal = () => { document.getElementById('productModal').classList.remove('show'); };
   window.handleSubmit = async (e) => {
     e.preventDefault();
-    const btn = document.getElementById('submitBtn'); btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving...';
+    const btn = document.querySelector('#productForm button[type="submit"]');
+    const originalText = btn.innerHTML;
+    btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving...';
     try {
       const name = document.getElementById('f-name').value.trim();
       const price = parseFloat(document.getElementById('f-price').value);
+      const productType = document.getElementById('f-type').value;
       if (!name || isNaN(price)) throw new Error('Name and price required');
-      // Validate variants: at least one non-empty
-      const validVariants = variants.filter(v => v.color.trim() && v.storage.trim() && v.stock >= 0);
-      if (validVariants.length === 0) throw new Error('Add at least one variant with color, storage, and quantity');
+      if (!productType) throw new Error('Select product type');
+      // Filter valid variants (all attribute fields non-empty, stock >=0)
+      const attrs = getVariantAttributes().map(a => a.toLowerCase());
+      const validVariants = variants.filter(v => {
+        for (let attr of attrs) if (!v[attr] || v[attr].trim() === '') return false;
+        return v.stock >= 0;
+      });
+      if (validVariants.length === 0) throw new Error('Add at least one complete variant with all attributes and quantity');
       const productId = editingProductId || 'new_' + Date.now();
       let newUrls = [];
       if (pendingImages.length) newUrls = await uploadImages(productId);
       const allImages = [...existingImages, ...newUrls];
+      // Convert variants to Firestore structure
+      const variantsForDb = validVariants.map(v => {
+        const attributes = {};
+        if (v.color) attributes.color = v.color;
+        if (v.storage) attributes.storage = v.storage;
+        if (v.ram) attributes.ram = v.ram;
+        return { attributes, stock: v.stock };
+      });
       const productData = {
         name, brand: document.getElementById('f-brand').value.trim() || null,
+        type: productType,
         category: document.getElementById('f-category').value,
         price, oldPrice: parseFloat(document.getElementById('f-oldprice').value) || null,
         description: document.getElementById('f-desc').value.trim() || null,
         shortDesc: document.getElementById('f-shortdesc').value.trim() || null,
-        variants: validVariants.map(v => ({ attributes: { color: v.color, storage: v.storage }, stock: v.stock })),
+        variants: variantsForDb,
         images: allImages.length ? allImages : null,
         updatedAt: new Date().toISOString()
       };
@@ -329,7 +406,7 @@
       closeModal();
       await loadProducts();
     } catch (err) { showToast(err.message, true); }
-    finally { btn.disabled = false; btn.innerHTML = 'Save Product'; }
+    finally { btn.disabled = false; btn.innerHTML = originalText; }
   };
   window.deleteProduct = async (id) => {
     if (!confirm('Delete this product? This will also delete its images.')) return;
