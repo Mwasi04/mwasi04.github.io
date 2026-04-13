@@ -146,7 +146,7 @@
     .modal.show { display: flex; }
     .modal-content {
       background: white; border-radius: var(--radius-lg); padding: 2rem;
-      max-width: 820px; width: 95%; max-height: 90vh; overflow-y: auto;
+      max-width: 1100px; width: 95%; max-height: 90vh; overflow-y: auto;
       animation: slideIn 0.3s ease;
     }
     @keyframes slideIn { from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:translateY(0)} }
@@ -212,10 +212,20 @@
       border-radius: 100px; padding: 3px 10px; font-size: 0.78rem;
       display: flex; align-items: center; gap: 5px;
     }
-    .chip .chip-dot { width: 10px; height: 10px; border-radius: 50; flex-shrink: 0; border: 1px solid rgba(0,0,0,0.1); }
+    .chip .chip-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; border: 1px solid rgba(0,0,0,0.1); }
     .chip button { background: none; border: none; cursor: pointer; color: var(--gray-400); font-size: 14px; line-height: 1; padding: 0; }
     .chip button:hover { color: #ef4444; }
     .chip-wrap input { border: none; outline: none; background: none; font-family: 'Inter', sans-serif; font-size: 0.85rem; min-width: 120px; flex: 1; color: var(--dark); }
+
+    /* Variants Table */
+    .variants-table-container { overflow-x: auto; margin-top: 1rem; }
+    .variants-table { width: 100%; border-collapse: collapse; }
+    .variants-table th, .variants-table td { padding: 0.75rem; border: 1px solid var(--gray-200); text-align: left; }
+    .variants-table th { background: var(--gray-100); font-weight: 700; font-size: 0.8rem; text-transform: uppercase; }
+    .variants-table td input { width: 100px; padding: 0.5rem; border: 1px solid var(--gray-200); border-radius: var(--radius-sm); }
+    .variant-stock-input { width: 90px; padding: 0.5rem; text-align: center; }
+    .set-all-btn { margin-bottom: 1rem; padding: 0.5rem 1rem; background: var(--gray-200); border: none; border-radius: var(--radius-md); cursor: pointer; }
+    .set-all-btn:hover { background: var(--gray-400); color: white; }
 
     /* ── IMAGE UPLOAD ── */
     .upload-zone {
@@ -252,7 +262,6 @@
       font-size: 11px; cursor: pointer; display: flex; align-items: center; justify-content: center;
       line-height: 1; transition: 0.2s;
     }
-    .img-preview-item .main-star:hover { background: rgba(0,188,212,1); }
 
     /* Upload progress */
     .upload-progress { margin-top: 10px; display: none; }
@@ -260,30 +269,12 @@
     .progress-fill { height: 100%; background: var(--primary); width: 0%; transition: width 0.3s; }
     .progress-text { font-size: 0.78rem; color: var(--gray-400); margin-top: 4px; display: block; }
 
-    /* ── SPECS EDITOR ── */
-    .spec-row { display: flex; gap: 8px; margin-bottom: 8px; align-items: center; }
-    .spec-row input { flex: 1; padding: 0.65rem 0.9rem; border: 2px solid var(--gray-200); border-radius: var(--radius-md); font-family: 'Inter', sans-serif; font-size: 0.88rem; outline: none; transition: 0.2s; }
-    .spec-row input:focus { border-color: var(--primary); }
-    .remove-spec {
-      width: 34px; height: 34px; border-radius: 50%; border: none;
-      background: #fee2e2; color: #ef4444; cursor: pointer; display: flex;
-      align-items: center; justify-content: center; flex-shrink: 0; transition: 0.2s;
-    }
-    .remove-spec:hover { background: #ef4444; color: white; }
-    .add-spec-btn {
-      width: 100%; padding: 0.7rem; border: none; border-radius: var(--radius-md);
-      background: var(--gray-200); cursor: pointer; font-weight: 600; transition: 0.2s;
-      font-family: 'Inter', sans-serif;
-    }
-    .add-spec-btn:hover { background: var(--primary); color: white; }
-
     .info-alert {
       background: #dbeafe; color: #1e40af; padding: 0.75rem 1rem;
       border-radius: var(--radius-md); margin-bottom: 1rem; font-size: 0.85rem;
       display: flex; align-items: center; gap: 0.5rem;
     }
 
-    /* ── LOADING ── */
     .loading-spinner {
       display: inline-block; width: 40px; height: 40px;
       border: 4px solid var(--gray-200); border-top: 4px solid var(--primary);
@@ -291,7 +282,6 @@
     }
     @keyframes spin { 0%{transform:rotate(0deg)} 100%{transform:rotate(360deg)} }
 
-    /* ── TOAST ── */
     .toast {
       position: fixed; bottom: 30px; right: 30px; background: white;
       padding: 1rem 1.5rem; border-radius: 100px;
@@ -302,19 +292,15 @@
     .toast.show { transform: translateX(0); }
     .toast i { font-size: 1.2rem; }
 
-    /* ── MOBILE ── */
     @media (max-width: 768px) {
       .admin-sidebar { display: none; }
       .admin-main { margin-left: 0; padding: 1rem; }
       .form-row, .form-row.three { grid-template-columns: 1fr; }
-      .img-preview-grid { grid-template-columns: repeat(3,1fr); }
     }
   </style>
 </head>
 <body>
 <div class="admin-container">
-
-  <!-- ── SIDEBAR ── -->
   <aside class="admin-sidebar">
     <div class="sidebar-header">
       <a href="dashboard.html">
@@ -331,12 +317,11 @@
     </div>
   </aside>
 
-  <!-- ── MAIN ── -->
   <main class="admin-main">
     <header class="admin-header">
       <div class="header-title">
         <h1>Products</h1>
-        <p style="color:var(--gray-400);font-size:0.9rem;margin-top:0.3rem">Manage your product catalog</p>
+        <p style="color:var(--gray-400);font-size:0.9rem;margin-top:0.3rem">Manage your product catalog with variants</p>
       </div>
       <div class="header-profile">
         <div class="profile-avatar" id="adminInitials">A</div>
@@ -354,7 +339,6 @@
       </button>
     </div>
 
-    <!-- Filters -->
     <div class="filters-section">
       <div class="filters-grid">
         <select class="filter-select" id="categoryFilter" onchange="filterProducts()">
@@ -363,20 +347,13 @@
         <select class="filter-select" id="brandFilter" onchange="filterProducts()">
           <option value="all">All Brands</option>
         </select>
-        <select class="filter-select" id="stockFilter" onchange="filterProducts()">
-          <option value="all">All Stock</option>
-          <option value="in">In Stock</option>
-          <option value="low">Low Stock (&lt;5)</option>
-          <option value="out">Out of Stock</option>
-        </select>
         <div class="search-box">
-          <input type="text" id="searchInput" placeholder="Search by name, brand, storage...">
+          <input type="text" id="searchInput" placeholder="Search by name, brand...">
           <button onclick="filterProducts()"><i class="fa-solid fa-search"></i></button>
         </div>
       </div>
     </div>
 
-    <!-- Grid -->
     <div id="productsGrid" class="products-grid">
       <div style="grid-column:1/-1;text-align:center;padding:3rem">
         <div class="loading-spinner"></div>
@@ -386,7 +363,6 @@
   </main>
 </div>
 
-<!-- ── PRODUCT MODAL ── -->
 <div id="productModal" class="modal">
   <div class="modal-content">
     <div class="modal-header">
@@ -396,809 +372,344 @@
 
     <div class="form-tabs">
       <button class="tab-btn active" onclick="switchTab('basic',this)">Basic Info</button>
+      <button class="tab-btn" onclick="switchTab('variants',this)">Variants (Stock)</button>
       <button class="tab-btn" onclick="switchTab('details',this)">Details</button>
-      <button class="tab-btn" onclick="switchTab('specs',this)">Specs</button>
       <button class="tab-btn" onclick="switchTab('images',this)">Images</button>
     </div>
 
     <form id="productForm" onsubmit="handleSubmit(event)">
       <input type="hidden" id="editProductId">
 
-      <!-- ── TAB: BASIC ── -->
+      <!-- TAB: BASIC -->
       <div id="tab-basic" class="tab-pane active">
         <div class="form-group">
           <label>Product Name <span class="req">*</span></label>
-          <input type="text" id="f-name" placeholder="e.g. Samsung Galaxy S24 Ultra" required>
+          <input type="text" id="f-name" placeholder="e.g. iPhone 17 Pro" required>
         </div>
-
         <div class="form-row">
-          <div class="form-group">
-            <label>Brand</label>
-            <input type="text" id="f-brand" placeholder="e.g. Apple, Samsung, HP">
-          </div>
-          <div class="form-group">
-            <label>Product Type <span class="req">*</span></label>
-            <select id="f-type" required>
-              <option value="">Select type</option>
-              <option value="Smartphone">Smartphone</option>
-              <option value="Laptop">Laptop</option>
-              <option value="Accessory">Accessory</option>
-              <option value="Tablet">Tablet</option>
-              <option value="Audio">Audio</option>
-              <option value="Wearable">Wearable</option>
-              <option value="Gaming">Gaming</option>
-              <option value="TV">TV &amp; Home Theater</option>
-            </select>
-          </div>
+          <div class="form-group"><label>Brand</label><input type="text" id="f-brand" placeholder="Apple"></div>
+          <div class="form-group"><label>Product Type</label><select id="f-type" required><option value="">Select</option><option>Smartphone</option><option>Laptop</option><option>Accessory</option><option>Tablet</option></select></div>
         </div>
-
         <div class="form-row three">
-          <div class="form-group">
-            <label>Price (K) <span class="req">*</span></label>
-            <input type="number" id="f-price" min="0" step="0.01" placeholder="0.00" required>
-          </div>
-          <div class="form-group">
-            <label>Old Price (K)</label>
-            <input type="number" id="f-oldprice" min="0" step="0.01" placeholder="0.00">
-            <p class="field-hint">Leave blank if no discount</p>
-          </div>
-          <div class="form-group">
-            <label>Quantity in Stock <span class="req">*</span></label>
-            <input type="number" id="f-qty" min="0" placeholder="0" required>
-          </div>
+          <div class="form-group"><label>Price (K)</label><input type="number" id="f-price" min="0" step="0.01" required></div>
+          <div class="form-group"><label>Old Price (K)</label><input type="number" id="f-oldprice" min="0" step="0.01"></div>
+          <div class="form-group"><label>Category</label><select id="f-category"><option value="phones">Phones</option><option value="laptops">Laptops</option><option value="accessories">Accessories</option></select></div>
         </div>
-
         <div class="form-row">
-          <div class="form-group">
-            <label>Condition</label>
-            <select id="f-condition">
-              <option value="New" selected>New</option>
-              <option value="Refurbished">Refurbished</option>
-              <option value="Open Box">Open Box</option>
-              <option value="Used">Used</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>Warranty</label>
-            <select id="f-warranty">
-              <option value="">No Warranty</option>
-              <option value="3 months">3 Months</option>
-              <option value="6 months">6 Months</option>
-              <option value="12 months" selected>12 Months</option>
-              <option value="24 months">24 Months</option>
-              <option value="36 months">36 Months</option>
-            </select>
-          </div>
+          <div class="form-group"><label>Condition</label><select id="f-condition"><option>New</option><option>Refurbished</option></select></div>
+          <div class="form-group"><label>Warranty</label><select id="f-warranty"><option>12 months</option><option>6 months</option><option>24 months</option></select></div>
         </div>
 
-        <!-- Storage chips -->
+        <!-- Storage and Color options (used to generate variant matrix) -->
         <div class="chip-input-section">
-          <label>Storage Options <span style="font-weight:400;color:var(--gray-400)">(press Enter to add each)</span></label>
+          <label>Storage Options <span class="field-hint">(define all available storage sizes)</span></label>
           <div class="chip-wrap" id="storage-wrap" onclick="document.getElementById('storage-chip-input').focus()">
             <input type="text" id="storage-chip-input" placeholder="e.g. 128GB — press Enter">
           </div>
-          <p class="field-hint">Add all available storage sizes. These appear as selectable options on the store.</p>
         </div>
-
-        <!-- Colors chips -->
         <div class="chip-input-section">
-          <label>Available Colors <span style="font-weight:400;color:var(--gray-400)">(press Enter to add each)</span></label>
+          <label>Color Options <span class="field-hint">(define all available colors)</span></label>
           <div class="chip-wrap" id="colors-wrap" onclick="document.getElementById('color-chip-input').focus()">
             <input type="text" id="color-chip-input" placeholder="e.g. Midnight Black — press Enter">
           </div>
-          <p class="field-hint">Color swatches are auto-generated from color names.</p>
         </div>
       </div>
 
-      <!-- ── TAB: DETAILS ── -->
+      <!-- TAB: VARIANTS (Matrix) -->
+      <div id="tab-variants" class="tab-pane">
+        <div class="info-alert"><i class="fa-solid fa-cubes"></i> For each combination of storage and color, set the available quantity.</div>
+        <button type="button" class="set-all-btn" onclick="setAllVariantStock(0)">Set all quantities to 0</button>
+        <div class="variants-table-container" id="variantsTableContainer">
+          <table class="variants-table" id="variantsTable">
+            <thead><tr><th>Color</th><th>Storage</th><th>Quantity</th></tr></thead>
+            <tbody id="variantsTbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- TAB: DETAILS -->
       <div id="tab-details" class="tab-pane">
-        <div class="form-group">
-          <label>Short Description</label>
-          <textarea id="f-shortdesc" rows="2" placeholder="Brief 1-2 sentence summary shown on the product card (max 150 chars)"></textarea>
-        </div>
-        <div class="form-group">
-          <label>Full Description</label>
-          <textarea id="f-desc" rows="5" placeholder="Detailed product description shown in the modal..."></textarea>
-        </div>
-
-        <div class="form-row three">
-          <div class="form-group">
-            <label>RAM Size</label>
-            <input type="text" id="f-ram" placeholder="e.g. 8GB, 16GB, 32GB">
-          </div>
-          <div class="form-group">
-            <label>Screen Size</label>
-            <input type="text" id="f-screen" placeholder="e.g. 6.7&quot;, 14.2&quot;">
-          </div>
-          <div class="form-group">
-            <label>Category (Firestore)</label>
-            <select id="f-category">
-              <option value="phones">Smartphones</option>
-              <option value="laptops">Laptops</option>
-              <option value="tablets">Tablets</option>
-              <option value="audio">Audio</option>
-              <option value="wearables">Wearables</option>
-              <option value="accessories">Accessories</option>
-              <option value="gaming">Gaming</option>
-              <option value="tv">TV &amp; Home Theater</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label>Tags <span style="font-weight:400;color:var(--gray-400)">(comma separated)</span></label>
-          <input type="text" id="f-tags" placeholder="e.g. bestseller, new, sale, featured">
-        </div>
+        <div class="form-group"><label>Short Description</label><textarea id="f-shortdesc" rows="2"></textarea></div>
+        <div class="form-group"><label>Full Description</label><textarea id="f-desc" rows="4"></textarea></div>
+        <div class="form-row"><div class="form-group"><label>RAM</label><input id="f-ram" placeholder="8GB"></div><div class="form-group"><label>Screen</label><input id="f-screen" placeholder="6.7\""></div></div>
+        <div class="form-group"><label>Tags</label><input id="f-tags" placeholder="bestseller,new"></div>
       </div>
 
-      <!-- ── TAB: SPECS ── -->
-      <div id="tab-specs" class="tab-pane">
-        <div class="info-alert">
-          <i class="fa-solid fa-info-circle"></i>
-          Add detailed specs as key-value pairs — these appear in the product detail popup
-        </div>
-        <div id="specsEditor"></div>
-        <button type="button" class="add-spec-btn" onclick="addSpecRow()">
-          <i class="fa-solid fa-plus"></i> Add Specification
-        </button>
-      </div>
-
-      <!-- ── TAB: IMAGES ── -->
+      <!-- TAB: IMAGES -->
       <div id="tab-images" class="tab-pane">
-        <div class="info-alert">
-          <i class="fa-solid fa-image"></i>
-          Upload up to 8 images. The first image is the main product photo shown on the store card. Click the star &#9733; to promote any image to main.
-        </div>
-
         <div class="upload-zone" id="uploadZone">
-          <input type="file" id="imgFileInput" accept="image/jpeg,image/png,image/gif,image/webp" multiple>
+          <input type="file" id="imgFileInput" accept="image/jpeg,image/png,image/webp" multiple>
           <div class="upload-icon">📸</div>
-          <h4>Click or drag &amp; drop to upload images</h4>
-          <p>JPG &bull; PNG &bull; WEBP &bull; GIF &bull; Max 5 MB each</p>
+          <h4>Click or drag & drop images</h4>
         </div>
-
-        <div class="upload-progress" id="uploadProgress">
-          <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
-          <span class="progress-text" id="progressText">Uploading...</span>
-        </div>
-
         <div class="img-preview-grid" id="imgPreviewGrid"></div>
       </div>
 
-      <!-- FORM FOOTER -->
       <div style="display:flex;gap:1rem;margin-top:2rem;padding-top:1rem;border-top:1px solid var(--gray-200)">
-        <button type="submit" id="submitBtn" class="btn btn-primary" style="flex:1">
-          <i class="fa-solid fa-floppy-disk" style="margin-right:6px"></i>Save Product
-        </button>
-        <button type="button" class="btn btn-secondary" onclick="closeModal()" style="flex:0.4">Cancel</button>
+        <button type="submit" id="submitBtn" class="btn btn-primary" style="flex:1">Save Product</button>
+        <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
       </div>
     </form>
   </div>
 </div>
 
-<!-- ── TOAST ── -->
-<div class="toast" id="toast">
-  <i class="fa-regular fa-circle-check"></i>
-  <span>Done!</span>
-</div>
+<div class="toast" id="toast"><i class="fa-regular fa-circle-check"></i><span>Done!</span></div>
 
 <script type="module">
   import { auth, db, storage } from '../js/firebase-config.js';
-  import {
-    collection, getDocs, addDoc, updateDoc, deleteDoc,
-    doc, query, orderBy, getDoc
-  } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-  import {
-    ref, uploadBytesResumable, getDownloadURL, deleteObject
-  } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
+  import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc, query, orderBy, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+  import { ref, uploadBytesResumable, getDownloadURL, deleteObject } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
   import { signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
   import { observeAuthState, isUserAdmin } from '../js/auth.js';
 
-  /* ──────────────────────────────────────────────────────
-     STATE
-  ────────────────────────────────────────────────────── */
-  let allProducts      = [];
-  let storageChips     = [];   // storage options array
-  let colorChips       = [];   // color options array
-  let pendingImages    = [];   // { file, dataUrl } — new files to upload
-  let existingImages   = [];   // string[] — URLs already in Firestore
+  let allProducts = [];
+  let storageOptions = [], colorOptions = [];
+  let variantStockMap = new Map(); // key "color|storage" -> stock
+  let pendingImages = [], existingImages = [];
   let editingProductId = null;
 
-  /* ──────────────────────────────────────────────────────
-     COLOR LOOKUP
-  ────────────────────────────────────────────────────── */
-  const COLOR_MAP = {
-    'black':'#1a1a1a','midnight black':'#1a1a1a','onyx black':'#1a1a1a','graphite':'#4b4b4b',
-    'white':'#f0f0f0','starlight':'#f0ede8','silver':'#b0b0b0','titanium':'#8a8a8a',
-    'gold':'#c9a84c','natural':'#c5b99a','blue':'#2563eb','phantom blue':'#2d4a8a',
-    'cobalt violet':'#5b3fa8','lavender':'#a78bfa','purple':'#7c3aed','red':'#dc2626',
-    'coral':'#f4845f','orange':'#ea580c','green':'#16a34a','mint':'#6ee7b7',
-    'yellow':'#ca8a04','amber yellow':'#d97706','grey':'#9ca3af','gray':'#9ca3af',
-    'pink':'#db2777','rose':'#fb7185','space black':'#1a1a2e','blue titanium':'#4a6fa5',
-    'black titanium':'#2a2a2a','white titanium':'#e8e8e8','natural titanium':'#c5b99a',
-  };
-  function getHex(name){ return COLOR_MAP[(name||'').toLowerCase()] || '#888'; }
-
-  /* ──────────────────────────────────────────────────────
-     AUTH GUARD
-  ────────────────────────────────────────────────────── */
   observeAuthState(async user => {
     if (!user) { window.location.href = '../login.html'; return; }
     const admin = await isUserAdmin(user.uid);
-    if (!admin) { alert('Access denied. Admins only.'); window.location.href = '../index.html'; return; }
-
+    if (!admin) { alert('Access denied.'); window.location.href = '../index.html'; return; }
     const userDoc = await getDoc(doc(db, "users", user.uid));
-    const data    = userDoc.data();
-    document.getElementById('adminName').textContent     = data?.name || 'Admin';
-    document.getElementById('adminInitials').textContent = (data?.name||'A').charAt(0).toUpperCase();
-
+    document.getElementById('adminName').textContent = userDoc.data()?.name || 'Admin';
+    document.getElementById('adminInitials').textContent = (userDoc.data()?.name || 'A').charAt(0);
     await loadProducts();
   });
 
-  /* ──────────────────────────────────────────────────────
-     LOAD PRODUCTS
-  ────────────────────────────────────────────────────── */
   async function loadProducts() {
-    try {
-      const snap  = await getDocs(query(collection(db,"products"), orderBy("createdAt","desc")));
-      allProducts = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-      updateFilters();
-      displayProducts(allProducts);
-    } catch (e) {
-      console.error(e);
-      showToast('Error loading products', 'error');
-    }
+    const snap = await getDocs(query(collection(db, "products"), orderBy("createdAt", "desc")));
+    allProducts = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    updateFilters();
+    displayProducts(allProducts);
   }
 
   function updateFilters() {
-    const cats   = [...new Set(allProducts.map(p=>p.category).filter(Boolean))].sort();
-    const brands = [...new Set(allProducts.map(p=>p.brand).filter(Boolean))].sort();
-
-    document.getElementById('categoryFilter').innerHTML =
-      '<option value="all">All Categories</option>' +
-      cats.map(c=>`<option value="${c}">${c.charAt(0).toUpperCase()+c.slice(1)}</option>`).join('');
-
-    document.getElementById('brandFilter').innerHTML =
-      '<option value="all">All Brands</option>' +
-      brands.map(b=>`<option value="${b}">${b}</option>`).join('');
+    const cats = [...new Set(allProducts.map(p=>p.category).filter(Boolean))];
+    document.getElementById('categoryFilter').innerHTML = '<option value="all">All Categories</option>' + cats.map(c=>`<option value="${c}">${c}</option>`).join('');
+    const brands = [...new Set(allProducts.map(p=>p.brand).filter(Boolean))];
+    document.getElementById('brandFilter').innerHTML = '<option value="all">All Brands</option>' + brands.map(b=>`<option value="${b}">${b}</option>`).join('');
   }
 
-  /* ──────────────────────────────────────────────────────
-     DISPLAY PRODUCTS (admin grid)
-  ────────────────────────────────────────────────────── */
   function displayProducts(products) {
     const grid = document.getElementById('productsGrid');
-    if (!products.length) {
-      grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:3rem;color:var(--gray-400)">
-        No products yet. Click <strong>Add New Product</strong> to get started.</div>`;
-      return;
-    }
-
+    if (!products.length) { grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:3rem">No products found.</div>'; return; }
     grid.innerHTML = products.map(p => {
-      const imgSrc = (p.images && p.images.length) ? p.images[0] : (p.image || '');
-      const imgHtml = imgSrc
-        ? `<img src="${imgSrc}" alt="${p.name}" onerror="this.style.display='none'">`
-        : `<span style="font-size:56px">${p.category==='laptops'?'💻':p.category==='accessories'?'🎧':'📱'}</span>`;
-      const imgCount = (p.images && p.images.length > 1) ? `<span class="img-count-badge">${p.images.length} photos</span>` : '';
-
-      const storages = Array.isArray(p.storage) ? p.storage : (p.storage ? [p.storage] : []);
-      const colors   = Array.isArray(p.colors)  ? p.colors  : (p.colors  ? [p.colors]  : []);
-
-      const storagePills = storages.map(s=>`<span class="meta-pill">${s}</span>`).join('');
-      const colorPills   = colors.map(c=>`<span class="meta-pill color-pill">
-        <span class="color-dot" style="background:${getHex(c)}"></span>${c}</span>`).join('');
-
-      const saleBadge     = p.oldPrice ? '<span class="product-badge sale">SALE</span>' : '';
-      const lowStockBadge = p.stock > 0 && p.stock < 5 ? '<span class="product-badge low-stock">Low Stock</span>' : '';
-      const outBadge      = p.stock <= 0 ? '<span class="product-badge" style="background:#64748b">Out of Stock</span>' : '';
-
-      return `
-        <div class="product-card">
-          <div class="product-image">
-            ${saleBadge}${lowStockBadge}${outBadge}
-            ${imgHtml}
-            ${imgCount}
-          </div>
-          <div class="product-info">
-            <div class="product-category">${p.category||'Uncategorized'} &bull; ${p.type||''}</div>
-            <div class="product-name">${p.name}</div>
-            ${p.brand ? `<div class="product-brand">${p.brand}</div>` : ''}
-            <div class="product-meta-row">
-              ${storagePills}
-              <span class="meta-pill">${p.condition||'New'}</span>
-              ${p.ram ? `<span class="meta-pill">RAM: ${p.ram}</span>` : ''}
-              ${p.screen ? `<span class="meta-pill">Screen: ${p.screen}</span>` : ''}
-            </div>
-            ${colorPills ? `<div class="product-meta-row">${colorPills}</div>` : ''}
-            <div style="margin:6px 0">
-              <span class="product-price">K${(p.price||0).toLocaleString()}</span>
-              ${p.oldPrice ? `<span class="product-old-price">K${p.oldPrice.toLocaleString()}</span>` : ''}
-            </div>
-            <div style="font-size:0.8rem;color:var(--gray-400)">
-              Stock: ${p.stock||0}
-              ${p.warranty ? ` &bull; ${p.warranty} warranty` : ''}
-            </div>
-            <div class="product-actions">
-              <button class="edit-btn" onclick="editProduct('${p.id}')">
-                <i class="fa-regular fa-pen-to-square"></i> Edit
-              </button>
-              <button class="delete-btn" onclick="deleteProduct('${p.id}')">
-                <i class="fa-regular fa-trash-can"></i> Delete
-              </button>
-            </div>
-          </div>
-        </div>`;
+      const imgSrc = p.images?.[0] || '';
+      const totalStock = p.variants?.reduce((sum, v) => sum + (v.stock || 0), 0) || 0;
+      const lowStock = totalStock > 0 && totalStock < 5;
+      return `<div class="product-card"><div class="product-image">${imgSrc ? `<img src="${imgSrc}">` : '<span style="font-size:56px">📦</span>'}</div><div class="product-info"><div class="product-category">${p.category||''}</div><div class="product-name">${p.name}</div><div class="product-price">K${(p.price||0).toLocaleString()}</div><div>Stock: ${totalStock}</div><div class="product-actions"><button class="edit-btn" onclick="editProduct('${p.id}')">Edit</button><button class="delete-btn" onclick="deleteProduct('${p.id}')">Delete</button></div></div></div>`;
     }).join('');
   }
 
-  /* ──────────────────────────────────────────────────────
-     FILTER
-  ────────────────────────────────────────────────────── */
   window.filterProducts = () => {
-    const category = document.getElementById('categoryFilter').value;
-    const brand    = document.getElementById('brandFilter').value;
-    const stock    = document.getElementById('stockFilter').value;
-    const search   = document.getElementById('searchInput').value.toLowerCase();
-
-    let f = [...allProducts];
-    if (category !== 'all') f = f.filter(p => p.category === category);
-    if (brand    !== 'all') f = f.filter(p => p.brand    === brand);
-    if (stock === 'in')  f = f.filter(p => (p.stock||0) > 0);
-    if (stock === 'low') f = f.filter(p => (p.stock||0) > 0 && p.stock < 5);
-    if (stock === 'out') f = f.filter(p => (p.stock||0) <= 0);
-    if (search) f = f.filter(p => {
-      const storages = Array.isArray(p.storage) ? p.storage.join(' ') : (p.storage||'');
-      const colors   = Array.isArray(p.colors)  ? p.colors.join(' ')  : (p.colors||'');
-      return [p.name, p.brand, p.category, storages, colors].filter(Boolean)
-        .some(v => v.toLowerCase().includes(search));
-    });
+    const cat = document.getElementById('categoryFilter').value;
+    const brand = document.getElementById('brandFilter').value;
+    const search = document.getElementById('searchInput').value.toLowerCase();
+    let f = allProducts.filter(p => (cat==='all'||p.category===cat) && (brand==='all'||p.brand===brand) && (!search||p.name?.toLowerCase().includes(search)));
     displayProducts(f);
   };
 
-  /* ──────────────────────────────────────────────────────
-     CHIP INPUT HELPERS
-  ────────────────────────────────────────────────────── */
-  function initChipInput(inputId, wrapId, arr, isColor = false) {
+  // Chip inputs
+  function initChipInput(inputId, wrapId, arr, isColor=false) {
     const inp = document.getElementById(inputId);
-    if (!inp) return;
+    if(!inp) return;
     inp.addEventListener('keydown', e => {
-      if (e.key === 'Enter' && e.target.value.trim()) {
+      if(e.key==='Enter' && e.target.value.trim()){
         e.preventDefault();
         arr.push(e.target.value.trim());
-        e.target.value = '';
+        e.target.value='';
         renderChips(arr, wrapId, inputId, isColor);
+        generateVariantTable();
       }
     });
   }
-
-  function renderChips(arr, wrapId, inputId, isColor = false) {
+  function renderChips(arr, wrapId, inputId, isColor=false){
     const wrap = document.getElementById(wrapId);
-    if (!wrap) return;
-    const ph = (wrap.querySelector('input') || {}).placeholder || '';
+    if(!wrap) return;
     wrap.innerHTML = '';
-    arr.forEach((val, i) => {
-      const chip = document.createElement('div');
-      chip.className = 'chip';
-      if (isColor) {
-        const dot = document.createElement('span');
-        dot.className = 'chip-dot';
-        dot.style.background = getHex(val);
-        chip.appendChild(dot);
-      }
-      chip.appendChild(Object.assign(document.createElement('span'), { textContent: val }));
-      const btn = document.createElement('button');
-      btn.type = 'button'; btn.textContent = '×';
-      btn.onclick = () => { arr.splice(i,1); renderChips(arr, wrapId, inputId, isColor); };
-      chip.appendChild(btn);
-      wrap.appendChild(chip);
+    arr.forEach((val,i)=>{
+      const chip=document.createElement('div'); chip.className='chip';
+      if(isColor){ const dot=document.createElement('span'); dot.className='chip-dot'; dot.style.background=getHex(val); chip.appendChild(dot); }
+      chip.appendChild(document.createTextNode(val));
+      const btn=document.createElement('button'); btn.textContent='×'; btn.onclick=()=>{ arr.splice(i,1); renderChips(arr,wrapId,inputId,isColor); generateVariantTable(); };
+      chip.appendChild(btn); wrap.appendChild(chip);
     });
-    const inp = document.createElement('input');
-    inp.type = 'text'; inp.id = inputId; inp.placeholder = ph;
-    inp.addEventListener('keydown', e => {
-      if (e.key === 'Enter' && e.target.value.trim()) {
-        e.preventDefault();
-        arr.push(e.target.value.trim());
-        e.target.value = '';
-        renderChips(arr, wrapId, inputId, isColor);
-      }
-    });
+    const inp=document.createElement('input'); inp.type='text'; inp.id=inputId; inp.placeholder='press Enter';
+    inp.addEventListener('keydown', e=>{ if(e.key==='Enter' && e.target.value.trim()){ arr.push(e.target.value.trim()); e.target.value=''; renderChips(arr,wrapId,inputId,isColor); generateVariantTable(); } });
     wrap.appendChild(inp);
   }
+  function getHex(c){ const map={black:'#1a1a1a',white:'#f0f0f0',blue:'#2563eb',red:'#dc2626',green:'#16a34a',gold:'#c9a84c',silver:'#b0b0b0'}; return map[c?.toLowerCase()]||'#888'; }
 
-  /* ──────────────────────────────────────────────────────
-     IMAGE UPLOAD HANDLING
-  ────────────────────────────────────────────────────── */
-  function setupImageInput() {
-    const inp = document.getElementById('imgFileInput');
-    if (!inp) return;
-    inp.onchange = e => {
-      const files = Array.from(e.target.files);
-      const slots = 8 - existingImages.length - pendingImages.length;
-      files.slice(0, slots).forEach(file => {
-        if (!file.type.startsWith('image/')) return;
-        if (file.size > 5 * 1024 * 1024) { showToast(`${file.name} exceeds 5MB — skipped`, 'error'); return; }
-        const reader = new FileReader();
-        reader.onload = ev => {
-          pendingImages.push({ file, dataUrl: ev.target.result });
-          renderImagePreviews();
-        };
-        reader.readAsDataURL(file);
-      });
-      e.target.value = '';
-    };
-
-    // Drag and drop
-    const zone = document.getElementById('uploadZone');
-    if (zone) {
-      zone.addEventListener('dragover', e => { e.preventDefault(); zone.style.borderColor = 'var(--primary)'; });
-      zone.addEventListener('dragleave', () => { zone.style.borderColor = ''; });
-      zone.addEventListener('drop', e => {
-        e.preventDefault(); zone.style.borderColor = '';
-        const files = Array.from(e.dataTransfer.files);
-        const slots = 8 - existingImages.length - pendingImages.length;
-        files.slice(0, slots).forEach(file => {
-          if (!file.type.startsWith('image/')) return;
-          if (file.size > 5 * 1024 * 1024) return;
-          const reader = new FileReader();
-          reader.onload = ev => {
-            pendingImages.push({ file, dataUrl: ev.target.result });
-            renderImagePreviews();
-          };
-          reader.readAsDataURL(file);
-        });
-      });
-    }
-  }
-
-  function renderImagePreviews() {
-    const grid = document.getElementById('imgPreviewGrid');
-    if (!grid) return;
-
-    const allPreviews = [
-      ...existingImages.map(url => ({ type: 'existing', src: url })),
-      ...pendingImages.map(p  => ({ type: 'pending',  src: p.dataUrl, idx: pendingImages.indexOf(p) }))
-    ];
-
-    grid.innerHTML = allPreviews.map((item, globalIdx) => `
-      <div class="img-preview-item">
-        <img src="${item.src}" alt="Product image ${globalIdx+1}">
-        ${globalIdx === 0 ? '<div class="main-label">★ Main</div>' : ''}
-        <button type="button" class="main-star" title="Set as main image"
-          onclick="setAsMainImage(${globalIdx})"
-          style="${globalIdx===0?'opacity:0.4;cursor:default':''}"
-          ${globalIdx===0?'disabled':''}>★</button>
-        <button type="button" class="remove-img-btn" onclick="removeImage(${globalIdx}, '${item.type}', ${item.type==='pending'?item.idx:-1})">×</button>
-      </div>`).join('');
-  }
-
-  window.setAsMainImage = globalIdx => {
-    const existCount = existingImages.length;
-    if (globalIdx < existCount) {
-      // Reorder existing images
-      const moved = existingImages.splice(globalIdx, 1)[0];
-      existingImages.unshift(moved);
-    } else {
-      const pendingIdx = globalIdx - existCount;
-      const moved = pendingImages.splice(pendingIdx, 1)[0];
-      // Move to front of all images (before existing)
-      const movedUrl = moved.dataUrl;
-      pendingImages.unshift(moved);
-      // Actually make it the absolute first: swap with existingImages[0] if present
-      if (existingImages.length > 0) {
-        // Can't easily swap existing URL with pending, so just ensure pending is first
-        // by temporarily moving to existingImages slot — handled by order in renderImagePreviews
+  function generateVariantTable(){
+    const tbody = document.getElementById('variantsTbody');
+    if(!tbody) return;
+    tbody.innerHTML='';
+    for(const color of colorOptions){
+      for(const storage of storageOptions){
+        const key=`${color}|${storage}`;
+        const stock = variantStockMap.get(key) || 0;
+        const row = tbody.insertRow();
+        row.insertCell(0).textContent = color;
+        row.insertCell(1).textContent = storage;
+        const cell = row.insertCell(2);
+        const input = document.createElement('input');
+        input.type='number'; input.min='0'; input.value=stock; input.className='variant-stock-input';
+        input.onchange = (()=>{ variantStockMap.set(key, parseInt(input.value)||0); });
+        cell.appendChild(input);
       }
     }
-    renderImagePreviews();
-  };
-
-  window.removeImage = (globalIdx, type, pendingIdx) => {
-    if (type === 'existing') {
-      existingImages.splice(globalIdx, 1);
-    } else {
-      pendingImages.splice(pendingIdx, 1);
+  }
+  function setAllVariantStock(val){
+    for(const color of colorOptions){
+      for(const storage of storageOptions){
+        variantStockMap.set(`${color}|${storage}`, val);
+      }
     }
-    renderImagePreviews();
-  };
+    generateVariantTable();
+  }
 
-  /* ──────────────────────────────────────────────────────
-     UPLOAD IMAGE TO FIREBASE STORAGE
-  ────────────────────────────────────────────────────── */
-  async function uploadImages(productId) {
-    const urls = [];
-    for (let i = 0; i < pendingImages.length; i++) {
-      const { file } = pendingImages[i];
-      const clean    = file.name.replace(/[^a-zA-Z0-9.]/g,'_');
-      const path     = `products/${productId}/img_${Date.now()}_${i}_${clean}`;
-      const storRef  = ref(storage, path);
-      const task     = uploadBytesResumable(storRef, file);
-
-      document.getElementById('uploadProgress').style.display = 'block';
-
-      await new Promise((resolve, reject) => {
-        task.on('state_changed',
-          snap => {
-            const pct = Math.round((snap.bytesTransferred / snap.totalBytes) * 100);
-            document.getElementById('progressFill').style.width = pct + '%';
-            document.getElementById('progressText').textContent  = `Uploading image ${i+1} of ${pendingImages.length}... ${pct}%`;
-          },
-          reject,
-          async () => {
-            const url = await getDownloadURL(task.snapshot.ref);
-            urls.push(url);
-            resolve();
-          }
-        );
-      });
+  function getVariantsArray(){
+    const variants = [];
+    for(const color of colorOptions){
+      for(const storage of storageOptions){
+        const stock = variantStockMap.get(`${color}|${storage}`) || 0;
+        if(stock > 0){
+          variants.push({ attributes: { color, storage }, stock });
+        }
+      }
     }
-    document.getElementById('uploadProgress').style.display = 'none';
+    return variants;
+  }
+
+  // Images handling
+  function setupImageInput(){
+    const inp=document.getElementById('imgFileInput');
+    inp.onchange=e=>{ Array.from(e.target.files).forEach(file=>{ if(file.type.startsWith('image/')){ const reader=new FileReader(); reader.onload=ev=>{ pendingImages.push({file,dataUrl:ev.target.result}); renderImagePreviews(); }; reader.readAsDataURL(file); } }); inp.value=''; };
+  }
+  function renderImagePreviews(){
+    const grid=document.getElementById('imgPreviewGrid');
+    if(!grid) return;
+    const all=[...existingImages.map(url=>({type:'existing',src:url})), ...pendingImages.map((p,i)=>({type:'pending',src:p.dataUrl,idx:i}))];
+    grid.innerHTML=all.map((item,idx)=>`<div class="img-preview-item"><img src="${item.src}"><button type="button" class="remove-img-btn" onclick="removeImage(${idx},'${item.type}',${item.idx??-1})">×</button></div>`).join('');
+  }
+  window.removeImage=(globalIdx,type,pendingIdx)=>{ if(type==='existing') existingImages.splice(globalIdx,1); else pendingImages.splice(pendingIdx,1); renderImagePreviews(); };
+  async function uploadImages(productId){
+    const urls=[];
+    for(let i=0;i<pendingImages.length;i++){
+      const {file}=pendingImages[i];
+      const path=`products/${productId}/img_${Date.now()}_${i}`;
+      const task=uploadBytesResumable(ref(storage,path),file);
+      await new Promise((res,rej)=>task.on('state_changed',null,rej,async()=>{ urls.push(await getDownloadURL(task.snapshot.ref)); res(); }));
+    }
     return urls;
   }
 
-  /* ──────────────────────────────────────────────────────
-     SPECS EDITOR
-  ────────────────────────────────────────────────────── */
-  window.addSpecRow = (key = '', val = '') => {
-    const editor = document.getElementById('specsEditor');
-    const id     = 'spec_' + Date.now() + '_' + Math.random().toString(36).substr(2,6);
-    const row    = document.createElement('div');
-    row.className = 'spec-row'; row.id = id;
-    row.innerHTML = `
-      <input type="text" class="spec-key"   placeholder="Name (e.g. Processor)" value="${key.replace(/"/g,'&quot;')}">
-      <input type="text" class="spec-value" placeholder="Value (e.g. A17 Pro)"  value="${val.replace(/"/g,'&quot;')}">
-      <button type="button" class="remove-spec" onclick="document.getElementById('${id}').remove()">
-        <i class="fa-solid fa-times"></i>
-      </button>`;
-    editor.appendChild(row);
-  };
-
-  function getSpecsFromEditor() {
-    const specs = {};
-    document.querySelectorAll('.spec-row').forEach(row => {
-      const k = row.querySelector('.spec-key')?.value.trim();
-      const v = row.querySelector('.spec-value')?.value.trim();
-      if (k && v) specs[k] = v;
-    });
-    return Object.keys(specs).length ? specs : null;
-  }
-
-  /* ──────────────────────────────────────────────────────
-     TABS
-  ────────────────────────────────────────────────────── */
-  window.switchTab = (tabId, btn) => {
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
-    if (btn) btn.classList.add('active');
-    else document.querySelector(`[onclick*="'${tabId}'"]`)?.classList.add('active');
-    document.getElementById(`tab-${tabId}`)?.classList.add('active');
-  };
-
-  /* ──────────────────────────────────────────────────────
-     SHOW ADD MODAL
-  ────────────────────────────────────────────────────── */
   window.showAddModal = () => {
-    document.getElementById('modalTitle').textContent = 'Add New Product';
+    document.getElementById('modalTitle').innerHTML='Add New Product';
     document.getElementById('productForm').reset();
-    document.getElementById('editProductId').value = '';
-    editingProductId = null;
-    storageChips = []; colorChips = [];
-    pendingImages = []; existingImages = [];
-
-    document.getElementById('specsEditor').innerHTML = '';
-    for (let i = 0; i < 3; i++) addSpecRow();
-
-    renderChips(storageChips, 'storage-wrap', 'storage-chip-input', false);
-    renderChips(colorChips,   'colors-wrap',  'color-chip-input',   true);
-    initChipInput('storage-chip-input', 'storage-wrap', storageChips, false);
-    initChipInput('color-chip-input',   'colors-wrap',  colorChips,   true);
-    renderImagePreviews();
-    setupImageInput();
-
+    editingProductId=null; storageOptions=[]; colorOptions=[]; variantStockMap.clear(); pendingImages=[]; existingImages=[];
+    renderChips(storageOptions,'storage-wrap','storage-chip-input',false);
+    renderChips(colorOptions,'colors-wrap','color-chip-input',true);
+    initChipInput('storage-chip-input','storage-wrap',storageOptions,false);
+    initChipInput('color-chip-input','colors-wrap',colorOptions,true);
+    generateVariantTable();
+    renderImagePreviews(); setupImageInput();
     document.getElementById('productModal').classList.add('show');
-    document.body.style.overflow = 'hidden';
-    switchTab('basic', document.querySelector('.tab-btn'));
+    switchTab('basic',document.querySelector('.tab-btn'));
   };
 
-  /* ──────────────────────────────────────────────────────
-     EDIT PRODUCT
-  ────────────────────────────────────────────────────── */
-  window.editProduct = async productId => {
-    const p = allProducts.find(x => x.id === productId);
-    if (!p) return;
-
-    document.getElementById('modalTitle').textContent = 'Edit Product';
-    document.getElementById('editProductId').value    = productId;
-    editingProductId = productId;
-
-    // Basic
-    document.getElementById('f-name').value      = p.name || '';
-    document.getElementById('f-brand').value     = p.brand || '';
-    document.getElementById('f-type').value      = p.type || 'Smartphone';
-    document.getElementById('f-price').value     = p.price || '';
-    document.getElementById('f-oldprice').value  = p.oldPrice || '';
-    document.getElementById('f-qty').value       = p.stock || 0;
-    document.getElementById('f-condition').value = p.condition || 'New';
-    document.getElementById('f-warranty').value  = p.warranty || '12 months';
-
-    // Storage + colors
-    storageChips = Array.isArray(p.storage) ? [...p.storage] : (p.storage ? [p.storage] : []);
-    colorChips   = Array.isArray(p.colors)  ? [...p.colors]  : (p.colors  ? [p.colors]  : []);
-    renderChips(storageChips, 'storage-wrap', 'storage-chip-input', false);
-    renderChips(colorChips,   'colors-wrap',  'color-chip-input',   true);
-    initChipInput('storage-chip-input', 'storage-wrap', storageChips, false);
-    initChipInput('color-chip-input',   'colors-wrap',  colorChips,   true);
-
-    // Details
-    document.getElementById('f-shortdesc').value = p.shortDesc || '';
-    document.getElementById('f-desc').value      = p.description || '';
-    document.getElementById('f-ram').value        = p.ram || '';
-    document.getElementById('f-screen').value     = p.screen || '';
-    document.getElementById('f-category').value   = p.category || 'phones';
-    document.getElementById('f-tags').value       = Array.isArray(p.tags) ? p.tags.join(', ') : (p.tags||'');
-
-    // Specs
-    document.getElementById('specsEditor').innerHTML = '';
-    if (p.specs && typeof p.specs === 'object') {
-      Object.entries(p.specs).forEach(([k,v]) => addSpecRow(k, v));
-    } else {
-      for (let i = 0; i < 2; i++) addSpecRow();
+  window.editProduct = async (id) => {
+    const p=allProducts.find(x=>x.id===id);
+    if(!p) return;
+    editingProductId=id;
+    document.getElementById('modalTitle').innerHTML='Edit Product';
+    document.getElementById('f-name').value=p.name||'';
+    document.getElementById('f-brand').value=p.brand||'';
+    document.getElementById('f-type').value=p.type||'Smartphone';
+    document.getElementById('f-price').value=p.price||'';
+    document.getElementById('f-oldprice').value=p.oldPrice||'';
+    document.getElementById('f-category').value=p.category||'phones';
+    document.getElementById('f-condition').value=p.condition||'New';
+    document.getElementById('f-warranty').value=p.warranty||'12 months';
+    document.getElementById('f-shortdesc').value=p.shortDesc||'';
+    document.getElementById('f-desc').value=p.description||'';
+    document.getElementById('f-ram').value=p.ram||'';
+    document.getElementById('f-screen').value=p.screen||'';
+    document.getElementById('f-tags').value=(p.tags||[]).join(', ');
+    storageOptions = p.storageOptions || [];
+    colorOptions = p.colorOptions || [];
+    renderChips(storageOptions,'storage-wrap','storage-chip-input',false);
+    renderChips(colorOptions,'colors-wrap','color-chip-input',true);
+    initChipInput('storage-chip-input','storage-wrap',storageOptions,false);
+    initChipInput('color-chip-input','colors-wrap',colorOptions,true);
+    variantStockMap.clear();
+    if(p.variants){
+      p.variants.forEach(v=>{ const key=`${v.attributes.color}|${v.attributes.storage}`; variantStockMap.set(key, v.stock); });
     }
-
-    // Images
-    existingImages = (p.images && p.images.length) ? [...p.images] : (p.image ? [p.image] : []);
-    pendingImages  = [];
-    renderImagePreviews();
-    setupImageInput();
-
+    generateVariantTable();
+    existingImages = p.images || [];
+    pendingImages = [];
+    renderImagePreviews(); setupImageInput();
     document.getElementById('productModal').classList.add('show');
-    document.body.style.overflow = 'hidden';
-    switchTab('basic', document.querySelector('.tab-btn'));
+    switchTab('basic',document.querySelector('.tab-btn'));
   };
 
-  /* ──────────────────────────────────────────────────────
-     CLOSE MODAL
-  ────────────────────────────────────────────────────── */
-  window.closeModal = () => {
-    document.getElementById('productModal').classList.remove('show');
-    document.body.style.overflow = 'auto';
-  };
-
-  /* ──────────────────────────────────────────────────────
-     HANDLE SUBMIT
-  ────────────────────────────────────────────────────── */
-  window.handleSubmit = async e => {
+  window.handleSubmit = async (e) => {
     e.preventDefault();
-    const btn = document.getElementById('submitBtn');
-    btn.disabled   = true;
-    btn.innerHTML  = '<i class="fa-solid fa-spinner fa-spin" style="margin-right:6px"></i>Saving...';
-
-    try {
-      if (!auth.currentUser) throw new Error('Not logged in');
-
-      const name     = document.getElementById('f-name').value.trim();
-      const brand    = document.getElementById('f-brand').value.trim();
-      const type     = document.getElementById('f-type').value;
-      const price    = parseFloat(document.getElementById('f-price').value);
-      const oldPrice = document.getElementById('f-oldprice').value ? parseFloat(document.getElementById('f-oldprice').value) : null;
-      const stock    = parseInt(document.getElementById('f-qty').value);
-      const condition= document.getElementById('f-condition').value;
-      const warranty = document.getElementById('f-warranty').value;
-      const shortDesc= document.getElementById('f-shortdesc').value.trim();
-      const desc     = document.getElementById('f-desc').value.trim();
-      const ram      = document.getElementById('f-ram').value.trim();
-      const screen   = document.getElementById('f-screen').value.trim();
-      const category = document.getElementById('f-category').value;
-      const tags     = document.getElementById('f-tags').value.split(',').map(t=>t.trim()).filter(Boolean);
-      const specs    = getSpecsFromEditor();
-
-      if (!name)                    throw new Error('Product name is required');
-      if (!type)                    throw new Error('Product type is required');
-      if (isNaN(price)||price < 0)  throw new Error('A valid price is required');
-      if (isNaN(stock)||stock < 0)  throw new Error('A valid stock quantity is required');
-
-      // Determine product ID (need it before uploading images)
-      const productId = editingProductId || 'new_' + Date.now();
-
-      // Upload pending images
-      let newImageUrls = [];
-      if (pendingImages.length > 0) {
-        newImageUrls = await uploadImages(productId);
-      }
-
-      // Combine images: existing first, then newly uploaded
-      const allImageUrls = [...existingImages, ...newImageUrls];
-
+    const btn=document.getElementById('submitBtn'); btn.disabled=true; btn.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i> Saving...';
+    try{
+      const name=document.getElementById('f-name').value.trim();
+      const price=parseFloat(document.getElementById('f-price').value);
+      if(!name||isNaN(price)) throw new Error('Name and price required');
+      const productId = editingProductId || 'new_'+Date.now();
+      let newUrls=[];
+      if(pendingImages.length) newUrls = await uploadImages(productId);
+      const allImages = [...existingImages, ...newUrls];
+      const variants = getVariantsArray();
       const productData = {
-        name, brand: brand||null, type, category,
-        price, oldPrice,
-        stock, condition, warranty: warranty||null,
-        storage: storageChips.length ? storageChips : null,
-        colors:  colorChips.length  ? colorChips  : null,
-        shortDesc: shortDesc||null,
-        description: desc||null,
-        ram: ram||null, screen: screen||null,
-        specs, tags: tags.length ? tags : null,
-        images: allImageUrls.length ? allImageUrls : null,
-        // Keep legacy image field for backwards compatibility
-        image: allImageUrls[0] || null,
-        updatedAt: new Date().toISOString(),
+        name, brand: document.getElementById('f-brand').value.trim()||null,
+        type: document.getElementById('f-type').value,
+        price, oldPrice: parseFloat(document.getElementById('f-oldprice').value)||null,
+        category: document.getElementById('f-category').value,
+        condition: document.getElementById('f-condition').value,
+        warranty: document.getElementById('f-warranty').value||null,
+        shortDesc: document.getElementById('f-shortdesc').value.trim()||null,
+        description: document.getElementById('f-desc').value.trim()||null,
+        ram: document.getElementById('f-ram').value.trim()||null,
+        screen: document.getElementById('f-screen').value.trim()||null,
+        tags: document.getElementById('f-tags').value.split(',').map(t=>t.trim()).filter(Boolean),
+        storageOptions, colorOptions,
+        variants,  // array of { attributes: {color, storage}, stock }
+        images: allImages.length? allImages : null,
+        updatedAt: new Date().toISOString()
       };
-
-      if (editingProductId) {
+      if(editingProductId){
         await updateDoc(doc(db,"products",editingProductId), productData);
-        showToast('Product updated successfully!');
+        showToast('Product updated');
       } else {
         productData.createdAt = new Date().toISOString();
         await addDoc(collection(db,"products"), productData);
-        showToast('Product added successfully!');
+        showToast('Product added');
       }
-
       closeModal();
       await loadProducts();
-
-    } catch (err) {
-      console.error(err);
-      showToast(err.message || 'Error saving product', 'error');
-    } finally {
-      btn.disabled  = false;
-      btn.innerHTML = '<i class="fa-solid fa-floppy-disk" style="margin-right:6px"></i>Save Product';
-    }
+    }catch(err){ showToast(err.message,'error'); }
+    finally{ btn.disabled=false; btn.innerHTML='Save Product'; }
   };
 
-  /* ──────────────────────────────────────────────────────
-     DELETE
-  ────────────────────────────────────────────────────── */
-  window.deleteProduct = async productId => {
-    if (!confirm('Delete this product? This cannot be undone.')) return;
-    const product = allProducts.find(p => p.id === productId);
-
-    try {
-      // Delete all images from Storage
-      const allImgs = [];
-      if (product.images && product.images.length) allImgs.push(...product.images);
-      else if (product.image) allImgs.push(product.image);
-
-      for (const url of allImgs) {
-        try { await deleteObject(ref(storage, url)); } catch {}
-      }
-
-      await deleteDoc(doc(db,"products",productId));
-      showToast('Product deleted');
-      await loadProducts();
-    } catch (e) {
-      console.error(e);
-      showToast('Error deleting product', 'error');
-    }
+  window.deleteProduct = async (id) => {
+    if(!confirm('Delete product?')) return;
+    await deleteDoc(doc(db,"products",id));
+    showToast('Deleted');
+    await loadProducts();
   };
 
-  /* ──────────────────────────────────────────────────────
-     TOAST
-  ────────────────────────────────────────────────────── */
-  function showToast(msg, type = 'success') {
-    const t    = document.getElementById('toast');
-    const icon = t.querySelector('i');
-    icon.className   = type === 'success' ? 'fa-regular fa-circle-check' : 'fa-regular fa-circle-exclamation';
-    icon.style.color = type === 'success' ? 'var(--primary)' : '#ef4444';
-    t.querySelector('span').textContent = msg;
-    t.classList.add('show');
-    setTimeout(() => t.classList.remove('show'), 3500);
-  }
-
-  /* ──────────────────────────────────────────────────────
-     LOGOUT + KEYBOARD
-  ────────────────────────────────────────────────────── */
-  window.handleLogout = async () => {
-    try { await signOut(auth); window.location.href = '../login.html'; }
-    catch (e) { showToast('Error logging out', 'error'); }
-  };
-
-  document.addEventListener('keydown', e => {
-    if (e.key === 'Escape' && document.getElementById('productModal').classList.contains('show'))
-      closeModal();
-  });
-  document.getElementById('productModal').addEventListener('click', e => {
-    if (e.target === document.getElementById('productModal')) closeModal();
-  });
+  window.closeModal = () => { document.getElementById('productModal').classList.remove('show'); };
+  window.switchTab = (tabId, btn) => { document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active')); document.getElementById(`tab-${tabId}`).classList.add('active'); document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); };
+  function showToast(msg,type='success'){ const t=document.getElementById('toast'); t.querySelector('span').textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),3000); }
+  window.handleLogout = async () => { await signOut(auth); window.location.href='../login.html'; };
 </script>
 </body>
 </html>
