@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BMB Electronics | Manage Products</title>
+  <title>BMB Electronics | Product Manager (Simplified)</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
@@ -41,11 +41,11 @@
     .filter-select{padding:0.8rem 1rem;border:2px solid var(--gray-200);border-radius:var(--radius-md);font-family:'Inter',sans-serif;font-size:0.9rem;outline:none;}
     .filter-select:focus{border-color:var(--primary);}
     .search-box{display:flex;gap:0.5rem;}
-    .search-box input{flex:1;padding:0.8rem 1rem;border:2px solid var(--gray-200);border-radius:var(--radius-md);outline:none;font-family:'Inter',sans-serif;}
+    .search-box input{flex:1;padding:0.8rem 1rem;border:2px solid var(--gray-200);border-radius:var(--radius-md);outline:none;}
     .search-box button{padding:0.8rem 1.5rem;background:var(--primary);color:white;border:none;border-radius:var(--radius-md);cursor:pointer;}
     .products-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.5rem;}
     .product-card{background:white;border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow);transition:0.3s;}
-    .product-card:hover{transform:translateY(-4px);box-shadow:0 10px 20px rgba(0,0,0,0.1);}
+    .product-card:hover{transform:translateY(-4px);}
     .product-image{height:180px;background:var(--gray-100);display:flex;align-items:center;justify-content:center;padding:1rem;}
     .product-image img{max-width:100%;max-height:100%;object-fit:contain;}
     .product-info{padding:1.2rem;}
@@ -53,123 +53,59 @@
     .product-price{font-size:1.1rem;font-weight:800;color:var(--primary);}
     .product-meta{font-size:0.8rem;color:var(--gray-400);margin:0.3rem 0;}
     .product-actions{display:flex;gap:0.5rem;margin-top:0.8rem;}
-    .product-actions button{flex:1;padding:0.55rem;border:none;border-radius:var(--radius-md);cursor:pointer;font-size:0.8rem;font-family:'Inter',sans-serif;font-weight:600;}
+    .product-actions button{flex:1;padding:0.55rem;border:none;border-radius:var(--radius-md);cursor:pointer;font-weight:600;}
     .edit-btn{background:var(--primary);color:white;}
     .delete-btn{background:#fee2e2;color:#ef4444;}
 
-    /* ═══ MODAL ═══ */
+    /* --- Simplified Modal --- */
     .modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);backdrop-filter:blur(5px);align-items:center;justify-content:center;z-index:1000;padding:1rem;}
     .modal.show{display:flex;}
-    .modal-content{background:white;border-radius:var(--radius-lg);max-width:960px;width:95%;max-height:93vh;overflow-y:auto;animation:slideIn 0.3s ease;display:flex;flex-direction:column;}
-    @keyframes slideIn{from{opacity:0;transform:translateY(30px);}to{opacity:1;transform:translateY(0);}}
-    .stepper-header{padding:1.5rem 2rem 0;border-bottom:2px solid var(--gray-200);}
-    .stepper-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.2rem;}
-    .stepper-top h2{font-size:1.3rem;font-weight:700;}
-    .close-modal{width:36px;height:36px;border:none;background:var(--gray-100);border-radius:50%;cursor:pointer;font-size:1.1rem;display:flex;align-items:center;justify-content:center;color:var(--gray-400);}
-    .close-modal:hover{background:#fee2e2;color:#ef4444;}
-    .step-indicators{display:flex;margin-bottom:-2px;}
-    .step-tab{display:flex;align-items:center;gap:0.5rem;padding:0.75rem 1.5rem;border-bottom:3px solid transparent;font-size:0.88rem;font-weight:600;color:var(--gray-400);white-space:nowrap;}
-    .step-tab.active{color:var(--primary);border-bottom-color:var(--primary);}
-    .step-tab.done{color:#22c55e;}
-    .step-num{width:22px;height:22px;border-radius:50%;font-size:0.72rem;display:flex;align-items:center;justify-content:center;font-weight:700;background:var(--gray-200);color:var(--gray-400);flex-shrink:0;}
-    .step-tab.active .step-num{background:var(--primary);color:white;}
-    .step-tab.done .step-num{background:#22c55e;color:white;}
-    .step-panels{padding:2rem;flex:1;}
-    .step-panel{display:none;}
-    .step-panel.active{display:block;}
-    .form-group{margin-bottom:1.1rem;}
-    .form-group label{display:block;margin-bottom:0.4rem;font-weight:600;font-size:0.88rem;}
-    .form-group input,.form-group select,.form-group textarea{width:100%;padding:0.8rem 1rem;border:2px solid var(--gray-200);border-radius:var(--radius-md);font-family:'Inter',sans-serif;font-size:0.9rem;outline:none;transition:border-color 0.2s;}
-    .form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--primary);}
-    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
-    .type-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem;margin-top:0.5rem;}
-    .type-card{border:2px solid var(--gray-200);border-radius:var(--radius-md);padding:1.5rem;cursor:pointer;transition:0.2s;text-align:center;}
-    .type-card:hover{border-color:var(--primary);}
-    .type-card.selected{border-color:var(--primary);background:rgba(0,188,212,0.06);}
-    .type-icon{font-size:2rem;margin-bottom:0.5rem;}
-    .type-name{font-weight:700;font-size:0.95rem;}
-    .type-desc{font-size:0.8rem;color:var(--gray-400);margin-top:0.25rem;}
+    .modal-content{background:white;border-radius:var(--radius-lg);max-width:1000px;width:100%;max-height:90vh;overflow-y:auto;display:flex;flex-direction:column;}
+    .modal-header{display:flex;justify-content:space-between;align-items:center;padding:1.5rem 2rem;border-bottom:2px solid var(--gray-200);position:sticky;top:0;background:white;z-index:5;}
+    .modal-header h2{font-size:1.4rem;font-weight:700;}
+    .close-modal{width:36px;height:36px;border:none;background:var(--gray-100);border-radius:50%;cursor:pointer;font-size:1.1rem;}
+    .modal-body{padding:2rem;display:flex;flex-direction:column;gap:2rem;}
+    .form-section{border:1px solid var(--gray-200);border-radius:var(--radius-lg);padding:1.2rem 1.5rem;background:var(--gray-100);}
+    .form-section h3{font-size:1.1rem;margin-bottom:1rem;display:flex;align-items:center;gap:0.6rem;}
+    .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+    .form-group{margin-bottom:0.8rem;}
+    .form-group label{display:block;margin-bottom:0.3rem;font-weight:600;font-size:0.85rem;}
+    .form-group input,.form-group select,.form-group textarea{width:100%;padding:0.7rem 1rem;border:2px solid var(--gray-200);border-radius:var(--radius-md);font-family:'Inter',sans-serif;font-size:0.9rem;outline:none;}
+    .form-group input:focus,.form-group select:focus{border-color:var(--primary);}
+    .full-width{grid-column:span 2;}
 
-    /* ═══ COLOR VARIANT CARD ═══ */
-    .variants-list{display:flex;flex-direction:column;gap:1rem;margin-bottom:1rem;}
-    .cvc{background:white;border:2px solid var(--gray-200);border-radius:var(--radius-md);overflow:hidden;}
-    .cvc-head{display:flex;align-items:center;gap:0.65rem;padding:0.85rem 1rem;background:var(--gray-100);border-bottom:2px solid var(--gray-200);}
-    .cvc-dot{width:26px;height:26px;border-radius:50%;border:2.5px solid rgba(0,0,0,0.12);flex-shrink:0;transition:background 0.2s;}
-    .cvc-name-input{flex:1;border:none;background:transparent;font-weight:700;font-size:0.92rem;outline:none;font-family:'Inter',sans-serif;color:var(--dark);}
-    .cvc-name-input::placeholder{color:var(--gray-400);font-weight:400;}
-
-    /* icon selector */
-    .cvc-icon-btn{width:38px;height:38px;border:2px solid var(--gray-200);border-radius:0.6rem;background:white;cursor:pointer;font-size:1.15rem;display:flex;align-items:center;justify-content:center;position:relative;flex-shrink:0;}
-    .cvc-icon-btn:hover{border-color:var(--primary);}
-    .icon-popup{display:none;position:absolute;top:calc(100%+4px);right:0;background:white;border:2px solid var(--gray-200);border-radius:var(--radius-md);padding:0.5rem;z-index:200;box-shadow:var(--shadow);width:220px;}
-    .icon-popup.open{display:block;}
-    .icon-grid{display:flex;flex-wrap:wrap;gap:4px;}
-    .icon-opt{width:32px;height:32px;border:2px solid transparent;border-radius:6px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;transition:0.15s;}
-    .icon-opt:hover{border-color:var(--primary);background:rgba(0,188,212,0.08);}
-    .icon-opt.active{border-color:var(--primary);background:rgba(0,188,212,0.12);}
-
-    /* color picker */
-    .cvc-color-btn{width:38px;height:38px;border-radius:50%;border:3px solid white;outline:2px solid var(--gray-200);cursor:pointer;flex-shrink:0;transition:outline-color 0.2s;position:relative;}
-    .cvc-color-btn:hover{outline-color:var(--primary);}
-    .color-popup{display:none;position:absolute;top:calc(100%+6px);left:0;background:white;border:2px solid var(--gray-200);border-radius:var(--radius-md);padding:0.65rem;z-index:200;box-shadow:var(--shadow);width:196px;}
-    .color-popup.open{display:block;}
-    .color-swatch-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:5px;margin-bottom:0.5rem;}
-    .cs{width:24px;height:24px;border-radius:50%;cursor:pointer;border:2.5px solid transparent;transition:0.15s;}
-    .cs:hover,.cs.active{border-color:var(--dark);transform:scale(1.15);}
-    .hex-row{display:flex;align-items:center;gap:0.4rem;border-top:1px solid var(--gray-200);padding-top:0.4rem;}
-    .hex-row label{font-size:0.72rem;color:var(--gray-400);}
-    .hex-input{flex:1;padding:0.28rem 0.5rem;border:1.5px solid var(--gray-200);border-radius:6px;font-family:'Inter',sans-serif;font-size:0.78rem;outline:none;}
-    .hex-input:focus{border-color:var(--primary);}
-
-    .cvc-remove{width:30px;height:30px;border:none;border-radius:50%;background:#fee2e2;color:#ef4444;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:0.85rem;flex-shrink:0;}
-
-    .cvc-body{display:grid;grid-template-columns:200px 1fr;}
-    .cvc-img-pane{padding:1rem;border-right:2px solid var(--gray-200);}
-    .cvc-stor-pane{padding:1rem;}
-    .pane-label{font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:var(--gray-400);margin-bottom:0.55rem;}
-    .upload-zone{border:2px dashed var(--gray-200);border-radius:var(--radius-md);padding:0.9rem;text-align:center;cursor:pointer;background:var(--gray-100);position:relative;min-height:100px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.35rem;transition:border-color 0.2s;}
-    .upload-zone:hover{border-color:var(--primary);}
-    .upload-zone input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
-    .upload-zone img{width:70px;height:70px;object-fit:contain;border-radius:8px;}
-    .upload-ph{font-size:0.78rem;color:var(--gray-400);}
-    .upload-ph i{font-size:1.3rem;display:block;margin-bottom:0.2rem;}
-    .up-prog{font-size:0.72rem;color:var(--primary);font-weight:600;margin-top:0.3rem;}
-
-    .stor-col-heads{display:grid;grid-template-columns:1fr 85px 75px 26px;gap:0.4rem;margin-bottom:0.25rem;}
-    .stor-col-heads span{font-size:0.67rem;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;color:var(--gray-400);}
-    .stor-rows{display:flex;flex-direction:column;gap:0.35rem;margin-bottom:0.5rem;}
-    .stor-row{display:grid;grid-template-columns:1fr 85px 75px 26px;gap:0.4rem;align-items:center;}
-    .sr{padding:0.5rem 0.6rem;border:2px solid var(--gray-200);border-radius:0.6rem;font-family:'Inter',sans-serif;font-size:0.82rem;outline:none;width:100%;}
-    .sr:focus{border-color:var(--primary);}
-    .rm-stor{width:26px;height:26px;border:none;border-radius:50%;background:#fee2e2;color:#ef4444;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:0.72rem;}
-    .btn-add-stor{display:flex;align-items:center;gap:0.35rem;padding:0.38rem 0.75rem;background:white;border:2px dashed var(--gray-200);border-radius:100px;font-size:0.78rem;font-weight:600;color:var(--gray-400);cursor:pointer;font-family:'Inter',sans-serif;transition:0.2s;}
-    .btn-add-stor:hover{border-color:var(--primary);color:var(--primary);}
-
-    .btn-add-color{display:flex;align-items:center;justify-content:center;gap:0.6rem;width:100%;padding:0.85rem;border:2px dashed var(--gray-200);border-radius:var(--radius-md);background:white;cursor:pointer;font-size:0.9rem;font-weight:600;color:var(--gray-400);transition:0.2s;font-family:'Inter',sans-serif;}
-    .btn-add-color:hover{border-color:var(--primary);color:var(--primary);}
-
-    .step-footer{padding:1.2rem 2rem;border-top:2px solid var(--gray-200);display:flex;justify-content:space-between;align-items:center;gap:1rem;}
-    .step-footer-right{display:flex;gap:0.8rem;}
-    .step-hint{font-size:0.82rem;color:var(--gray-400);}
-
-    .toast{position:fixed;bottom:30px;right:30px;background:var(--dark);color:white;padding:0.9rem 1.5rem;border-radius:100px;display:flex;align-items:center;gap:10px;transform:translateX(420px);transition:0.35s;z-index:9999;font-size:0.9rem;}
+    /* Color variants simplified */
+    .color-card{background:white;border:2px solid var(--gray-200);border-radius:var(--radius-lg);padding:1rem;margin-bottom:1.2rem;transition:0.2s;}
+    .color-header{display:flex;flex-wrap:wrap;gap:0.8rem;align-items:center;margin-bottom:1rem;}
+    .color-name{flex:2;min-width:140px;}
+    .color-picker{width:60px;}
+    .color-icon{flex:1;min-width:80px;}
+    .remove-color-btn{background:#fee2e2;color:#ef4444;border:none;border-radius:100px;padding:0.4rem 1rem;cursor:pointer;font-weight:600;}
+    .color-image-area{display:flex;gap:1rem;align-items:center;margin-bottom:1rem;flex-wrap:wrap;}
+    .img-preview{width:70px;height:70px;background:var(--gray-100);border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;overflow:hidden;border:1px solid var(--gray-200);}
+    .img-preview img{max-width:100%;max-height:100%;object-fit:contain;}
+    .upload-btn{background:var(--gray-100);border:1px dashed var(--gray-400);border-radius:var(--radius-md);padding:0.4rem 1rem;font-size:0.8rem;cursor:pointer;display:inline-flex;align-items:center;gap:6px;}
+    .upload-btn:hover{background:var(--gray-200);}
+    .storage-rows{margin-top:0.8rem;}
+    .storage-item{display:grid;grid-template-columns:1fr 110px 100px 32px;gap:0.5rem;margin-bottom:0.6rem;align-items:center;}
+    .storage-item input{padding:0.5rem 0.7rem;border:2px solid var(--gray-200);border-radius:0.6rem;font-size:0.85rem;}
+    .add-storage-btn{background:transparent;border:1px dashed var(--gray-400);border-radius:100px;padding:0.4rem 0.9rem;font-size:0.75rem;font-weight:600;cursor:pointer;margin-top:0.3rem;}
+    .add-color-btn{width:100%;margin-top:0.5rem;padding:0.9rem;background:white;border:2px dashed var(--gray-200);border-radius:var(--radius-md);font-weight:600;cursor:pointer;}
+    .modal-footer{padding:1.2rem 2rem;border-top:2px solid var(--gray-200);display:flex;justify-content:flex-end;gap:1rem;background:white;}
+    .toast{position:fixed;bottom:30px;right:30px;background:var(--dark);color:white;padding:0.9rem 1.5rem;border-radius:100px;display:flex;align-items:center;gap:10px;transform:translateX(420px);transition:0.35s;z-index:9999;}
     .toast.show{transform:translateX(0);}
     .toast.error{background:#ef4444;}
-
     @media(max-width:768px){
       .admin-sidebar{display:none;}.admin-main{margin-left:0;padding:1rem;}
-      .form-row,.type-grid,.cvc-body{grid-template-columns:1fr;}
-      .cvc-img-pane{border-right:none;border-bottom:2px solid var(--gray-200);}
-      .step-tab .step-label{display:none;}
+      .form-grid{grid-template-columns:1fr;}.full-width{grid-column:span 1;}
+      .storage-item{grid-template-columns:1fr 100px 80px 28px;}
     }
   </style>
 </head>
 <body>
 <div class="admin-container">
   <aside class="admin-sidebar">
-    <div class="sidebar-header">
-      <a href="dashboard.html"><img src="../photos/logo.png" alt="logo"><h2>BMB<span>Admin</span></h2></a>
-    </div>
+    <div class="sidebar-header"><a href="dashboard.html"><img src="../photos/logo.png" alt="logo"><h2>BMB<span>Admin</span></h2></a></div>
     <div class="sidebar-menu">
       <div class="menu-item"><a href="dashboard.html"><i class="fa-solid fa-gauge"></i> Dashboard</a></div>
       <div class="menu-item"><a href="users.html"><i class="fa-solid fa-users"></i> Users</a></div>
@@ -178,101 +114,54 @@
       <div class="menu-item logout"><a href="#" onclick="handleLogout()"><i class="fa-solid fa-sign-out"></i> Logout</a></div>
     </div>
   </aside>
-
   <main class="admin-main">
     <header class="admin-header">
-      <div class="header-title"><h1>Products</h1><p>Color-first variants with per-storage pricing</p></div>
-      <div class="header-profile">
-        <div class="profile-avatar" id="adminInitials">A</div>
-        <div><div style="font-weight:600" id="adminName">Admin</div><div style="font-size:0.8rem;">Administrator</div></div>
-      </div>
+      <div class="header-title"><h1>Products</h1><p>Manage colors, storage & pricing</p></div>
+      <div class="header-profile"><div class="profile-avatar" id="adminInitials">A</div><div><div style="font-weight:600" id="adminName">Admin</div><div style="font-size:0.8rem;">Administrator</div></div></div>
     </header>
-    <div class="page-actions">
-      <h2>All Products</h2>
-      <button class="btn btn-primary" onclick="showAddModal()"><i class="fa-solid fa-plus"></i> Add New Product</button>
-    </div>
-    <div class="filters-section">
-      <div class="filters-grid">
-        <select class="filter-select" id="categoryFilter" onchange="filterProducts()"><option value="all">All Categories</option></select>
-        <select class="filter-select" id="brandFilter" onchange="filterProducts()"><option value="all">All Brands</option></select>
-        <div class="search-box">
-          <input type="text" id="searchInput" placeholder="Search products...">
-          <button onclick="filterProducts()"><i class="fa-solid fa-search"></i></button>
-        </div>
-      </div>
-    </div>
-    <div class="products-grid" id="productsGrid">
-      <div style="grid-column:1/-1;text-align:center;padding:3rem;color:var(--gray-400)">
-        <i class="fa-solid fa-spinner fa-spin" style="font-size:2rem;margin-bottom:1rem;display:block"></i>Loading…
-      </div>
-    </div>
+    <div class="page-actions"><h2>All Products</h2><button class="btn btn-primary" onclick="showAddModal()"><i class="fa-solid fa-plus"></i> Add New Product</button></div>
+    <div class="filters-section"><div class="filters-grid">
+      <select class="filter-select" id="categoryFilter" onchange="filterProducts()"><option value="all">All Categories</option></select>
+      <select class="filter-select" id="brandFilter" onchange="filterProducts()"><option value="all">All Brands</option></select>
+      <div class="search-box"><input type="text" id="searchInput" placeholder="Search products..."><button onclick="filterProducts()"><i class="fa-solid fa-search"></i></button></div>
+    </div></div>
+    <div class="products-grid" id="productsGrid"><div style="grid-column:1/-1;text-align:center;padding:3rem;"><i class="fa-solid fa-spinner fa-spin"></i> Loading…</div></div>
   </main>
 </div>
 
-<!-- MODAL -->
+<!-- SIMPLIFIED MODAL (one step) -->
 <div id="productModal" class="modal">
   <div class="modal-content">
-    <div class="stepper-header">
-      <div class="stepper-top">
-        <h2 id="modalTitle">Add New Product</h2>
-        <button class="close-modal" onclick="closeModal()"><i class="fa-solid fa-times"></i></button>
+    <div class="modal-header"><h2 id="modalTitle">Add / Edit Product</h2><button class="close-modal" onclick="closeModal()"><i class="fa-solid fa-times"></i></button></div>
+    <div class="modal-body">
+      <!-- BASIC INFO SECTION -->
+      <div class="form-section"><h3><i class="fa-regular fa-rectangle-list"></i> Basic Information</h3>
+        <div class="form-grid">
+          <div class="form-group"><label>Product Name *</label><input type="text" id="productName" placeholder="iPhone 15 Pro, Galaxy S24..."></div>
+          <div class="form-group"><label>Brand</label><input type="text" id="productBrand" placeholder="Apple, Samsung..."></div>
+          <div class="form-group"><label>Product Type *</label><select id="productTypeSelect">
+            <option value="Smartphone">📱 Smartphone</option><option value="Laptop">💻 Laptop</option><option value="Tablet">📟 Tablet</option><option value="Accessory">🎧 Accessory</option>
+          </select></div>
+          <div class="form-group"><label>Category</label><select id="productCategory">
+            <option value="phones">Phones</option><option value="laptops">Laptops</option><option value="tablets">Tablets</option><option value="accessories">Accessories</option>
+          </select></div>
+          <div class="form-group"><label>Compare-at price (K) optional</label><input type="number" id="comparePrice" step="0.01" placeholder="0.00"></div>
+          <div class="form-group full-width"><label>Short description (card preview)</label><textarea id="shortDesc" rows="2" placeholder="Brief summary..."></textarea></div>
+          <div class="form-group full-width"><label>Full description</label><textarea id="fullDesc" rows="3" placeholder="Detailed product description..."></textarea></div>
+        </div>
       </div>
-      <div class="step-indicators">
-        <div class="step-tab active" id="tab-1"><div class="step-num">1</div><span class="step-label">Type</span></div>
-        <div class="step-tab" id="tab-2"><div class="step-num">2</div><span class="step-label">Details</span></div>
-        <div class="step-tab" id="tab-3"><div class="step-num">3</div><span class="step-label">Colors &amp; Variants</span></div>
+      <!-- COLORS & VARIANTS SECTION (simplified dynamic) -->
+      <div class="form-section"><h3><i class="fa-regular fa-palette"></i> Colors & Variants</h3>
+        <div id="colorsContainer"></div>
+        <button type="button" class="add-color-btn" onclick="addColorVariant()"><i class="fa-solid fa-plus"></i> + Add Color</button>
+        <p style="font-size:0.75rem; color:var(--gray-400); margin-top:0.5rem;">Each color has its own image, icon, and storage options (price + stock).</p>
       </div>
     </div>
-    <div class="step-panels">
-      <!-- STEP 1 -->
-      <div class="step-panel active" id="panel-1">
-        <p style="color:var(--gray-400);font-size:0.9rem;margin-bottom:1.2rem">Select the type of product you are adding.</p>
-        <div class="type-grid">
-          <div class="type-card" data-type="Smartphone" onclick="selectType(this)"><div class="type-icon">📱</div><div class="type-name">Smartphone</div><div class="type-desc">Mobile phones &amp; handsets</div></div>
-          <div class="type-card" data-type="Laptop" onclick="selectType(this)"><div class="type-icon">💻</div><div class="type-name">Laptop</div><div class="type-desc">Notebooks &amp; ultrabooks</div></div>
-          <div class="type-card" data-type="Tablet" onclick="selectType(this)"><div class="type-icon">📟</div><div class="type-name">Tablet</div><div class="type-desc">iPads &amp; Android tablets</div></div>
-          <div class="type-card" data-type="Accessory" onclick="selectType(this)"><div class="type-icon">🎧</div><div class="type-name">Accessory</div><div class="type-desc">Cables, cases &amp; more</div></div>
-        </div>
-      </div>
-      <!-- STEP 2 -->
-      <div class="step-panel" id="panel-2">
-        <div class="form-row">
-          <div class="form-group"><label>Product Name *</label><input type="text" id="f-name" placeholder="e.g. Samsung Galaxy S25"></div>
-          <div class="form-group"><label>Brand</label><input type="text" id="f-brand" placeholder="e.g. Samsung"></div>
-        </div>
-        <div class="form-row">
-          <div class="form-group"><label>Category</label>
-            <select id="f-category"><option value="phones">Phones</option><option value="laptops">Laptops</option><option value="tablets">Tablets</option><option value="accessories">Accessories</option></select>
-          </div>
-          <div class="form-group"><label>Product Type</label><input type="text" id="f-type-display" readonly style="background:var(--gray-100);cursor:not-allowed;"></div>
-        </div>
-        <div class="form-row">
-          <div class="form-group"><label>Compare-at Price (K) <span style="font-weight:400;color:var(--gray-400)">optional strikethrough</span></label><input type="number" id="f-oldprice" step="0.01" placeholder="0.00"></div>
-        </div>
-        <div class="form-group"><label>Description</label><textarea id="f-desc" rows="3" placeholder="Full product description…"></textarea></div>
-        <div class="form-group"><label>Short Description</label><textarea id="f-shortdesc" rows="2" placeholder="Brief summary shown on listing cards…"></textarea></div>
-      </div>
-      <!-- STEP 3 -->
-      <div class="step-panel" id="panel-3">
-        <p style="color:var(--gray-400);font-size:0.88rem;margin-bottom:1rem">
-          <strong>Color is the main category.</strong> Each color gets its own image and icon. Under each color, add storage/spec options — each with its own price and stock.
-        </p>
-        <div class="variants-list" id="variantsList"></div>
-        <button class="btn-add-color" onclick="addColor()"><i class="fa-solid fa-plus"></i> Add Color</button>
-      </div>
-    </div>
-    <div class="step-footer">
-      <div class="step-hint" id="stepHint">Choose a product type to continue.</div>
-      <div class="step-footer-right">
-        <button class="btn btn-secondary" id="btnBack" onclick="goStep(-1)" style="display:none">← Back</button>
-        <button class="btn btn-primary" id="btnNext" onclick="goStep(1)">Next →</button>
-        <button class="btn btn-primary" id="btnSave" onclick="handleSubmit()" style="display:none"><i class="fa-solid fa-floppy-disk"></i> Save Product</button>
-      </div>
-    </div>
+    <div class="modal-footer"><button class="btn btn-secondary" onclick="closeModal()">Cancel</button><button class="btn btn-primary" id="saveProductBtn" onclick="saveProduct()"><i class="fa-solid fa-floppy-disk"></i> Save Product</button></div>
   </div>
 </div>
 
-<div class="toast" id="toast"><i class="fa-regular fa-circle-check"></i><span>Done!</span></div>
+<div class="toast" id="toast"><i class="fa-regular fa-circle-check"></i><span>Done</span></div>
 
 <script type="module">
 import { auth, db, storage } from '../js/firebase-config.js';
@@ -281,326 +170,276 @@ import { ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.c
 import { signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 import { observeAuthState, isUserAdmin } from '../js/auth.js';
 
-const PRESET_COLORS=['#111827','#f8fafc','#e2e8f0','#94a3b8','#ef4444','#f97316','#eab308','#22c55e','#14b8a6','#06b6d4','#3b82f6','#8b5cf6','#ec4899','#d97706','#92400e','#78716c','#1e293b','#fbbf24'];
-const COLOR_ICONS=['⬛','⬜','🔴','🟠','🟡','🟢','🔵','🟣','🟤','🩶','🩷','🩵','⚫','⚪','🔶','🔷','💛','❤️','💜','💙','💚','🖤','🤍','🤎','🔲','🔳'];
+let allProducts = [];
+let currentColors = []; // array of { name, cssColor, icon, imageUrl, storageOptions: [{storage, price, stock}] }
+let editingProductId = null;
 
-let allProducts=[], colorVariants=[], currentStep=1, selectedType='', editingProductId=null;
-
-function showToast(msg,err=false){const t=document.getElementById('toast');t.querySelector('span').textContent=msg;t.className='toast show'+(err?' error':'');setTimeout(()=>t.classList.remove('show'),3200);}
-
-observeAuthState(async user=>{
-  if(!user){window.location.href='../login.html';return;}
-  const admin=await isUserAdmin(user.uid);
-  if(!admin){alert('Access denied.');window.location.href='../index.html';return;}
-  const ud=await getDoc(doc(db,'users',user.uid));
-  document.getElementById('adminName').textContent=ud.data()?.name||'Admin';
-  document.getElementById('adminInitials').textContent=(ud.data()?.name||'A').charAt(0).toUpperCase();
-  await loadProducts();
-});
-
-async function loadProducts(){
-  try{
-    const snap=await getDocs(query(collection(db,'products'),orderBy('createdAt','desc')));
-    allProducts=snap.docs.map(d=>({id:d.id,...d.data()}));
-    updateFilters();displayProducts(allProducts);
-  }catch(e){showToast('Failed to load products',true);}
+// helpers
+function showToast(msg, isErr = false) {
+  const t = document.getElementById('toast');
+  t.querySelector('span').textContent = msg;
+  t.className = 'toast show' + (isErr ? ' error' : '');
+  setTimeout(() => t.classList.remove('show'), 3000);
 }
-function updateFilters(){
-  const cats=[...new Set(allProducts.map(p=>p.category).filter(Boolean))];
-  document.getElementById('categoryFilter').innerHTML='<option value="all">All Categories</option>'+cats.map(c=>`<option value="${c}">${c}</option>`).join('');
-  const brands=[...new Set(allProducts.map(p=>p.brand).filter(Boolean))];
-  document.getElementById('brandFilter').innerHTML='<option value="all">All Brands</option>'+brands.map(b=>`<option value="${b}">${b}</option>`).join('');
+
+// Load products
+async function loadProducts() {
+  try {
+    const snap = await getDocs(query(collection(db, 'products'), orderBy('createdAt', 'desc')));
+    allProducts = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    updateFilters();
+    renderProductGrid(allProducts);
+  } catch (e) { showToast('Failed load products', true); }
 }
-function getPriceRange(p){
-  const prices=(p.colors||[]).flatMap(c=>(c.storageOptions||[]).map(o=>o.price)).filter(Boolean);
-  if(!prices.length)return{min:0,max:0};
-  return{min:Math.min(...prices),max:Math.max(...prices)};
+function updateFilters() {
+  const cats = [...new Set(allProducts.map(p => p.category).filter(Boolean))];
+  document.getElementById('categoryFilter').innerHTML = '<option value="all">All Categories</option>' + cats.map(c => `<option value="${c}">${c}</option>`).join('');
+  const brands = [...new Set(allProducts.map(p => p.brand).filter(Boolean))];
+  document.getElementById('brandFilter').innerHTML = '<option value="all">All Brands</option>' + brands.map(b => `<option value="${b}">${b}</option>`).join('');
 }
-function displayProducts(products){
-  const grid=document.getElementById('productsGrid');
-  if(!products.length){grid.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:3rem;color:var(--gray-400)">No products found.</div>';return;}
-  grid.innerHTML=products.map(p=>{
-    const firstColor=p.colors?.[0];
-    const img=firstColor?.imageUrl||'';
-    const pr=getPriceRange(p);
-    const priceStr=pr.min===pr.max?`K${pr.min.toLocaleString()}`:`K${pr.min.toLocaleString()} – K${pr.max.toLocaleString()}`;
-    const totalStock=(p.colors||[]).reduce((s,c)=>s+(c.storageOptions||[]).reduce((ss,o)=>ss+(o.stock||0),0),0);
-    const icons=(p.colors||[]).slice(0,6).map(c=>`<span title="${c.name}" style="font-size:1.1rem">${c.icon||'🔵'}</span>`).join('');
-    return`<div class="product-card">
-      <div class="product-image">${img?`<img src="${img}" onerror="this.style.display='none'">`:'<span style="font-size:3rem">📦</span>'}</div>
-      <div class="product-info">
-        <div class="product-name">${p.name}</div>
-        <div class="product-meta">${p.brand||''} · ${p.type||''}</div>
-        <div class="product-price">${priceStr}</div>
-        <div class="product-meta" style="display:flex;align-items:center;gap:0.4rem">${icons}<span>· ${totalStock} in stock</span></div>
-        <div class="product-actions">
-          <button class="edit-btn" onclick="editProduct('${p.id}')"><i class="fa-solid fa-pen"></i> Edit</button>
-          <button class="delete-btn" onclick="deleteProduct('${p.id}')"><i class="fa-regular fa-trash-can"></i> Delete</button>
-        </div>
-      </div>
-    </div>`;
+function getPriceRange(p) {
+  const prices = (p.colors || []).flatMap(c => (c.storageOptions || []).map(o => o.price)).filter(v => v > 0);
+  if (!prices.length) return { min: 0, max: 0 };
+  return { min: Math.min(...prices), max: Math.max(...prices) };
+}
+function renderProductGrid(products) {
+  const grid = document.getElementById('productsGrid');
+  if (!products.length) { grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:3rem;">No products found.</div>'; return; }
+  grid.innerHTML = products.map(p => {
+    const firstColor = p.colors?.[0];
+    const img = firstColor?.imageUrl || '';
+    const range = getPriceRange(p);
+    const priceStr = range.min === range.max ? `K${range.min.toLocaleString()}` : `K${range.min.toLocaleString()} – K${range.max.toLocaleString()}`;
+    const totalStock = (p.colors || []).reduce((s, c) => s + (c.storageOptions || []).reduce((ss, o) => ss + (o.stock || 0), 0), 0);
+    const icons = (p.colors || []).slice(0, 4).map(c => `<span title="${c.name}" style="font-size:1rem">${c.icon || '🔵'}</span>`).join('');
+    return `<div class="product-card"><div class="product-image">${img ? `<img src="${img}" onerror="this.style.display='none'">` : '<span style="font-size:3rem">📦</span>'}</div><div class="product-info"><div class="product-name">${p.name}</div><div class="product-meta">${p.brand || ''} · ${p.type || ''}</div><div class="product-price">${priceStr}</div><div class="product-meta" style="display:flex;gap:0.4rem">${icons}<span>· ${totalStock} in stock</span></div><div class="product-actions"><button class="edit-btn" onclick="window.editProductById('${p.id}')"><i class="fa-solid fa-pen"></i> Edit</button><button class="delete-btn" onclick="window.deleteProductById('${p.id}')"><i class="fa-regular fa-trash-can"></i> Delete</button></div></div></div>`;
   }).join('');
 }
-window.filterProducts=()=>{
-  const cat=document.getElementById('categoryFilter').value;
-  const brand=document.getElementById('brandFilter').value;
-  const q=document.getElementById('searchInput').value.toLowerCase();
-  displayProducts(allProducts.filter(p=>(cat==='all'||p.category===cat)&&(brand==='all'||p.brand===brand)&&(!q||p.name?.toLowerCase().includes(q))));
+window.filterProducts = () => {
+  const cat = document.getElementById('categoryFilter').value;
+  const brand = document.getElementById('brandFilter').value;
+  const q = document.getElementById('searchInput').value.toLowerCase();
+  const filtered = allProducts.filter(p => (cat === 'all' || p.category === cat) && (brand === 'all' || p.brand === brand) && (!q || p.name?.toLowerCase().includes(q)));
+  renderProductGrid(filtered);
 };
 
-/* STEPPER */
-function setStep(n){
-  currentStep=n;
-  for(let i=1;i<=3;i++){
-    document.getElementById(`panel-${i}`).classList.toggle('active',i===n);
-    const tab=document.getElementById(`tab-${i}`);
-    tab.classList.remove('active','done');
-    if(i===n)tab.classList.add('active');else if(i<n)tab.classList.add('done');
-  }
-  document.getElementById('btnBack').style.display=n>1?'':'none';
-  document.getElementById('btnNext').style.display=n<3?'':'none';
-  document.getElementById('btnSave').style.display=n===3?'':'none';
-  const hints=['Choose a product type to continue.','Fill in the product details.','Add colors — each with its own image, icon, and storage options.'];
-  document.getElementById('stepHint').textContent=hints[n-1];
-}
-window.goStep=(dir)=>{
-  const next=currentStep+dir;
-  if(dir>0){
-    if(currentStep===1&&!selectedType){showToast('Please select a product type.',true);return;}
-    if(currentStep===2&&!document.getElementById('f-name').value.trim()){showToast('Product name is required.',true);return;}
-  }
-  if(next<1||next>3)return;
-  setStep(next);
-};
-window.selectType=(card)=>{
-  document.querySelectorAll('.type-card').forEach(c=>c.classList.remove('selected'));
-  card.classList.add('selected');selectedType=card.dataset.type;
-  document.getElementById('f-type-display').value=selectedType;
-  const map={Smartphone:'phones',Laptop:'laptops',Tablet:'tablets',Accessory:'accessories'};
-  if(map[selectedType])document.getElementById('f-category').value=map[selectedType];
-};
-
-/* RENDER VARIANTS */
-function renderVariants(){
-  const list=document.getElementById('variantsList');
-  if(!list)return;
-  list.innerHTML='';
-  colorVariants.forEach((v,idx)=>{
-    const card=document.createElement('div');
-    card.className='cvc';
-
-    // Color picker popup HTML
-    const colorPopupId=`cpop-${idx}`;
-    const iconPopupId=`ipop-${idx}`;
-
-    card.innerHTML=`
-      <div class="cvc-head">
-        <div class="cvc-dot" id="dot-${idx}" style="background:${v.cssColor||'#94a3b8'}"></div>
-
-        <!-- Color picker -->
-        <div style="position:relative;flex-shrink:0">
-          <button type="button" class="cvc-color-btn" id="colbtn-${idx}"
-            style="background:${v.cssColor||'#94a3b8'}"
-            onclick="togglePopup('${colorPopupId}')"></button>
-          <div class="color-popup" id="${colorPopupId}">
-            <div class="color-swatch-grid">
-              ${PRESET_COLORS.map(c=>`<div class="cs${c===v.cssColor?' active':''}" style="background:${c}" onclick="pickColor(${idx},'${c}')"></div>`).join('')}
-            </div>
-            <div class="hex-row">
-              <label>Hex</label>
-              <input class="hex-input" type="text" placeholder="#000000" value="${v.cssColor||''}" oninput="pickHex(${idx},this.value)">
-            </div>
-          </div>
-        </div>
-
-        <input type="text" class="cvc-name-input" placeholder="Color name e.g. Midnight Black"
-          value="${v.name||''}" oninput="updateColorName(${idx},this.value)">
-
-        <!-- Icon picker -->
-        <div style="position:relative;flex-shrink:0">
-          <button type="button" class="cvc-icon-btn" onclick="togglePopup('${iconPopupId}')" title="Choose icon">
-            <span id="icon-display-${idx}">${v.icon||'🔵'}</span>
-          </button>
-          <div class="icon-popup" id="${iconPopupId}">
-            <div class="icon-grid">
-              ${COLOR_ICONS.map(ic=>`<div class="icon-opt${ic===v.icon?' active':''}" onclick="pickIcon(${idx},'${ic}')">${ic}</div>`).join('')}
-            </div>
-          </div>
-        </div>
-
-        <button class="cvc-remove" onclick="removeColor(${idx})" title="Remove"><i class="fa-solid fa-times"></i></button>
+// ----- COLOR VARIANTS RENDER (simplified) -----
+function renderColorList() {
+  const container = document.getElementById('colorsContainer');
+  if (!container) return;
+  if (currentColors.length === 0) { container.innerHTML = '<div style="text-align:center; padding:1rem; background:var(--gray-100); border-radius:1rem; color:gray;">No colors added. Click "Add Color" to start.</div>'; return; }
+  container.innerHTML = currentColors.map((color, idx) => `
+    <div class="color-card" data-color-index="${idx}">
+      <div class="color-header">
+        <div class="color-name"><label>Color name</label><input type="text" class="color-name-input" value="${escapeHtml(color.name || '')}" placeholder="e.g. Midnight Black" data-field="name"></div>
+        <div class="color-picker"><label>Color</label><input type="color" class="color-hex-input" value="${color.cssColor || '#94a3b8'}" data-field="cssColor"></div>
+        <div class="color-icon"><label>Icon (emoji)</label><input type="text" class="color-icon-input" maxlength="2" value="${color.icon || '🔵'}" placeholder="🔵" data-field="icon"></div>
+        <button type="button" class="remove-color-btn" data-remove-idx="${idx}"><i class="fa-regular fa-trash-can"></i> Remove</button>
       </div>
-      <div class="cvc-body">
-        <div class="cvc-img-pane">
-          <div class="pane-label">Color Image</div>
-          <div class="upload-zone" id="uz-${idx}">
-            <input type="file" accept="image/*" onchange="uploadImage(${idx},this.files[0])">
-            ${v.imageUrl?`<img src="${v.imageUrl}" alt="preview">`:`<div class="upload-ph"><i class="fa-solid fa-cloud-arrow-up"></i>Click to upload</div>`}
-          </div>
-          <div id="up-prog-${idx}" class="up-prog" style="display:none"></div>
-        </div>
-        <div class="cvc-stor-pane">
-          <div class="pane-label">Storage / Spec Options</div>
-          <div class="stor-col-heads"><span>Storage</span><span>Price (K)</span><span>Qty</span><span></span></div>
-          <div class="stor-rows" id="sl-${idx}"></div>
-          <button class="btn-add-stor" onclick="addStorage(${idx})"><i class="fa-solid fa-plus"></i> Add Option</button>
-        </div>
+      <div class="color-image-area">
+        <div class="img-preview" id="preview-${idx}">${color.imageUrl ? `<img src="${color.imageUrl}" alt="preview">` : '<i class="fa-regular fa-image" style="font-size:1.5rem; color:#ccc;"></i>'}</div>
+        <label class="upload-btn" data-idx="${idx}"><i class="fa-solid fa-cloud-arrow-up"></i> Upload Image<input type="file" accept="image/*" class="hidden-file-input" data-upload-idx="${idx}" style="display:none;"></label>
+        <span style="font-size:0.7rem; color:var(--gray-400);">Required: main color image</span>
       </div>
-    `;
-    list.appendChild(card);
-
-    // Render storage rows
-    const sl=document.getElementById(`sl-${idx}`);
-    (v.storageOptions||[]).forEach((opt,oi)=>{
-      const row=document.createElement('div');
-      row.className='stor-row';
-      row.innerHTML=`
-        <input class="sr" type="text" placeholder="e.g. 128GB" value="${opt.storage||''}" oninput="updateStor(${idx},${oi},'storage',this.value)">
-        <input class="sr" type="number" placeholder="Price" value="${opt.price||''}" min="0" step="0.01" oninput="updateStor(${idx},${oi},'price',parseFloat(this.value)||0)">
-        <input class="sr" type="number" placeholder="Qty" value="${opt.stock||0}" min="0" oninput="updateStor(${idx},${oi},'stock',parseInt(this.value)||0)">
-        <button class="rm-stor" onclick="removeStor(${idx},${oi})"><i class="fa-solid fa-times"></i></button>
-      `;
-      sl.appendChild(row);
+      <div class="storage-section">
+        <div style="font-weight:600; font-size:0.8rem; margin:0.5rem 0 0.3rem;">Storage / Capacity options</div>
+        <div class="storage-rows" id="storage-rows-${idx}"></div>
+        <button type="button" class="add-storage-btn" data-idx="${idx}"><i class="fa-solid fa-plus"></i> Add option</button>
+      </div>
+    </div>
+  `);
+  // Populate storage rows for each color
+  currentColors.forEach((color, idx) => {
+    const storageDiv = document.getElementById(`storage-rows-${idx}`);
+    if (storageDiv) {
+      const options = color.storageOptions || [];
+      storageDiv.innerHTML = options.map((opt, optIdx) => `
+        <div class="storage-item" data-stor-idx="${optIdx}">
+          <input type="text" placeholder="e.g. 128GB" value="${escapeHtml(opt.storage || '')}" class="stor-name" data-stor-field="storage">
+          <input type="number" placeholder="Price (K)" value="${opt.price || 0}" step="0.01" class="stor-price" data-stor-field="price">
+          <input type="number" placeholder="Stock" value="${opt.stock || 0}" step="1" class="stor-stock" data-stor-field="stock">
+          <button class="remove-storage-btn" data-remove-stor="${optIdx}"><i class="fa-solid fa-times"></i></button>
+        </div>
+      `).join('');
+      // attach storage listeners
+      storageDiv.querySelectorAll('.storage-item').forEach(item => {
+        const storIdx = parseInt(item.dataset.storIdx);
+        item.querySelector('.stor-name')?.addEventListener('input', (e) => { currentColors[idx].storageOptions[storIdx].storage = e.target.value; });
+        item.querySelector('.stor-price')?.addEventListener('input', (e) => { currentColors[idx].storageOptions[storIdx].price = parseFloat(e.target.value) || 0; });
+        item.querySelector('.stor-stock')?.addEventListener('input', (e) => { currentColors[idx].storageOptions[storIdx].stock = parseInt(e.target.value) || 0; });
+        item.querySelector('.remove-storage-btn')?.addEventListener('click', () => { currentColors[idx].storageOptions.splice(storIdx, 1); renderColorList(); });
+      });
+    }
+  });
+  // attach input events for color fields
+  document.querySelectorAll('.color-name-input').forEach(inp => {
+    const card = inp.closest('.color-card');
+    const idx = parseInt(card?.dataset.colorIndex);
+    inp.addEventListener('input', (e) => { if (!isNaN(idx)) currentColors[idx].name = e.target.value; });
+  });
+  document.querySelectorAll('.color-hex-input').forEach(inp => {
+    const card = inp.closest('.color-card');
+    const idx = parseInt(card?.dataset.colorIndex);
+    inp.addEventListener('input', (e) => { if (!isNaN(idx)) currentColors[idx].cssColor = e.target.value; });
+  });
+  document.querySelectorAll('.color-icon-input').forEach(inp => {
+    const card = inp.closest('.color-card');
+    const idx = parseInt(card?.dataset.colorIndex);
+    inp.addEventListener('input', (e) => { if (!isNaN(idx)) currentColors[idx].icon = e.target.value.substring(0,2); });
+  });
+  document.querySelectorAll('.remove-color-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => { const idx = parseInt(btn.dataset.removeIdx); if (!isNaN(idx)) { currentColors.splice(idx, 1); renderColorList(); } });
+  });
+  // file upload trigger
+  document.querySelectorAll('.upload-btn').forEach(btn => {
+    const idx = parseInt(btn.dataset.idx);
+    const fileInput = btn.querySelector('.hidden-file-input');
+    if (fileInput) {
+      fileInput.addEventListener('change', async (e) => {
+        const file = e.target.files[0];
+        if (!file || !auth.currentUser) return;
+        const progressSpan = btn.querySelector('.upload-progress') || (() => { let s = document.createElement('span'); s.className = 'upload-progress'; s.style.marginLeft = '8px'; s.style.fontSize = '0.7rem'; btn.appendChild(s); return s; })();
+        progressSpan.textContent = '⏫ uploading...';
+        const path = `products/${Date.now()}_${idx}_${file.name.replace(/[^a-zA-Z0-9.]/g, '_')}`;
+        const task = uploadBytesResumable(ref(storage, path), file);
+        try {
+          await new Promise((resolve, reject) => {
+            task.on('state_changed', null, reject, async () => {
+              const url = await getDownloadURL(task.snapshot.ref);
+              currentColors[idx].imageUrl = url;
+              progressSpan.textContent = '✓ uploaded';
+              setTimeout(() => { if (progressSpan) progressSpan.remove(); }, 1500);
+              renderColorList();
+              resolve();
+            });
+          });
+        } catch (err) { showToast('Upload failed', true); progressSpan.remove(); }
+        fileInput.value = '';
+      });
+      btn.addEventListener('click', () => fileInput.click());
+    }
+  });
+  // add storage listeners (dynamic)
+  document.querySelectorAll('.add-storage-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const idx = parseInt(btn.dataset.idx);
+      if (!isNaN(idx)) {
+        if (!currentColors[idx].storageOptions) currentColors[idx].storageOptions = [];
+        currentColors[idx].storageOptions.push({ storage: '', price: 0, stock: 0 });
+        renderColorList();
+      }
     });
   });
 }
+function escapeHtml(str) { if(!str) return ''; return str.replace(/[&<>]/g, function(m){if(m==='&') return '&amp;'; if(m==='<') return '&lt;'; if(m==='>') return '&gt;'; return m;}); }
 
-/* POPUP TOGGLE — close others */
-window.togglePopup=(id)=>{
-  const popup=document.getElementById(id);
-  const wasOpen=popup.classList.contains('open');
-  document.querySelectorAll('.color-popup,.icon-popup').forEach(p=>p.classList.remove('open'));
-  if(!wasOpen)popup.classList.add('open');
-};
-document.addEventListener('click',e=>{
-  if(!e.target.closest('.cvc-color-btn')&&!e.target.closest('.color-popup')&&
-     !e.target.closest('.cvc-icon-btn')&&!e.target.closest('.icon-popup'))
-    document.querySelectorAll('.color-popup,.icon-popup').forEach(p=>p.classList.remove('open'));
-});
-
-window.pickColor=(idx,hex)=>{
-  colorVariants[idx].cssColor=hex;
-  document.getElementById(`dot-${idx}`).style.background=hex;
-  document.getElementById(`colbtn-${idx}`).style.background=hex;
-  document.getElementById(`cpop-${idx}`).querySelectorAll('.cs').forEach(s=>{
-    const bg=s.style.background;s.classList.toggle('active',bg===hex||bg.replace(/\s/g,'')===hex.replace(/\s/g,''));
-  });
-  document.getElementById(`cpop-${idx}`).querySelector('.hex-input').value=hex;
-};
-window.pickHex=(idx,hex)=>{
-  if(!/^#[0-9A-Fa-f]{6}$/.test(hex))return;
-  colorVariants[idx].cssColor=hex;
-  document.getElementById(`dot-${idx}`).style.background=hex;
-  document.getElementById(`colbtn-${idx}`).style.background=hex;
-};
-window.pickIcon=(idx,icon)=>{
-  colorVariants[idx].icon=icon;
-  document.getElementById(`icon-display-${idx}`).textContent=icon;
-  document.getElementById(`ipop-${idx}`).querySelectorAll('.icon-opt').forEach(el=>el.classList.toggle('active',el.textContent===icon));
-  document.getElementById(`ipop-${idx}`).classList.remove('open');
-};
-window.updateColorName=(idx,val)=>{colorVariants[idx].name=val;};
-window.addColor=()=>{colorVariants.push({name:'',cssColor:'#94a3b8',icon:'🔵',imageUrl:'',storageOptions:[]});renderVariants();};
-window.removeColor=(idx)=>{colorVariants.splice(idx,1);renderVariants();};
-window.addStorage=(idx)=>{colorVariants[idx].storageOptions.push({storage:'',price:0,stock:0});renderVariants();};
-window.removeStor=(idx,oi)=>{colorVariants[idx].storageOptions.splice(oi,1);renderVariants();};
-window.updateStor=(idx,oi,field,val)=>{if(colorVariants[idx]?.storageOptions[oi])colorVariants[idx].storageOptions[oi][field]=val;};
-
-/* IMAGE UPLOAD */
-window.uploadImage=async(idx,file)=>{
-  if(!file||!auth.currentUser)return;
-  const prog=document.getElementById(`up-prog-${idx}`);
-  if(prog){prog.style.display='block';prog.textContent='Uploading…';}
-  const path=`temp_products/${Date.now()}_${idx}_${file.name.replace(/[^a-zA-Z0-9.]/g,'_')}`;
-  const task=uploadBytesResumable(ref(storage,path),file);
-  task.on('state_changed',
-    s=>{const pct=Math.round(s.bytesTransferred/s.totalBytes*100);if(prog)prog.textContent=`Uploading… ${pct}%`;},
-    err=>{showToast('Upload failed: '+err.message,true);if(prog)prog.style.display='none';},
-    async()=>{
-      const url=await getDownloadURL(task.snapshot.ref);
-      colorVariants[idx].imageUrl=url;
-      if(prog)prog.style.display='none';
-      renderVariants();showToast(`Image uploaded for ${colorVariants[idx].name||'color'}`);
-    }
-  );
+window.addColorVariant = () => {
+  currentColors.push({ name: '', cssColor: '#3b82f6', icon: '🔵', imageUrl: '', storageOptions: [] });
+  renderColorList();
 };
 
-/* OPEN MODAL */
-window.showAddModal=()=>{
-  editingProductId=null;selectedType='';colorVariants=[];
-  document.getElementById('modalTitle').textContent='Add New Product';
-  document.getElementById('productModal').classList.add('show');
-  ['f-name','f-brand','f-oldprice','f-desc','f-shortdesc','f-type-display'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
-  document.getElementById('f-category').value='phones';
-  document.querySelectorAll('.type-card').forEach(c=>c.classList.remove('selected'));
-  renderVariants();setStep(1);
-};
-window.editProduct=(id)=>{
-  const p=allProducts.find(x=>x.id===id);if(!p)return;
-  editingProductId=id;selectedType=p.type||'';
-  colorVariants=(p.colors||[]).map(c=>({
-    name:c.name||'',cssColor:c.cssColor||'#94a3b8',icon:c.icon||'🔵',imageUrl:c.imageUrl||'',
-    storageOptions:(c.storageOptions||[]).map(o=>({storage:o.storage,price:o.price||0,stock:o.stock||0}))
-  }));
-  document.getElementById('modalTitle').textContent='Edit Product';
-  document.getElementById('f-name').value=p.name||'';
-  document.getElementById('f-brand').value=p.brand||'';
-  document.getElementById('f-oldprice').value=p.oldPrice||'';
-  document.getElementById('f-desc').value=p.description||'';
-  document.getElementById('f-shortdesc').value=p.shortDesc||'';
-  document.getElementById('f-category').value=p.category||'phones';
-  document.getElementById('f-type-display').value=selectedType;
-  document.querySelectorAll('.type-card').forEach(c=>c.classList.toggle('selected',c.dataset.type===selectedType));
-  renderVariants();
-  document.getElementById('productModal').classList.add('show');
-  setStep(2);
-};
-window.closeModal=()=>document.getElementById('productModal').classList.remove('show');
-
-/* SAVE */
-window.handleSubmit=async()=>{
-  const name=document.getElementById('f-name').value.trim();
-  if(!name){showToast('Product name is required.',true);return;}
-  if(!selectedType){showToast('Please select a product type.',true);return;}
-  if(!colorVariants.length){showToast('Add at least one color.',true);return;}
-  for(const v of colorVariants){
-    if(!v.name.trim()){showToast('All colors need a name.',true);return;}
-    if(!v.imageUrl){showToast(`Upload an image for: ${v.name}`,true);return;}
-    if(!v.storageOptions.length){showToast(`Add at least one storage option for: ${v.name}`,true);return;}
-    for(const o of v.storageOptions){
-      if(!o.storage.trim()){showToast(`Storage name missing for: ${v.name}`,true);return;}
-      if(!o.price||o.price<=0){showToast(`Price missing for ${v.name} – ${o.storage}`,true);return;}
+// save product (create/update)
+window.saveProduct = async () => {
+  const name = document.getElementById('productName').value.trim();
+  if (!name) { showToast('Product name is required', true); return; }
+  const type = document.getElementById('productTypeSelect').value;
+  if (!type) { showToast('Select product type', true); return; }
+  if (currentColors.length === 0) { showToast('Add at least one color variant', true); return; }
+  for (let i = 0; i < currentColors.length; i++) {
+    const c = currentColors[i];
+    if (!c.name.trim()) { showToast(`Color ${i+1}: name required`, true); return; }
+    if (!c.imageUrl) { showToast(`Color "${c.name || i+1}" needs an image`, true); return; }
+    if (!c.storageOptions || c.storageOptions.length === 0) { showToast(`Color ${c.name} needs at least one storage option`, true); return; }
+    for (let s of c.storageOptions) {
+      if (!s.storage.trim()) { showToast(`${c.name}: storage capacity missing`, true); return; }
+      if (!s.price || s.price <= 0) { showToast(`${c.name} - ${s.storage}: price required`, true); return; }
     }
   }
-  const btn=document.getElementById('btnSave');
-  btn.disabled=true;btn.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i> Saving…';
-  const allPrices=colorVariants.flatMap(v=>v.storageOptions.map(o=>o.price)).filter(Boolean);
-  const data={
-    name,brand:document.getElementById('f-brand').value.trim()||null,type:selectedType,
-    category:document.getElementById('f-category').value,
-    price:allPrices.length?Math.min(...allPrices):0,
-    oldPrice:parseFloat(document.getElementById('f-oldprice').value)||null,
-    description:document.getElementById('f-desc').value.trim()||null,
-    shortDesc:document.getElementById('f-shortdesc').value.trim()||null,
-    colors:colorVariants.map(v=>({
-      name:v.name,cssColor:v.cssColor,icon:v.icon,imageUrl:v.imageUrl,
-      storageOptions:v.storageOptions.map(o=>({storage:o.storage,price:Number(o.price),stock:Number(o.stock)}))
+  const btn = document.getElementById('saveProductBtn');
+  btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving...';
+  const allPrices = currentColors.flatMap(c => c.storageOptions.map(o => o.price));
+  const data = {
+    name: name,
+    brand: document.getElementById('productBrand').value.trim() || null,
+    type: type,
+    category: document.getElementById('productCategory').value,
+    price: allPrices.length ? Math.min(...allPrices) : 0,
+    oldPrice: parseFloat(document.getElementById('comparePrice').value) || null,
+    description: document.getElementById('fullDesc').value.trim() || null,
+    shortDesc: document.getElementById('shortDesc').value.trim() || null,
+    colors: currentColors.map(c => ({
+      name: c.name, cssColor: c.cssColor, icon: c.icon, imageUrl: c.imageUrl,
+      storageOptions: c.storageOptions.map(o => ({ storage: o.storage, price: Number(o.price), stock: Number(o.stock) }))
     })),
-    updatedAt:new Date().toISOString()
+    updatedAt: new Date().toISOString()
   };
-  try{
-    if(editingProductId){await updateDoc(doc(db,'products',editingProductId),data);showToast('Product updated.');}
-    else{data.createdAt=new Date().toISOString();await addDoc(collection(db,'products'),data);showToast('Product added.');}
-    closeModal();await loadProducts();
-  }catch(e){showToast(e.message,true);}
-  finally{btn.disabled=false;btn.innerHTML='<i class="fa-solid fa-floppy-disk"></i> Save Product';}
+  try {
+    if (editingProductId) {
+      await updateDoc(doc(db, 'products', editingProductId), data);
+      showToast('Product updated');
+    } else {
+      data.createdAt = new Date().toISOString();
+      await addDoc(collection(db, 'products'), data);
+      showToast('Product added');
+    }
+    closeModal();
+    await loadProducts();
+  } catch (err) { showToast(err.message, true); }
+  finally { btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Save Product'; }
 };
 
-window.deleteProduct=async(id)=>{
-  if(!confirm('Delete this product?'))return;
-  await deleteDoc(doc(db,'products',id));showToast('Deleted.');await loadProducts();
+window.editProductById = async (id) => {
+  const prod = allProducts.find(p => p.id === id);
+  if (!prod) return;
+  editingProductId = id;
+  document.getElementById('modalTitle').innerText = 'Edit Product';
+  document.getElementById('productName').value = prod.name || '';
+  document.getElementById('productBrand').value = prod.brand || '';
+  document.getElementById('productTypeSelect').value = prod.type || 'Smartphone';
+  document.getElementById('productCategory').value = prod.category || 'phones';
+  document.getElementById('comparePrice').value = prod.oldPrice || '';
+  document.getElementById('shortDesc').value = prod.shortDesc || '';
+  document.getElementById('fullDesc').value = prod.description || '';
+  currentColors = (prod.colors || []).map(c => ({
+    name: c.name || '', cssColor: c.cssColor || '#94a3b8', icon: c.icon || '🔵', imageUrl: c.imageUrl || '',
+    storageOptions: (c.storageOptions || []).map(o => ({ storage: o.storage, price: o.price || 0, stock: o.stock || 0 }))
+  }));
+  renderColorList();
+  document.getElementById('productModal').classList.add('show');
 };
-window.handleLogout=async()=>{await signOut(auth);window.location.href='../login.html';};
+window.deleteProductById = async (id) => {
+  if (!confirm('Permanently delete this product?')) return;
+  await deleteDoc(doc(db, 'products', id));
+  showToast('Deleted');
+  await loadProducts();
+};
+window.showAddModal = () => {
+  editingProductId = null;
+  document.getElementById('modalTitle').innerText = 'Add New Product';
+  document.getElementById('productName').value = '';
+  document.getElementById('productBrand').value = '';
+  document.getElementById('productTypeSelect').value = 'Smartphone';
+  document.getElementById('productCategory').value = 'phones';
+  document.getElementById('comparePrice').value = '';
+  document.getElementById('shortDesc').value = '';
+  document.getElementById('fullDesc').value = '';
+  currentColors = [];
+  renderColorList();
+  document.getElementById('productModal').classList.add('show');
+};
+window.closeModal = () => { document.getElementById('productModal').classList.remove('show'); editingProductId = null; };
+window.handleLogout = async () => { await signOut(auth); window.location.href = '../login.html'; };
+
+// Auth observer
+observeAuthState(async user => {
+  if (!user) { window.location.href = '../login.html'; return; }
+  const admin = await isUserAdmin(user.uid);
+  if (!admin) { alert('Access denied.'); window.location.href = '../index.html'; return; }
+  const userDoc = await getDoc(doc(db, 'users', user.uid));
+  document.getElementById('adminName').innerText = userDoc.data()?.name || 'Admin';
+  document.getElementById('adminInitials').innerText = (userDoc.data()?.name || 'A').charAt(0).toUpperCase();
+  await loadProducts();
+});
 </script>
 </body>
 </html>
