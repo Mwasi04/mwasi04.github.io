@@ -63,21 +63,18 @@
     .modal.show{display:flex}
     .modal-content{background:white;border-radius:var(--radius-lg);max-width:860px;width:95%;max-height:93vh;overflow-y:auto;animation:slideIn .3s ease}
     @keyframes slideIn{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
-
     .modal-header{padding:1.5rem 2rem;border-bottom:2px solid var(--gray-200);display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:white;z-index:10}
     .modal-header h2{font-size:1.3rem;font-weight:700}
     .close-modal{width:36px;height:36px;border:none;background:var(--gray-100);border-radius:50%;cursor:pointer;font-size:1.1rem;display:flex;align-items:center;justify-content:center;color:var(--gray-400);transition:.2s}
     .close-modal:hover{background:#fee2e2;color:#ef4444}
-
     .modal-body{padding:2rem}
     .section-title{font-size:.8rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--gray-400);margin-bottom:1rem;padding-bottom:.5rem;border-bottom:1.5px solid var(--gray-200)}
     .form-section{margin-bottom:2rem}
     .form-group{margin-bottom:1rem}
     .form-group label{display:block;margin-bottom:.4rem;font-weight:600;font-size:.88rem}
-    .form-group input,.form-group select,.form-group textarea{width:100%;padding:.8rem 1rem;border:2px solid var(--gray-200);border-radius:var(--radius-md);font-family:'Inter',sans-serif;font-size:.9rem;outline:none;transition:border-color .2s}
-    .form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--primary)}
+    .form-group input,.form-group textarea{width:100%;padding:.8rem 1rem;border:2px solid var(--gray-200);border-radius:var(--radius-md);font-family:'Inter',sans-serif;font-size:.9rem;outline:none;transition:border-color .2s}
+    .form-group input:focus,.form-group textarea:focus{border-color:var(--primary)}
     .form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
-    .form-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem}
 
     /* TYPE CARDS */
     .type-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.75rem}
@@ -87,26 +84,20 @@
     .type-card .type-icon{font-size:1.8rem;margin-bottom:.3rem}
     .type-card .type-name{font-weight:700;font-size:.85rem}
 
-    /* PALETTE */
-    .palette-strip{display:flex;align-items:center;gap:.35rem;flex-wrap:wrap;padding:.6rem 1rem;background:var(--gray-100);border-radius:var(--radius-md);margin-bottom:.75rem}
-    .ps-swatch{width:22px;height:22px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:.15s;flex-shrink:0}
-    .ps-swatch:hover{transform:scale(1.2)}
-    .ps-swatch.sel{border-color:var(--dark);box-shadow:0 0 0 1px white,0 0 0 3px var(--dark)}
-    .ps-custom{width:22px;height:22px;border-radius:50%;cursor:pointer;border:none;padding:0;overflow:hidden;outline:1.5px solid var(--gray-200);flex-shrink:0}
-
-    /* ICON PICKER */
-    .icon-grid{display:flex;flex-wrap:wrap;gap:.4rem;padding:.75rem;background:var(--gray-100);border-radius:var(--radius-md);margin-bottom:.75rem}
-    .icon-opt{width:36px;height:36px;border-radius:50%;border:2px solid transparent;background:white;display:flex;align-items:center;justify-content:center;font-size:1.1rem;cursor:pointer;transition:.15s}
-    .icon-opt:hover{border-color:var(--primary)}
-    .icon-opt.sel{border-color:var(--primary);background:rgba(0,188,212,0.08)}
+    /* PALETTE — plain round swatches, nothing else */
+    .palette-strip{display:flex;align-items:center;gap:.4rem;flex-wrap:wrap;padding:.65rem 1rem;background:var(--gray-100);border-radius:var(--radius-md);margin-bottom:.75rem}
+    .ps-swatch{width:26px;height:26px;border-radius:50%;cursor:pointer;border:2.5px solid transparent;transition:.15s;flex-shrink:0}
+    .ps-swatch:hover{transform:scale(1.18)}
+    .ps-swatch.sel{border-color:var(--dark);box-shadow:0 0 0 1.5px white,0 0 0 3.5px var(--dark)}
+    .ps-custom{width:26px;height:26px;border-radius:50%;cursor:pointer;border:none;padding:0;overflow:hidden;outline:1.5px solid var(--gray-200);flex-shrink:0}
 
     /* VARIANT CARDS */
     .variants-list{display:flex;flex-direction:column;gap:1.2rem;margin-bottom:1rem}
     .variant-card{border-radius:var(--radius-md);border:1.5px solid var(--gray-200);overflow:hidden;background:white}
     .variant-head{display:flex;align-items:center;justify-content:space-between;padding:.85rem 1.1rem;border-bottom:1.5px solid var(--gray-200);background:var(--gray-100);gap:.75rem}
     .variant-head-left{display:flex;align-items:center;gap:.65rem;flex:1;min-width:0}
-    .v-color-dot{width:28px;height:28px;border-radius:50%;flex-shrink:0;border:2px solid rgba(0,0,0,0.1)}
-    .v-icon-preview{width:28px;height:28px;border-radius:50%;flex-shrink:0;background:white;border:1.5px solid var(--gray-200);display:flex;align-items:center;justify-content:center;font-size:1rem}
+    /* The big preview dot in the header */
+    .v-color-dot{width:32px;height:32px;border-radius:50%;flex-shrink:0;border:2.5px solid rgba(0,0,0,0.1);transition:background .2s}
     .color-name-input{flex:1;padding:.45rem .75rem;border:1.5px solid var(--gray-200);border-radius:.75rem;font-family:'Inter',sans-serif;font-size:.88rem;font-weight:600;outline:none;background:white}
     .color-name-input:focus{border-color:var(--primary)}
     .variant-body{display:grid;grid-template-columns:1fr 1fr;gap:1rem;padding:1rem 1.1rem}
@@ -136,16 +127,13 @@
     .upload-progress{font-size:.72rem;color:var(--primary);font-weight:600;margin-top:.25rem}
     .btn-add-color{display:flex;align-items:center;justify-content:center;gap:.6rem;width:100%;padding:.8rem;border:2px dashed var(--gray-200);border-radius:var(--radius-md);background:white;cursor:pointer;font-size:.9rem;font-weight:600;color:var(--gray-400);transition:.2s;font-family:'Inter',sans-serif}
     .btn-add-color:hover{border-color:var(--primary);color:var(--primary)}
-
     .modal-footer{padding:1.1rem 2rem;border-top:2px solid var(--gray-200);display:flex;justify-content:flex-end;gap:.8rem;position:sticky;bottom:0;background:white}
-
     .toast{position:fixed;bottom:30px;right:30px;background:var(--dark);color:white;padding:.9rem 1.5rem;border-radius:100px;display:flex;align-items:center;gap:10px;transform:translateX(420px);transition:.35s;z-index:9999;font-size:.9rem}
     .toast.show{transform:translateX(0)}
     .toast.error{background:#ef4444}
-
     @media(max-width:768px){
       .admin-sidebar{display:none}.admin-main{margin-left:0;padding:1rem}
-      .form-row,.form-row-3,.type-grid,.variant-body{grid-template-columns:1fr}
+      .form-row,.type-grid,.variant-body{grid-template-columns:1fr}
     }
   </style>
 </head>
@@ -178,7 +166,7 @@
     </div>
     <div class="filters-section">
       <div class="filters-grid">
-        <select class="filter-select" id="categoryFilter" onchange="filterProducts()"><option value="all">All Categories</option></select>
+        <select class="filter-select" id="typeFilter" onchange="filterProducts()"><option value="all">All Types</option></select>
         <select class="filter-select" id="brandFilter" onchange="filterProducts()"><option value="all">All Brands</option></select>
         <div class="search-box">
           <input type="text" id="searchInput" placeholder="Search products...">
@@ -201,7 +189,6 @@
       <h2 id="modalTitle">Add New Product</h2>
       <button class="close-modal" onclick="closeModal()"><i class="fa-solid fa-times"></i></button>
     </div>
-
     <div class="modal-body">
 
       <!-- PRODUCT TYPE -->
@@ -223,18 +210,9 @@
           <div class="form-group"><label>Brand</label><input type="text" id="f-brand" placeholder="e.g. Samsung"></div>
         </div>
         <div class="form-row">
-          <div class="form-group">
-            <label>Category</label>
-            <select id="f-category">
-              <option value="phones">Phones</option>
-              <option value="laptops">Laptops</option>
-              <option value="tablets">Tablets</option>
-              <option value="accessories">Accessories</option>
-            </select>
-          </div>
           <div class="form-group"><label>Compare Price (K) <span style="font-weight:400;color:var(--gray-400);font-size:.8rem">optional</span></label><input type="number" id="f-oldprice" step="0.01" placeholder="Shown as strikethrough"></div>
+          <div class="form-group"><label>Short Description</label><input type="text" id="f-shortdesc" placeholder="Brief summary for cards"></div>
         </div>
-        <div class="form-group"><label>Short Description</label><input type="text" id="f-shortdesc" placeholder="Brief summary shown on product cards"></div>
         <div class="form-group"><label>Full Description</label><textarea id="f-desc" rows="3" placeholder="Full product description…"></textarea></div>
       </div>
 
@@ -242,14 +220,13 @@
       <div class="form-section">
         <div class="section-title">Color Variants</div>
         <div style="background:rgba(0,188,212,0.06);border:1px solid rgba(0,188,212,0.2);border-radius:var(--radius-md);padding:.75rem 1rem;font-size:.84rem;color:var(--dark);margin-bottom:1.2rem;line-height:1.6">
-          Each <strong>color</strong> has its own icon and image. Each <strong>storage option</strong> within a color has its own price and stock.
+          Each <strong>color</strong> has its own image. Each <strong>storage option</strong> within a color has its own price and stock.
         </div>
         <div class="variants-list" id="variantsList"></div>
         <button class="btn-add-color" onclick="addColorVariant()"><i class="fa-solid fa-plus"></i> Add Color Variant</button>
       </div>
 
     </div>
-
     <div class="modal-footer">
       <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
       <button class="btn btn-primary" id="btnSave" onclick="handleSubmit()"><i class="fa-solid fa-floppy-disk"></i> Save Product</button>
@@ -280,8 +257,6 @@ const PALETTE = [
   {name:'Emerald',hex:'#10b981'},{name:'Olive',hex:'#65a30d'},
 ];
 
-const ICONS = ['🔲','⬛','🌑','🩶','🤍','🌕','💛','🟡','🟠','🔴','🌸','💜','🔵','🩵','🟢','🌿','🤎','🖤'];
-
 let allProducts=[], colorVariants=[], selectedType='', editingProductId=null;
 
 function showToast(msg,isError=false){
@@ -310,8 +285,8 @@ async function loadProducts(){
 }
 
 function updateFilters(){
-  const cats=[...new Set(allProducts.map(p=>p.category).filter(Boolean))];
-  document.getElementById('categoryFilter').innerHTML='<option value="all">All Categories</option>'+cats.map(c=>`<option value="${c}">${c}</option>`).join('');
+  const types=[...new Set(allProducts.map(p=>p.type).filter(Boolean))];
+  document.getElementById('typeFilter').innerHTML='<option value="all">All Types</option>'+types.map(t=>`<option value="${t}">${t}</option>`).join('');
   const brands=[...new Set(allProducts.map(p=>p.brand).filter(Boolean))];
   document.getElementById('brandFilter').innerHTML='<option value="all">All Brands</option>'+brands.map(b=>`<option value="${b}">${b}</option>`).join('');
 }
@@ -331,8 +306,8 @@ function displayProducts(products){
         <div class="product-name">${p.name}</div>
         <div class="product-meta">${p.brand||''} · ${p.type||''}</div>
         <div class="product-price">${priceStr}</div>
-        <div style="display:flex;gap:.3rem;margin:.4rem 0;flex-wrap:wrap">
-          ${(p.variants||[]).map(v=>`<span style="display:inline-flex;align-items:center;gap:.35rem;font-size:.75rem;padding:.2rem .6rem;border-radius:100px;background:var(--gray-100);border:1px solid var(--gray-200)"><span style="font-size:1rem;line-height:1">${v.icon||'🔵'}</span>${v.color}</span>`).join('')}
+        <div style="display:flex;gap:.4rem;margin:.4rem 0;flex-wrap:wrap;align-items:center">
+          ${(p.variants||[]).map(v=>`<span title="${v.color}" style="width:16px;height:16px;border-radius:50%;background:${v.hex||'#ccc'};border:1.5px solid rgba(0,0,0,0.12);display:inline-block;flex-shrink:0"></span>`).join('')}
         </div>
         <div class="product-meta">Total stock: ${totalStock}</div>
         <div class="product-actions">
@@ -345,54 +320,43 @@ function displayProducts(products){
 }
 
 window.filterProducts=()=>{
-  const cat=document.getElementById('categoryFilter').value;
+  const type=document.getElementById('typeFilter').value;
   const brand=document.getElementById('brandFilter').value;
   const q=document.getElementById('searchInput').value.toLowerCase();
-  displayProducts(allProducts.filter(p=>(cat==='all'||p.category===cat)&&(brand==='all'||p.brand===brand)&&(!q||p.name?.toLowerCase().includes(q))));
+  displayProducts(allProducts.filter(p=>(type==='all'||p.type===type)&&(brand==='all'||p.brand===brand)&&(!q||p.name?.toLowerCase().includes(q))));
 };
 
 window.selectType=(card)=>{
   document.querySelectorAll('.type-card').forEach(c=>c.classList.remove('selected'));
   card.classList.add('selected');
   selectedType=card.dataset.type;
-  const map={Smartphone:'phones',Laptop:'laptops',Tablet:'tablets',Accessory:'accessories'};
-  if(map[selectedType])document.getElementById('f-category').value=map[selectedType];
 };
 
-/* ── RENDER VARIANTS ── */
 function renderVariants(){
   const list=document.getElementById('variantsList');
   if(!list)return;list.innerHTML='';
   colorVariants.forEach((v,idx)=>{
     const card=document.createElement('div');
     card.className='variant-card';
-
     const swatches=PALETTE.map((p,pi)=>`<div class="ps-swatch${v.hex===p.hex?' sel':''}" style="background:${p.hex}" title="${p.name}" onclick="pickPalette(${idx},${pi})"></div>`).join('');
-    const iconOpts=ICONS.map((ic,ii)=>`<div class="icon-opt${v.icon===ic?' sel':''}" title="${ic}" onclick="pickIcon(${idx},'${ic}')">${ic}</div>`).join('');
-
     card.innerHTML=`
       <div class="variant-head">
         <div class="variant-head-left">
           <div class="v-color-dot" id="vdot-${idx}" style="background:${v.hex||'#e2e8f0'}"></div>
-          <div class="v-icon-preview" id="vicon-${idx}">${v.icon||'🔵'}</div>
           <input class="color-name-input" type="text" value="${v.color||''}" placeholder="Color name, e.g. Midnight Black" oninput="updateVariantColor(${idx},this.value)">
         </div>
         <button class="btn-danger" style="padding:.3rem .9rem;border-radius:100px;font-size:.78rem;font-weight:600;flex-shrink:0" onclick="removeVariant(${idx})">
           <i class="fa-regular fa-trash-can"></i> Remove
         </button>
       </div>
-
       <div style="padding:.75rem 1.1rem;border-bottom:1.5px solid var(--gray-200)">
-        <div class="vsect-label" style="margin-bottom:.5rem">Color swatch</div>
+        <div class="vsect-label" style="margin-bottom:.5rem">Pick a color</div>
         <div class="palette-strip">
           ${swatches}
           <input type="color" class="ps-custom" value="${v.hex||'#000000'}" title="Custom color" oninput="pickCustom(${idx},this.value)" onchange="pickCustom(${idx},this.value)">
           <span style="font-size:.7rem;color:var(--gray-400);margin-left:auto">Custom</span>
         </div>
-        <div class="vsect-label" style="margin-bottom:.5rem">Color icon</div>
-        <div class="icon-grid">${iconOpts}</div>
       </div>
-
       <div class="variant-body">
         <div>
           <div class="vsect-label">Storage · Price · Qty</div>
@@ -416,7 +380,6 @@ function renderVariants(){
       </div>
     `;
     list.appendChild(card);
-
     const sl=document.getElementById(`sl-${idx}`);
     (v.storageOptions||[]).forEach((opt,oi)=>{
       const row=document.createElement('div');row.className='storage-row';
@@ -430,11 +393,19 @@ function renderVariants(){
   });
 }
 
-window.pickPalette=(idx,pi)=>{colorVariants[idx].hex=PALETTE[pi].hex;if(!colorVariants[idx].color)colorVariants[idx].color=PALETTE[pi].name;renderVariants()};
-window.pickCustom=(idx,hex)=>{colorVariants[idx].hex=hex;renderVariants()};
-window.pickIcon=(idx,icon)=>{colorVariants[idx].icon=icon;renderVariants()};
+window.pickPalette=(idx,pi)=>{
+  colorVariants[idx].hex=PALETTE[pi].hex;
+  if(!colorVariants[idx].color)colorVariants[idx].color=PALETTE[pi].name;
+  const dot=document.getElementById(`vdot-${idx}`);if(dot)dot.style.background=PALETTE[pi].hex;
+  document.querySelectorAll(`#variantsList .variant-card`)[idx]?.querySelectorAll('.ps-swatch').forEach((s,i)=>s.classList.toggle('sel',i===pi));
+};
+window.pickCustom=(idx,hex)=>{
+  colorVariants[idx].hex=hex;
+  const dot=document.getElementById(`vdot-${idx}`);if(dot)dot.style.background=hex;
+  document.querySelectorAll(`#variantsList .variant-card`)[idx]?.querySelectorAll('.ps-swatch').forEach(s=>s.classList.remove('sel'));
+};
 window.updateVariantColor=(idx,val)=>{colorVariants[idx].color=val};
-window.addColorVariant=()=>{colorVariants.push({color:'',hex:'',icon:'🔵',imageUrl:'',storageOptions:[]});renderVariants()};
+window.addColorVariant=()=>{colorVariants.push({color:'',hex:'',imageUrl:'',storageOptions:[]});renderVariants()};
 window.removeVariant=(idx)=>{colorVariants.splice(idx,1);renderVariants()};
 window.addStorage=(idx)=>{colorVariants[idx].storageOptions.push({storage:'',price:0,stock:0});renderVariants()};
 window.removeStorage=(idx,oi)=>{colorVariants[idx].storageOptions.splice(oi,1);renderVariants()};
@@ -462,7 +433,6 @@ window.showAddModal=()=>{
   document.getElementById('modalTitle').textContent='Add New Product';
   document.getElementById('productModal').classList.add('show');
   ['f-name','f-brand','f-oldprice','f-desc','f-shortdesc'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=''});
-  document.getElementById('f-category').value='phones';
   document.querySelectorAll('.type-card').forEach(c=>c.classList.remove('selected'));
   renderVariants();
 };
@@ -471,7 +441,7 @@ window.editProduct=(id)=>{
   const p=allProducts.find(x=>x.id===id);if(!p)return;
   editingProductId=id;selectedType=p.type||'';
   colorVariants=(p.variants||[]).map(v=>({
-    color:v.color||'',hex:v.hex||'',icon:v.icon||'🔵',imageUrl:v.imageUrl||'',
+    color:v.color||'',hex:v.hex||'',imageUrl:v.imageUrl||'',
     storageOptions:(v.storageOptions||[]).map(o=>({storage:o.storage,price:o.price||0,stock:o.stock}))
   }));
   document.getElementById('modalTitle').textContent='Edit Product';
@@ -480,7 +450,6 @@ window.editProduct=(id)=>{
   document.getElementById('f-oldprice').value=p.oldPrice||'';
   document.getElementById('f-desc').value=p.description||'';
   document.getElementById('f-shortdesc').value=p.shortDesc||'';
-  document.getElementById('f-category').value=p.category||'phones';
   document.querySelectorAll('.type-card').forEach(c=>c.classList.toggle('selected',c.dataset.type===selectedType));
   renderVariants();
   document.getElementById('productModal').classList.add('show');
@@ -510,13 +479,12 @@ window.handleSubmit=async()=>{
     name,
     brand:document.getElementById('f-brand').value.trim()||null,
     type:selectedType,
-    category:document.getElementById('f-category').value,
     price:allPrices.length?Math.min(...allPrices):0,
     oldPrice:parseFloat(document.getElementById('f-oldprice').value)||null,
     description:document.getElementById('f-desc').value.trim()||null,
     shortDesc:document.getElementById('f-shortdesc').value.trim()||null,
     variants:colorVariants.map(v=>({
-      color:v.color,hex:v.hex||'',icon:v.icon||'🔵',imageUrl:v.imageUrl,
+      color:v.color,hex:v.hex||'',imageUrl:v.imageUrl,
       storageOptions:v.storageOptions.map(o=>({storage:o.storage,price:Number(o.price),stock:Number(o.stock)}))
     })),
     updatedAt:new Date().toISOString()
