@@ -16,7 +16,6 @@
     body{font-family:'Inter',sans-serif;background:#fff;color:var(--dark);}
     .container{width:90%;max-width:1200px;margin:0 auto;padding:0 15px;}
 
-    /* NAV */
     nav{background:rgba(255,255,255,0.98);backdrop-filter:blur(10px);padding:0.8rem 0;position:sticky;top:0;z-index:1000;border-bottom:1px solid rgba(0,0,0,0.05);}
     nav .container{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;}
     .logo-link{display:flex;align-items:center;gap:8px;text-decoration:none;}
@@ -30,13 +29,11 @@
     .cart-icon-wrap{position:relative;cursor:pointer;}
     .cart-badge{position:absolute;top:-8px;right:-8px;background:#ef4444;color:white;width:18px;height:18px;border-radius:50%;font-size:10px;font-weight:700;display:none;align-items:center;justify-content:center;}
 
-    /* PAGE HEADER */
     .page-header{background:url('photos/e.jpeg') center/cover no-repeat;padding:4rem 1rem;text-align:center;color:white;margin:10px;border-radius:var(--radius-lg);position:relative;}
     .page-header .overlay{position:absolute;inset:0;background:rgba(15,23,42,0.75);border-radius:var(--radius-lg);}
     .page-header .inner{position:relative;z-index:1;}
     .page-header h1{font-size:2.5rem;font-weight:800;margin-bottom:0.5rem;}
 
-    /* FILTERS */
     .filters{display:flex;justify-content:space-between;align-items:center;margin:2rem 0;flex-wrap:wrap;gap:1rem;background:white;padding:1.25rem 1.5rem;border-radius:var(--radius-lg);box-shadow:var(--shadow);}
     .filter-group{display:flex;gap:0.75rem;flex-wrap:wrap;}
     .filter-select{padding:0.65rem 1.1rem;border-radius:100px;border:1.5px solid var(--gray-200);background:white;font-family:'Inter',sans-serif;cursor:pointer;font-size:0.9rem;outline:none;}
@@ -45,14 +42,12 @@
     .search-box input{border:none;outline:none;padding:0.45rem 0;width:100%;font-family:'Inter',sans-serif;}
     .search-box button{background:var(--primary);border:none;color:white;padding:0.55rem 1.1rem;border-radius:100px;cursor:pointer;}
 
-    /* PRODUCT GRID */
     .product-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(265px,1fr));gap:1.25rem;margin-bottom:3rem;}
 
     /* PRODUCT CARD */
     .product-card{background:white;border-radius:var(--radius-lg);border:1.5px solid var(--gray-200);transition:transform 0.3s,box-shadow 0.3s;cursor:pointer;overflow:hidden;}
     .product-card:hover{transform:translateY(-4px);box-shadow:var(--shadow);}
 
-    /* Image area with crossfade */
     .card-img-wrap{height:200px;background:var(--gray-100);position:relative;overflow:hidden;}
     .card-img-wrap img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;padding:1rem;transition:opacity 0.5s ease;}
     .card-img-wrap img.active{opacity:1;}
@@ -64,18 +59,30 @@
     .card-price{font-size:1.1rem;font-weight:800;color:var(--dark);margin-bottom:0.6rem;}
     .card-price span{font-size:0.82rem;font-weight:400;color:var(--gray-400);text-decoration:line-through;margin-left:0.4rem;}
 
-    /* Color icons row — the active one gets a border highlight */
+    /* Color icon row on card */
     .card-colors{display:flex;gap:0.35rem;flex-wrap:wrap;align-items:center;margin-bottom:0.65rem;}
-    .card-color-icon{
-      width:32px;height:32px;border-radius:50%;border:2.5px solid transparent;
-      display:flex;align-items:center;justify-content:center;font-size:1rem;
-      cursor:pointer;transition:border-color 0.2s,transform 0.15s;
+    .card-color-btn{
+      width:34px;height:34px;border-radius:50%;
+      border:2.5px solid transparent;
+      display:flex;align-items:center;justify-content:center;
+      font-size:1rem;cursor:pointer;
+      transition:border-color 0.2s,transform 0.15s,background 0.15s;
       background:var(--gray-100);
+      position:relative;
     }
-    .card-color-icon:hover{transform:scale(1.1);}
-    .card-color-icon.active{border-color:var(--primary);background:rgba(0,188,212,0.08);}
+    .card-color-btn:hover{transform:scale(1.12);}
+    .card-color-btn.active{
+      border-color:var(--primary);
+      background:rgba(0,188,212,0.1);
+      box-shadow:0 0 0 3px rgba(0,188,212,0.15);
+    }
+    /* Color dot inside icon button (bottom-right) */
+    .card-color-dot{
+      position:absolute;bottom:1px;right:1px;
+      width:9px;height:9px;border-radius:50%;
+      border:1.5px solid white;
+    }
 
-    /* Storage chips */
     .card-storages{display:flex;gap:0.3rem;flex-wrap:wrap;margin-bottom:0.8rem;}
     .card-stor-chip{font-size:0.68rem;padding:0.18rem 0.5rem;border:1px solid var(--gray-200);border-radius:100px;color:var(--gray-400);}
 
@@ -89,7 +96,6 @@
     .modal-box{background:white;border-radius:var(--radius-lg);max-width:900px;width:100%;max-height:92vh;overflow:hidden;display:flex;flex-direction:column;animation:fadeUp 0.25s ease;}
     @keyframes fadeUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
 
-    /* Modal top bar */
     .modal-bar{display:flex;justify-content:space-between;align-items:center;padding:1rem 1.5rem;border-bottom:1px solid var(--gray-200);flex-shrink:0;}
     .modal-bar-left{display:flex;flex-direction:column;gap:2px;}
     .modal-bar-brand{font-size:0.7rem;font-weight:700;color:var(--primary);text-transform:uppercase;letter-spacing:0.04em;}
@@ -97,52 +103,47 @@
     .modal-close{width:34px;height:34px;border-radius:50%;background:var(--gray-100);border:none;cursor:pointer;font-size:1rem;}
     .modal-close:hover{background:#fee2e2;color:#ef4444;}
 
-    /* Modal body: gallery + picker */
     .modal-body{display:grid;grid-template-columns:1fr 1fr;flex:1;overflow:hidden;min-height:0;}
 
-    /* Gallery */
-    .modal-gallery{background:var(--gray-100);display:flex;align-items:center;justify-content:center;padding:2rem;position:relative;overflow:hidden;}
-    .modal-gallery img{max-width:100%;max-height:280px;object-fit:contain;transition:opacity 0.3s;}
-    .modal-gallery img.fading{opacity:0;}
-
-    /* Color label bar under gallery */
+    .modal-gallery{background:var(--gray-100);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem;position:relative;overflow:hidden;}
+    .modal-gallery-img{max-width:100%;max-height:260px;object-fit:contain;transition:opacity 0.3s;}
+    .modal-gallery-img.fading{opacity:0;}
     .modal-gallery-color{position:absolute;bottom:0;left:0;right:0;padding:0.5rem;text-align:center;font-size:0.78rem;font-weight:600;color:var(--gray-400);background:rgba(255,255,255,0.85);backdrop-filter:blur(4px);}
 
-    /* Picker panel */
     .modal-picker{display:flex;flex-direction:column;overflow-y:auto;padding:1.5rem;}
-
-    /* Price display */
     .modal-price-area{margin-bottom:1.2rem;}
     .modal-price-main{font-size:2rem;font-weight:800;color:var(--dark);line-height:1;}
     .modal-price-old{font-size:0.9rem;color:var(--gray-400);text-decoration:line-through;margin-top:2px;}
     .modal-price-note{font-size:0.78rem;color:var(--gray-400);margin-top:4px;}
 
-    /* Section label */
     .picker-label{font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:var(--gray-400);margin-bottom:0.5rem;}
     .picker-value{font-size:0.88rem;font-weight:600;color:var(--dark);display:inline;text-transform:none;letter-spacing:0;}
 
-    /* Color swatches in modal */
+    /* Color swatches row in modal */
     .modal-colors{display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:1.25rem;}
-    .modal-color-swatch{
-      display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;
+    .modal-color-swatch{display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;}
+    .mcs-icon-wrap{
+      width:48px;height:48px;border-radius:50%;
+      border:2.5px solid transparent;
+      display:flex;align-items:center;justify-content:center;
+      font-size:1.4rem;
+      background:var(--gray-100);
+      transition:border-color 0.2s,transform 0.15s,background 0.2s;
+      position:relative;
     }
-    .mcs-icon{
-      width:46px;height:46px;border-radius:50%;border:2.5px solid transparent;
-      display:flex;align-items:center;justify-content:center;font-size:1.3rem;
-      background:var(--gray-100);transition:border-color 0.2s,transform 0.15s,background 0.2s;
+    .mcs-icon-wrap:hover{transform:scale(1.08);}
+    .mcs-dot{
+      position:absolute;bottom:1px;right:1px;
+      width:12px;height:12px;border-radius:50%;
+      border:2px solid white;
     }
-    .mcs-icon:hover{transform:scale(1.08);}
-    .modal-color-swatch.active .mcs-icon{border-color:var(--primary);background:rgba(0,188,212,0.1);box-shadow:0 0 0 3px rgba(0,188,212,0.15);}
-    .mcs-label{font-size:0.65rem;color:var(--gray-400);text-align:center;max-width:46px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .modal-color-swatch.active .mcs-icon-wrap{border-color:var(--primary);background:rgba(0,188,212,0.1);box-shadow:0 0 0 3px rgba(0,188,212,0.15);}
+    .mcs-label{font-size:0.65rem;color:var(--gray-400);text-align:center;max-width:48px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
     .modal-color-swatch.active .mcs-label{color:var(--primary);font-weight:600;}
 
-    /* Storage variants grid */
+    /* Storage rows */
     .storage-variants{display:flex;flex-direction:column;gap:0.45rem;margin-bottom:1.2rem;}
-    .sv-row{
-      display:flex;align-items:center;justify-content:space-between;
-      padding:0.65rem 1rem;border:2px solid var(--gray-200);border-radius:var(--radius-md);
-      cursor:pointer;transition:border-color 0.15s,background 0.15s;
-    }
+    .sv-row{display:flex;align-items:center;justify-content:space-between;padding:0.65rem 1rem;border:2px solid var(--gray-200);border-radius:var(--radius-md);cursor:pointer;transition:border-color 0.15s,background 0.15s;}
     .sv-row:hover:not(.oos){border-color:var(--primary);background:rgba(0,188,212,0.03);}
     .sv-row.selected{border-color:var(--primary);background:rgba(0,188,212,0.07);}
     .sv-row.oos{opacity:0.38;cursor:not-allowed;}
@@ -151,11 +152,11 @@
     .sv-stock{font-size:0.72rem;color:var(--gray-400);}
     .sv-price{font-size:1.05rem;font-weight:800;color:var(--primary);}
 
-    /* Qty + add */
     .qty-add-row{display:flex;align-items:center;gap:0.75rem;margin-top:auto;}
     .qty-wrap{display:flex;align-items:center;gap:0.4rem;background:var(--gray-100);border-radius:100px;padding:0.3rem 0.6rem;}
     .qty-btn{width:30px;height:30px;border-radius:50%;border:1.5px solid var(--gray-200);background:white;cursor:pointer;font-size:1rem;font-weight:700;display:flex;align-items:center;justify-content:center;transition:0.15s;}
-    .qty-btn:hover{border-color:var(--primary);color:var(--primary);}
+    .qty-btn:hover:not(:disabled){border-color:var(--primary);color:var(--primary);}
+    .qty-btn:disabled{opacity:.4;cursor:not-allowed;}
     .qty-num{font-size:0.95rem;font-weight:700;min-width:22px;text-align:center;}
     .btn-add-cart{flex:1;padding:0.75rem;background:var(--primary);color:white;border:none;border-radius:100px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;font-size:0.9rem;transition:0.2s;white-space:nowrap;}
     .btn-add-cart:hover:not(:disabled){background:var(--primary-dark);}
@@ -183,7 +184,6 @@
     .checkout-btn{width:100%;padding:0.9rem;background:var(--primary);color:white;border:none;border-radius:100px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;font-size:0.95rem;}
     .checkout-btn:hover{background:var(--primary-dark);}
 
-    /* NOTIF */
     .cart-notif{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--dark);color:white;padding:0.8rem 1.4rem;border-radius:100px;display:flex;gap:0.8rem;align-items:center;z-index:9999;transition:0.35s;opacity:0;font-size:0.88rem;}
     .cart-notif.show{transform:translateX(-50%) translateY(0);opacity:1;}
 
@@ -262,7 +262,7 @@
     </div>
     <div class="modal-body">
       <div class="modal-gallery">
-        <img id="mImg" src="" alt="" onerror="this.src='https://placehold.co/300x300?text=No+Image'">
+        <img class="modal-gallery-img" id="mImg" src="" alt="" onerror="this.src='https://placehold.co/300x300?text=No+Image'">
         <div class="modal-gallery-color" id="mColorLabel"></div>
       </div>
       <div class="modal-picker" id="mPicker"></div>
@@ -292,26 +292,28 @@ import { auth, db } from './js/firebase-config.js';
 import { collection, getDocs, query, orderBy, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 import { observeAuthState } from './js/auth.js';
 
-/* ─── STATE ─── */
 let allProducts = [], filteredProducts = [];
 let cartItems = [];
 let notifTimer = null;
 
-// Per-card cycling: productId → { activeColorIdx, timer }
+// Per-card cycling state
 const cardState = {};
 const CYCLE_MS = 5000;
 
 // Modal state
-let mProduct = null;   // product being shown
-let mColorIdx = 0;     // selected color index
-let mStorIdx = null;   // selected storage index
+let mProduct = null;
+let mColorIdx = 0;
+let mStorIdx = null;
 let mQty = 1;
 
-/* ─── AUTH ─── */
 window.toggleMenu = () => document.getElementById('navLinks').classList.toggle('show');
-function handleAccount(){ auth.currentUser ? window.location.href='profile.html' : (confirm('Please log in.')&&(window.location.href='login.html')); }
+
+function handleAccount(){
+  auth.currentUser ? window.location.href='profile.html' : (confirm('Please log in.') && (window.location.href='login.html'));
+}
 document.getElementById('accountLink').onclick = e=>{e.preventDefault();handleAccount();};
 document.getElementById('accountIcon').onclick = e=>{e.preventDefault();handleAccount();};
+
 observeAuthState(async user=>{
   document.querySelector('#accountIcon i').className = user?'fa-solid fa-circle-user':'fa-regular fa-circle-user';
   if(user) await loadCart();
@@ -334,22 +336,21 @@ function populateFilters(){
 }
 
 function getPriceRange(p){
-  const prices=(p.colors||[]).flatMap(c=>(c.storageOptions||[]).map(o=>o.price)).filter(Boolean);
+  const prices=(p.variants||[]).flatMap(v=>(v.storageOptions||[]).map(o=>o.price)).filter(Boolean);
   if(!prices.length)return{min:0,max:0};
   return{min:Math.min(...prices),max:Math.max(...prices)};
 }
 function getTotalStock(p){
-  return(p.colors||[]).reduce((s,c)=>s+(c.storageOptions||[]).reduce((ss,o)=>ss+(o.stock||0),0),0);
+  return(p.variants||[]).reduce((s,v)=>s+(v.storageOptions||[]).reduce((ss,o)=>ss+(o.stock||0),0),0);
 }
 function getUniqueStorages(p){
   const s=new Set();
-  (p.colors||[]).forEach(c=>(c.storageOptions||[]).forEach(o=>o.storage&&s.add(o.storage)));
+  (p.variants||[]).forEach(v=>(v.storageOptions||[]).forEach(o=>o.storage&&s.add(o.storage)));
   return[...s];
 }
 
 /* ─── RENDER GRID ─── */
 function renderGrid(){
-  // Clear old timers
   Object.values(cardState).forEach(s=>clearInterval(s.timer));
   Object.keys(cardState).forEach(k=>delete cardState[k]);
 
@@ -360,33 +361,35 @@ function renderGrid(){
   }
 
   grid.innerHTML = filteredProducts.map(p=>{
-    const colors = p.colors||[];
+    const variants = p.variants||[];
     const pr = getPriceRange(p);
     const priceStr = pr.min===pr.max ? `K${pr.min.toLocaleString()}` : `From K${pr.min.toLocaleString()}`;
     const oos = getTotalStock(p)<=0;
     const storages = getUniqueStorages(p);
 
-    // All color images (stacked, crossfade via CSS)
-    const imgs = colors.map((c,i)=>`<img src="${c.imageUrl||''}" class="${i===0?'active':'inactive'}" data-cidx="${i}" alt="${c.name}" onerror="this.src='https://placehold.co/200x200?text=No+Image'">`).join('');
+    // Stacked crossfade images
+    const imgs = variants.map((v,i)=>
+      `<img src="${v.imageUrl||''}" class="${i===0?'active':'inactive'}" data-cidx="${i}" alt="${v.color||''}" onerror="this.src='https://placehold.co/200x200?text=No+Image'">`
+    ).join('');
 
-    // Color icon buttons
-    const icons = colors.map((c,i)=>`
-      <div class="card-color-icon${i===0?' active':''}" data-pidx="${p.id}" data-cidx="${i}"
-        title="${c.name}" style="border-color:${i===0?'var(--primary)':'transparent'}"
+    // Color icon buttons with dot
+    const icons = variants.map((v,i)=>`
+      <div class="card-color-btn${i===0?' active':''}" data-pidx="${p.id}" data-cidx="${i}" title="${v.color||''}"
         onclick="event.stopPropagation();jumpToColor('${p.id}',${i})">
-        ${c.icon||'🔵'}
-      </div>`).join('');
+        ${v.icon||'🔵'}
+        <span class="card-color-dot" style="background:${v.hex||'#ccc'}"></span>
+      </div>`
+    ).join('');
 
-    // Storage chips (all unique sizes for reference)
     const storChips = storages.slice(0,4).map(s=>`<span class="card-stor-chip">${s}</span>`).join('');
 
-    return`<div class="product-card" onclick="openModal('${p.id}')">
+    return `<div class="product-card" onclick="openModal('${p.id}')">
       <div class="card-img-wrap" id="cimgwrap-${p.id}">${imgs}</div>
       <div class="card-body">
         <div class="card-brand">${p.brand||''}</div>
         <div class="card-name">${p.name}</div>
         <div class="card-price">${priceStr}${p.oldPrice?`<span>K${p.oldPrice.toLocaleString()}</span>`:''}</div>
-        ${colors.length?`<div class="card-colors" id="ccolors-${p.id}">${icons}</div>`:''}
+        ${variants.length?`<div class="card-colors" id="ccolors-${p.id}">${icons}</div>`:''}
         ${storages.length?`<div class="card-storages">${storChips}</div>`:''}
         <button class="btn-view" onclick="event.stopPropagation();openModal('${p.id}')" ${oos?'disabled':''}>
           ${oos?'Out of Stock':'<i class="fa-solid fa-eye"></i> View Options'}
@@ -395,14 +398,14 @@ function renderGrid(){
     </div>`;
   }).join('');
 
-  // Start cycling for multi-color products
+  // Start cycling
   filteredProducts.forEach(p=>{
-    const colors = p.colors||[];
-    if(colors.length>1){
-      cardState[p.id] = { activeColorIdx:0 };
+    const variants = p.variants||[];
+    if(variants.length>1){
+      cardState[p.id] = {activeColorIdx:0};
       cardState[p.id].timer = setInterval(()=>{
         const s = cardState[p.id];
-        const next = (s.activeColorIdx+1) % colors.length;
+        const next = (s.activeColorIdx+1) % variants.length;
         applyCardColor(p.id, next);
         s.activeColorIdx = next;
       }, CYCLE_MS);
@@ -411,35 +414,33 @@ function renderGrid(){
 }
 
 function applyCardColor(pid, cidx){
-  // Swap image
   const wrap = document.getElementById(`cimgwrap-${pid}`);
   if(wrap){
     wrap.querySelectorAll('img').forEach((img,i)=>{
       img.className = i===cidx ? 'active' : 'inactive';
     });
   }
-  // Update icon highlight
   const colorsEl = document.getElementById(`ccolors-${pid}`);
   if(colorsEl){
-    colorsEl.querySelectorAll('.card-color-icon').forEach((el,i)=>{
+    colorsEl.querySelectorAll('.card-color-btn').forEach((el,i)=>{
       el.classList.toggle('active', i===cidx);
-      el.style.borderColor = i===cidx ? 'var(--primary)' : 'transparent';
     });
   }
   if(cardState[pid]) cardState[pid].activeColorIdx = cidx;
 }
 
 window.jumpToColor = (pid, cidx)=>{
-  // Reset timer
   if(cardState[pid]){
     clearInterval(cardState[pid].timer);
     const p = allProducts.find(x=>x.id===pid);
-    const colors = p?.colors||[];
-    cardState[pid].timer = setInterval(()=>{
-      const s = cardState[pid];
-      const next = (s.activeColorIdx+1)%colors.length;
-      applyCardColor(pid,next);
-    }, CYCLE_MS);
+    const variants = p?.variants||[];
+    if(variants.length>1){
+      cardState[pid].timer = setInterval(()=>{
+        const s = cardState[pid];
+        const next = (s.activeColorIdx+1) % variants.length;
+        applyCardColor(pid, next);
+      }, CYCLE_MS);
+    }
   }
   applyCardColor(pid, cidx);
 };
@@ -450,26 +451,18 @@ window.filterProducts = ()=>{
   const sort = document.getElementById('sortFilter').value;
   const q = document.getElementById('searchInput').value.toLowerCase();
   filteredProducts = allProducts.filter(p=>
-    (cat==='all'||p.category===cat)&&(brand==='all'||p.brand===brand)&&(!q||p.name?.toLowerCase().includes(q))
+    (cat==='all'||p.category===cat) && (brand==='all'||p.brand===brand) && (!q||p.name?.toLowerCase().includes(q))
   );
   if(sort==='price-low') filteredProducts.sort((a,b)=>getPriceRange(a).min-getPriceRange(b).min);
   if(sort==='price-high') filteredProducts.sort((a,b)=>getPriceRange(b).min-getPriceRange(a).min);
   renderGrid();
 };
 
-/* ─────────────────────────────────────────────
-   VARIANT MODAL
-   Shows: all color swatches (each with its icon)
-   Clicking a color → updates gallery image + shows
-   that color's storage options each with price
-   User picks storage → qty + add enabled
-───────────────────────────────────────────── */
+/* ─── VARIANT MODAL ─── */
 window.openModal = (id)=>{
   mProduct = allProducts.find(p=>p.id===id);
   if(!mProduct) return;
-  // Start with the currently highlighted card color if possible
-  const currentCardColor = cardState[id]?.activeColorIdx || 0;
-  mColorIdx = currentCardColor;
+  mColorIdx = cardState[id]?.activeColorIdx || 0;
   mStorIdx = null;
   mQty = 1;
   renderModal();
@@ -477,22 +470,22 @@ window.openModal = (id)=>{
 };
 
 function renderModal(){
-  const colors = mProduct.colors||[];
-  const color = colors[mColorIdx];
+  const variants = mProduct.variants||[];
+  const color = variants[mColorIdx];
   const storageOpts = color?.storageOptions||[];
   const selStor = mStorIdx!==null ? storageOpts[mStorIdx] : null;
 
-  // Gallery
+  // Gallery image
   const imgEl = document.getElementById('mImg');
   if(imgEl){
     imgEl.classList.add('fading');
-    setTimeout(()=>{ imgEl.src=color?.imageUrl||''; imgEl.classList.remove('fading'); },180);
+    setTimeout(()=>{imgEl.src=color?.imageUrl||'';imgEl.classList.remove('fading');},180);
   }
   document.getElementById('mBrand').textContent = mProduct.brand||'';
   document.getElementById('mName').textContent = mProduct.name;
-  document.getElementById('mColorLabel').textContent = color?.name||'';
+  document.getElementById('mColorLabel').textContent = (color?.icon||'') + ' ' + (color?.color||'');
 
-  // Price display
+  // Price
   let priceHtml;
   if(selStor){
     priceHtml=`<div class="modal-price-main">K${selStor.price.toLocaleString()}</div>
@@ -507,21 +500,24 @@ function renderModal(){
       <div class="modal-price-note">Select a storage option to see exact price</div>`;
   }
 
-  // Color swatches
-  const colorSwatches = colors.map((c,i)=>`
+  // Color swatches — icon + color dot
+  const colorSwatches = variants.map((v,i)=>`
     <div class="modal-color-swatch${i===mColorIdx?' active':''}" onclick="pickColor(${i})">
-      <div class="mcs-icon">${c.icon||'🔵'}</div>
-      <div class="mcs-label">${c.name}</div>
+      <div class="mcs-icon-wrap">
+        ${v.icon||'🔵'}
+        <span class="mcs-dot" style="background:${v.hex||'#ccc'}"></span>
+      </div>
+      <div class="mcs-label">${v.color||''}</div>
     </div>`).join('');
 
-  // Storage variants
+  // Storage rows
   const storRows = storageOpts.map((opt,i)=>{
     const oos=opt.stock<=0;
     const low=!oos&&opt.stock<=5;
-    return`<div class="sv-row${i===mStorIdx?' selected':''}${oos?' oos':''}" onclick="${!oos?`pickStor(${i})`:''}" ${oos?'title="Out of stock"':''}>
+    return`<div class="sv-row${i===mStorIdx?' selected':''}${oos?' oos':''}" ${!oos?`onclick="pickStor(${i})"`:'title="Out of stock"'}>
       <div class="sv-left">
         <div class="sv-stor">${opt.storage}</div>
-        <div class="sv-stock">${oos?'Out of stock':low?`Only ${opt.stock} left`:opt.stock+' in stock'}</div>
+        <div class="sv-stock">${oos?'Out of stock':low?`Only ${opt.stock} left`:`${opt.stock} in stock`}</div>
       </div>
       <div class="sv-price">K${(opt.price||0).toLocaleString()}</div>
     </div>`;
@@ -531,10 +527,9 @@ function renderModal(){
 
   document.getElementById('mPicker').innerHTML = `
     <div class="modal-price-area">${priceHtml}</div>
-
     ${mProduct.shortDesc?`<p style="font-size:0.85rem;color:var(--gray-400);margin-bottom:1rem;line-height:1.5">${mProduct.shortDesc}</p>`:''}
 
-    <div class="picker-label">Color <span class="picker-value">${color?.name||''}</span></div>
+    <div class="picker-label">Color <span class="picker-value">${color?.color||''}</span></div>
     <div class="modal-colors">${colorSwatches}</div>
 
     <div class="picker-label" style="margin-bottom:0.5rem">Storage &amp; Price</div>
@@ -553,37 +548,26 @@ function renderModal(){
   `;
 }
 
-window.pickColor = (idx)=>{
-  mColorIdx = idx;
-  mStorIdx = null;
-  mQty = 1;
-  renderModal();
-};
-window.pickStor = (idx)=>{
-  mStorIdx = idx;
-  mQty = 1;
-  renderModal();
-};
+window.pickColor = (idx)=>{mColorIdx=idx;mStorIdx=null;mQty=1;renderModal();};
+window.pickStor = (idx)=>{mStorIdx=idx;mQty=1;renderModal();};
 window.changeQty = (delta)=>{
   if(mStorIdx===null)return;
-  const color = mProduct.colors[mColorIdx];
-  const stock = color?.storageOptions[mStorIdx]?.stock||0;
+  const stock = mProduct.variants[mColorIdx]?.storageOptions[mStorIdx]?.stock||0;
   mQty = Math.max(1, Math.min(stock, mQty+delta));
-  // Update just the qty display and add button without full re-render
   const qEl = document.querySelector('.qty-num');
   if(qEl) qEl.textContent = mQty;
 };
 window.addFromModal = async()=>{
   if(mStorIdx===null||!mProduct)return;
-  const color = mProduct.colors[mColorIdx];
+  const color = mProduct.variants[mColorIdx];
   const opt = color?.storageOptions[mStorIdx];
   if(!opt||opt.stock<mQty){alert('Not enough stock.');return;}
   await addToCart({
     id:mProduct.id, name:mProduct.name,
-    price:opt.price, color:color.name, colorIcon:color.icon||'',
+    price:opt.price, color:color.color, colorIcon:color.icon||'',
     storage:opt.storage, image:color.imageUrl, qty:mQty
   });
-  showNotif(`${mProduct.name} · ${color.name} · ${opt.storage}`);
+  showNotif(`${mProduct.name} · ${color.color} · ${opt.storage}`);
   closeModal();
 };
 window.closeModal = ()=>document.getElementById('productModal').classList.remove('show');
