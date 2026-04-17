@@ -58,8 +58,6 @@
     .btn-primary { background: var(--primary); color: white; }
     .btn-primary:hover { background: var(--primary-dark); }
     .btn-secondary { background: var(--gray-200); color: var(--dark); }
-    .btn-outline { background: transparent; border: 2px solid var(--gray-200); color: var(--dark); }
-    .btn-outline:hover { border-color: var(--primary); color: var(--primary); }
     .btn-danger { background: #fee2e2; color: #ef4444; border: none; cursor: pointer; font-family: 'Inter', sans-serif; }
     .page-actions { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
     .filters-section { background: white; border-radius: var(--radius-lg); padding: 1.5rem; margin-bottom: 2rem; box-shadow: var(--shadow); }
@@ -83,13 +81,13 @@
     .edit-btn { background: var(--primary); color: white; }
     .delete-btn { background: #fee2e2; color: #ef4444; }
 
-    /* ── MODAL ── */
+    /* MODAL */
     .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.55); backdrop-filter: blur(5px); align-items: center; justify-content: center; z-index: 1000; padding: 1rem; }
     .modal.show { display: flex; }
-    .modal-content { background: white; border-radius: var(--radius-lg); max-width: 860px; width: 95%; max-height: 92vh; overflow-y: auto; animation: slideIn 0.3s ease; display: flex; flex-direction: column; }
+    .modal-content { background: white; border-radius: var(--radius-lg); max-width: 900px; width: 95%; max-height: 92vh; overflow-y: auto; animation: slideIn 0.3s ease; display: flex; flex-direction: column; }
     @keyframes slideIn { from { opacity:0; transform:translateY(30px); } to { opacity:1; transform:translateY(0); } }
 
-    /* ── STEPPER ── */
+    /* STEPPER */
     .stepper-header { padding: 1.5rem 2rem 0; border-bottom: 2px solid var(--gray-200); }
     .stepper-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.2rem; }
     .stepper-top h2 { font-size: 1.3rem; font-weight: 700; }
@@ -112,7 +110,7 @@
     .step-tab.active .step-num { background: var(--primary); color: white; }
     .step-tab.done .step-num { background: #22c55e; color: white; }
 
-    /* ── STEP PANELS ── */
+    /* STEP PANELS */
     .step-panels { padding: 2rem; flex: 1; }
     .step-panel { display: none; }
     .step-panel.active { display: block; }
@@ -125,9 +123,8 @@
     }
     .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--primary); }
     .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-    .form-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; }
 
-    /* ── STEP 1: TYPE SELECTION ── */
+    /* STEP 1: TYPE SELECTION */
     .type-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-top: 0.5rem; }
     .type-card {
       border: 2px solid var(--gray-200); border-radius: var(--radius-md);
@@ -139,7 +136,7 @@
     .type-card .type-name { font-weight: 700; font-size: 0.95rem; }
     .type-card .type-desc { font-size: 0.8rem; color: var(--gray-400); margin-top: 0.25rem; }
 
-    /* ── VARIANT CARDS ── */
+    /* VARIANT CARDS */
     .variants-list { display: flex; flex-direction: column; gap: 1.2rem; margin-bottom: 1.2rem; }
     .variant-card {
       background: var(--gray-100); border-radius: var(--radius-md);
@@ -155,14 +152,21 @@
     .variant-card-body { padding: 1.2rem; display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
     .variant-section-label { font-size: 0.78rem; font-weight: 700; text-transform: uppercase; color: var(--gray-400); letter-spacing: 0.04em; margin-bottom: 0.6rem; }
 
-    /* Storage rows */
+    /* Storage rows — now with 3 inputs: name, price, qty */
     .storage-list { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 0.6rem; }
-    .storage-row { display: flex; align-items: center; gap: 0.5rem; }
-    .storage-row input { padding: 0.55rem 0.75rem; border: 1.5px solid var(--gray-200); border-radius: var(--radius-md); font-family: 'Inter', sans-serif; font-size: 0.85rem; outline: none; }
+    .storage-row { display: flex; align-items: center; gap: 0.4rem; }
+    .storage-row input { padding: 0.55rem 0.6rem; border: 1.5px solid var(--gray-200); border-radius: var(--radius-md); font-family: 'Inter', sans-serif; font-size: 0.82rem; outline: none; }
     .storage-row input:focus { border-color: var(--primary); }
-    .storage-row input.storage-name { flex: 1; }
-    .storage-row input.storage-qty { width: 90px; }
+    .storage-row input.storage-name { flex: 1.4; min-width: 0; }
+    .storage-row input.storage-price { flex: 1; min-width: 0; }
+    .storage-row input.storage-qty { width: 72px; flex-shrink: 0; }
     .storage-row .remove-storage { width: 28px; height: 28px; border: none; border-radius: 50%; background: #fee2e2; color: #ef4444; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; flex-shrink: 0; }
+    .storage-header { display: flex; gap: 0.4rem; margin-bottom: 0.3rem; }
+    .storage-header span { font-size: 0.72rem; font-weight: 600; color: var(--gray-400); text-transform: uppercase; letter-spacing: 0.03em; }
+    .storage-header span.sh-name { flex: 1.4; }
+    .storage-header span.sh-price { flex: 1; }
+    .storage-header span.sh-qty { width: 72px; }
+    .storage-header span.sh-del { width: 28px; }
     .btn-add-storage { display: flex; align-items: center; gap: 0.4rem; padding: 0.45rem 0.9rem; background: white; border: 1.5px dashed var(--gray-200); border-radius: 100px; font-size: 0.82rem; font-weight: 600; color: var(--gray-400); cursor: pointer; transition: 0.2s; font-family: 'Inter', sans-serif; }
     .btn-add-storage:hover { border-color: var(--primary); color: var(--primary); }
 
@@ -180,7 +184,6 @@
     .upload-zone .upload-placeholder i { font-size: 1.4rem; margin-bottom: 0.3rem; display: block; }
     .upload-progress { font-size: 0.75rem; color: var(--primary); font-weight: 600; margin-top: 0.3rem; }
 
-    /* Add color button */
     .btn-add-color {
       display: flex; align-items: center; justify-content: center; gap: 0.6rem;
       width: 100%; padding: 0.85rem; border: 2px dashed var(--gray-200);
@@ -190,12 +193,12 @@
     }
     .btn-add-color:hover { border-color: var(--primary); color: var(--primary); background: rgba(0,188,212,0.04); }
 
-    /* ── STEP FOOTER ── */
+    /* STEP FOOTER */
     .step-footer { padding: 1.2rem 2rem; border-top: 2px solid var(--gray-200); display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
     .step-footer-right { display: flex; gap: 0.8rem; }
     .step-hint { font-size: 0.82rem; color: var(--gray-400); }
 
-    /* ── TOAST ── */
+    /* TOAST */
     .toast { position: fixed; bottom: 30px; right: 30px; background: var(--dark); color: white; padding: 0.9rem 1.5rem; border-radius: 100px; display: flex; align-items: center; gap: 10px; transform: translateX(420px); transition: 0.35s; z-index: 9999; font-size: 0.9rem; }
     .toast.show { transform: translateX(0); }
     .toast.error { background: #ef4444; }
@@ -203,7 +206,7 @@
     @media (max-width: 768px) {
       .admin-sidebar { display: none; }
       .admin-main { margin-left: 0; padding: 1rem; }
-      .form-row, .form-row-3, .type-grid, .variant-card-body { grid-template-columns: 1fr; }
+      .form-row, .type-grid, .variant-card-body { grid-template-columns: 1fr; }
       .step-tab span.step-label { display: none; }
     }
   </style>
@@ -225,7 +228,7 @@
 
   <main class="admin-main">
     <header class="admin-header">
-      <div class="header-title"><h1>Products</h1><p>Manage products with color variants and storage options</p></div>
+      <div class="header-title"><h1>Products</h1><p>Manage products with color variants and per-storage pricing</p></div>
       <div class="header-profile">
         <div class="profile-avatar" id="adminInitials">A</div>
         <div><div style="font-weight:600" id="adminName">Admin</div><div style="font-size:0.8rem;">Administrator</div></div>
@@ -256,65 +259,52 @@
   </main>
 </div>
 
-<!-- ═══════════════ MODAL ═══════════════ -->
+<!-- MODAL -->
 <div id="productModal" class="modal">
   <div class="modal-content">
-
-    <!-- Stepper Header -->
     <div class="stepper-header">
       <div class="stepper-top">
         <h2 id="modalTitle">Add New Product</h2>
         <button class="close-modal" onclick="closeModal()"><i class="fa-solid fa-times"></i></button>
       </div>
       <div class="step-indicators">
-        <div class="step-tab active" id="tab-1">
-          <div class="step-num">1</div><span class="step-label">Product Type</span>
-        </div>
-        <div class="step-tab" id="tab-2">
-          <div class="step-num">2</div><span class="step-label">Details</span>
-        </div>
-        <div class="step-tab" id="tab-3">
-          <div class="step-num">3</div><span class="step-label">Colors &amp; Variants</span>
-        </div>
+        <div class="step-tab active" id="tab-1"><div class="step-num">1</div><span class="step-label">Product Type</span></div>
+        <div class="step-tab" id="tab-2"><div class="step-num">2</div><span class="step-label">Details</span></div>
+        <div class="step-tab" id="tab-3"><div class="step-num">3</div><span class="step-label">Colors &amp; Variants</span></div>
       </div>
     </div>
 
-    <!-- ── STEP 1: Product Type ── -->
     <div class="step-panels">
+      <!-- STEP 1 -->
       <div class="step-panel active" id="panel-1">
         <p style="color:var(--gray-400);font-size:0.9rem;margin-bottom:1.2rem">Select the type of product you are adding.</p>
-        <div class="type-grid" id="typeGrid">
+        <div class="type-grid">
           <div class="type-card" data-type="Smartphone" onclick="selectType(this)">
-            <div class="type-icon">📱</div>
-            <div class="type-name">Smartphone</div>
-            <div class="type-desc">Mobile phones &amp; handsets</div>
+            <div class="type-icon">📱</div><div class="type-name">Smartphone</div><div class="type-desc">Mobile phones &amp; handsets</div>
           </div>
           <div class="type-card" data-type="Laptop" onclick="selectType(this)">
-            <div class="type-icon">💻</div>
-            <div class="type-name">Laptop</div>
-            <div class="type-desc">Notebooks &amp; ultrabooks</div>
+            <div class="type-icon">💻</div><div class="type-name">Laptop</div><div class="type-desc">Notebooks &amp; ultrabooks</div>
           </div>
           <div class="type-card" data-type="Tablet" onclick="selectType(this)">
-            <div class="type-icon">📟</div>
-            <div class="type-name">Tablet</div>
-            <div class="type-desc">iPads &amp; Android tablets</div>
+            <div class="type-icon">📟</div><div class="type-name">Tablet</div><div class="type-desc">iPads &amp; Android tablets</div>
           </div>
           <div class="type-card" data-type="Accessory" onclick="selectType(this)">
-            <div class="type-icon">🎧</div>
-            <div class="type-name">Accessory</div>
-            <div class="type-desc">Cables, cases, earbuds &amp; more</div>
+            <div class="type-icon">🎧</div><div class="type-name">Accessory</div><div class="type-desc">Cables, cases, earbuds &amp; more</div>
           </div>
         </div>
       </div>
 
-      <!-- ── STEP 2: Product Details ── -->
+      <!-- STEP 2 -->
       <div class="step-panel" id="panel-2">
         <div class="form-row">
           <div class="form-group"><label>Product Name *</label><input type="text" id="f-name" placeholder="e.g. Samsung Galaxy S24"></div>
           <div class="form-group"><label>Brand</label><input type="text" id="f-brand" placeholder="e.g. Samsung"></div>
         </div>
         <div class="form-row">
-          <div class="form-group"><label>Price (K) *</label><input type="number" id="f-price" step="0.01" placeholder="0.00"></div>
+          <div class="form-group">
+            <label>Base Display Price (K) *</label>
+            <input type="number" id="f-price" step="0.01" placeholder="Lowest variant price — shown on card">
+          </div>
           <div class="form-group"><label>Old / Compare Price (K)</label><input type="number" id="f-oldprice" step="0.01" placeholder="0.00"></div>
         </div>
         <div class="form-row">
@@ -336,10 +326,10 @@
         <div class="form-group"><label>Short Description</label><textarea id="f-shortdesc" rows="2" placeholder="Brief summary shown on listing cards…"></textarea></div>
       </div>
 
-      <!-- ── STEP 3: Colors & Variants ── -->
+      <!-- STEP 3 -->
       <div class="step-panel" id="panel-3">
         <p style="color:var(--gray-400);font-size:0.88rem;margin-bottom:1.2rem">
-          Each color variant has its <strong>own image</strong> and <strong>storage options with quantities</strong>.
+          Each color has its own image. Each storage option has its own <strong>price</strong> and quantity.
         </p>
         <div class="variants-list" id="variantsList"></div>
         <button class="btn-add-color" onclick="addColorVariant()">
@@ -348,7 +338,6 @@
       </div>
     </div>
 
-    <!-- Step Footer -->
     <div class="step-footer">
       <div class="step-hint" id="stepHint">Choose a product type to continue.</div>
       <div class="step-footer-right">
@@ -359,13 +348,11 @@
         </button>
       </div>
     </div>
-
   </div>
 </div>
 
 <div class="toast" id="toast"><i class="fa-regular fa-circle-check"></i><span>Done!</span></div>
 
-<!-- ═══════════════ SCRIPT ═══════════════ -->
 <script type="module">
 import { auth, db, storage } from '../js/firebase-config.js';
 import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc, query, orderBy, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -373,14 +360,12 @@ import { ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.c
 import { signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 import { observeAuthState, isUserAdmin } from '../js/auth.js';
 
-/* ─── STATE ─── */
 let allProducts = [];
-let colorVariants = [];  // [{ color, imageUrl, imageFile, storageOptions: [{ storage, stock }] }]
+let colorVariants = [];
 let currentStep = 1;
 let selectedType = '';
 let editingProductId = null;
 
-/* ─── TOAST ─── */
 function showToast(msg, isError = false) {
   const t = document.getElementById('toast');
   t.querySelector('span').textContent = msg;
@@ -388,7 +373,6 @@ function showToast(msg, isError = false) {
   setTimeout(() => t.classList.remove('show'), 3200);
 }
 
-/* ─── AUTH ─── */
 observeAuthState(async user => {
   if (!user) { window.location.href = '../login.html'; return; }
   const admin = await isUserAdmin(user.uid);
@@ -399,7 +383,6 @@ observeAuthState(async user => {
   await loadProducts();
 });
 
-/* ─── LOAD / DISPLAY ─── */
 async function loadProducts() {
   try {
     const snap = await getDocs(query(collection(db, 'products'), orderBy('createdAt', 'desc')));
@@ -426,12 +409,17 @@ function displayProducts(products) {
     const img = p.variants?.[0]?.imageUrl || '';
     const totalStock = p.variants?.reduce((s, v) => s + (v.storageOptions?.reduce((ss, o) => ss + (o.stock || 0), 0) || 0), 0) || 0;
     const colors = [...new Set((p.variants || []).map(v => v.color))];
+    // Price range from all storage options
+    const prices = p.variants?.flatMap(v => v.storageOptions?.map(o => o.price) || []).filter(Boolean) || [];
+    const minPrice = prices.length ? Math.min(...prices) : p.price || 0;
+    const maxPrice = prices.length ? Math.max(...prices) : p.price || 0;
+    const priceDisplay = minPrice === maxPrice ? `K${minPrice.toLocaleString()}` : `K${minPrice.toLocaleString()} – K${maxPrice.toLocaleString()}`;
     return `<div class="product-card">
       <div class="product-image">${img ? `<img src="${img}" onerror="this.style.display='none'">` : '<span style="font-size:3rem">📦</span>'}</div>
       <div class="product-info">
         <div class="product-name">${p.name}</div>
         <div class="product-meta">${p.brand || ''} · ${p.type || ''}</div>
-        <div class="product-price">K${(p.price || 0).toLocaleString()}</div>
+        <div class="product-price">${priceDisplay}</div>
         <div class="product-meta">Colors: ${colors.join(', ') || '—'} · Stock: ${totalStock}</div>
         <div class="product-actions">
           <button class="edit-btn" onclick="editProduct('${p.id}')"><i class="fa-solid fa-pen"></i> Edit</button>
@@ -453,7 +441,6 @@ window.filterProducts = () => {
   ));
 };
 
-/* ─── STEPPER NAVIGATION ─── */
 function setStep(n) {
   currentStep = n;
   for (let i = 1; i <= 3; i++) {
@@ -469,7 +456,7 @@ function setStep(n) {
   const hints = [
     'Choose a product type to continue.',
     'Fill in the product details.',
-    'Add at least one color variant with storage options.'
+    'Add at least one color variant with storage options and prices.'
   ];
   document.getElementById('stepHint').textContent = hints[n - 1];
 }
@@ -477,31 +464,28 @@ function setStep(n) {
 window.goStep = (dir) => {
   const next = currentStep + dir;
   if (dir > 0) {
-    // Validate current step before advancing
     if (currentStep === 1 && !selectedType) { showToast('Please select a product type.', true); return; }
     if (currentStep === 2) {
       const name = document.getElementById('f-name').value.trim();
       const price = parseFloat(document.getElementById('f-price').value);
       if (!name) { showToast('Product name is required.', true); return; }
-      if (isNaN(price) || price <= 0) { showToast('Enter a valid price.', true); return; }
+      if (isNaN(price) || price <= 0) { showToast('Enter a valid base display price.', true); return; }
     }
   }
   if (next < 1 || next > 3) return;
   setStep(next);
 };
 
-/* ─── TYPE SELECTION ─── */
 window.selectType = (card) => {
   document.querySelectorAll('.type-card').forEach(c => c.classList.remove('selected'));
   card.classList.add('selected');
   selectedType = card.dataset.type;
   document.getElementById('f-type-display').value = selectedType;
-  // Auto-set category from type
   const map = { Smartphone: 'phones', Laptop: 'laptops', Tablet: 'tablets', Accessory: 'accessories' };
   if (map[selectedType]) document.getElementById('f-category').value = map[selectedType];
 };
 
-/* ─── VARIANTS RENDER ─── */
+/* ── VARIANTS ── */
 function renderVariants() {
   const list = document.getElementById('variantsList');
   if (!list) return;
@@ -522,7 +506,13 @@ function renderVariants() {
       </div>
       <div class="variant-card-body">
         <div>
-          <div class="variant-section-label">Storage Options &amp; Quantities</div>
+          <div class="variant-section-label">Storage · Price · Qty</div>
+          <div class="storage-header">
+            <span class="sh-name">Storage</span>
+            <span class="sh-price">Price (K)</span>
+            <span class="sh-qty">Qty</span>
+            <span class="sh-del"></span>
+          </div>
           <div class="storage-list" id="storage-list-${idx}"></div>
           <button class="btn-add-storage" onclick="addStorageOption(${idx})">
             <i class="fa-solid fa-plus"></i> Add Storage
@@ -542,7 +532,6 @@ function renderVariants() {
     `;
     list.appendChild(card);
 
-    // Render storage rows
     const storageList = document.getElementById(`storage-list-${idx}`);
     (v.storageOptions || []).forEach((opt, oi) => {
       const row = document.createElement('div');
@@ -550,6 +539,8 @@ function renderVariants() {
       row.innerHTML = `
         <input class="storage-name" type="text" placeholder="e.g. 128GB" value="${opt.storage || ''}"
           oninput="updateStorage(${idx},${oi},'storage',this.value)">
+        <input class="storage-price" type="number" placeholder="Price" value="${opt.price || ''}" min="0" step="0.01"
+          oninput="updateStorage(${idx},${oi},'price',parseFloat(this.value)||0)">
         <input class="storage-qty" type="number" placeholder="Qty" value="${opt.stock || 0}" min="0"
           oninput="updateStorage(${idx},${oi},'stock',parseInt(this.value)||0)">
         <button class="remove-storage" onclick="removeStorageOption(${idx},${oi})"><i class="fa-solid fa-times"></i></button>
@@ -559,55 +550,38 @@ function renderVariants() {
   });
 }
 
-/* Turn color names to approximate CSS colors for the icon */
 function getCSSColor(name) {
   const map = {
-    black: '#1a1a1a', white: '#e5e5e5', gray: '#9ca3af', grey: '#9ca3af',
-    red: '#ef4444', blue: '#3b82f6', green: '#22c55e', yellow: '#eab308',
-    gold: '#d97706', silver: '#94a3b8', purple: '#a855f7', pink: '#ec4899',
-    orange: '#f97316', brown: '#92400e', midnight: '#1e293b', titanium: '#78716c',
-    graphite: '#4b5563', starlight: '#e2e8f0', coral: '#f87171', teal: '#14b8a6',
-    violet: '#7c3aed', indigo: '#6366f1', cyan: '#06b6d4'
+    black:'#1a1a1a', white:'#e5e5e5', gray:'#9ca3af', grey:'#9ca3af',
+    red:'#ef4444', blue:'#3b82f6', green:'#22c55e', yellow:'#eab308',
+    gold:'#d97706', silver:'#94a3b8', purple:'#a855f7', pink:'#ec4899',
+    orange:'#f97316', brown:'#92400e', midnight:'#1e293b', titanium:'#78716c',
+    graphite:'#4b5563', starlight:'#e2e8f0', coral:'#f87171', teal:'#14b8a6',
+    violet:'#7c3aed', indigo:'#6366f1', cyan:'#06b6d4'
   };
   const lower = name.toLowerCase();
   for (const key of Object.keys(map)) { if (lower.includes(key)) return map[key]; }
   return 'var(--primary)';
 }
 
-/* ─── VARIANT ACTIONS ─── */
-window.addColorVariant = () => {
-  colorVariants.push({ color: '', imageUrl: '', imageFile: null, storageOptions: [] });
-  renderVariants();
-};
+window.addColorVariant = () => { colorVariants.push({ color: '', imageUrl: '', imageFile: null, storageOptions: [] }); renderVariants(); };
 window.removeVariant = (idx) => { colorVariants.splice(idx, 1); renderVariants(); };
 window.updateVariantColor = (idx, val) => { colorVariants[idx].color = val; };
-window.addStorageOption = (idx) => {
-  colorVariants[idx].storageOptions.push({ storage: '', stock: 0 });
-  renderVariants();
-};
+window.addStorageOption = (idx) => { colorVariants[idx].storageOptions.push({ storage: '', price: 0, stock: 0 }); renderVariants(); };
 window.removeStorageOption = (idx, oi) => { colorVariants[idx].storageOptions.splice(oi, 1); renderVariants(); };
 window.updateStorage = (idx, oi, field, val) => {
   if (colorVariants[idx]?.storageOptions[oi]) colorVariants[idx].storageOptions[oi][field] = val;
 };
 
-/* ─── IMAGE UPLOAD ─── */
 window.uploadImage = async (idx, file) => {
   if (!file || !auth.currentUser) return;
   const prog = document.getElementById(`upload-prog-${idx}`);
   if (prog) { prog.style.display = 'block'; prog.textContent = 'Uploading…'; }
-
   const path = `temp_products/${Date.now()}_${idx}_${file.name.replace(/[^a-zA-Z0-9.]/g, '_')}`;
   const task = uploadBytesResumable(ref(storage, path), file);
-
   task.on('state_changed',
-    snap => {
-      const pct = Math.round(snap.bytesTransferred / snap.totalBytes * 100);
-      if (prog) prog.textContent = `Uploading… ${pct}%`;
-    },
-    err => {
-      showToast('Upload failed: ' + err.message, true);
-      if (prog) prog.style.display = 'none';
-    },
+    snap => { const pct = Math.round(snap.bytesTransferred / snap.totalBytes * 100); if (prog) prog.textContent = `Uploading… ${pct}%`; },
+    err => { showToast('Upload failed: ' + err.message, true); if (prog) prog.style.display = 'none'; },
     async () => {
       const url = await getDownloadURL(task.snapshot.ref);
       colorVariants[idx].imageUrl = url;
@@ -618,17 +592,11 @@ window.uploadImage = async (idx, file) => {
   );
 };
 
-/* ─── OPEN / CLOSE MODAL ─── */
 window.showAddModal = () => {
-  editingProductId = null;
-  selectedType = '';
-  colorVariants = [];
+  editingProductId = null; selectedType = ''; colorVariants = [];
   document.getElementById('modalTitle').textContent = 'Add New Product';
   document.getElementById('productModal').classList.add('show');
-  // Reset form fields
-  ['f-name','f-brand','f-price','f-oldprice','f-desc','f-shortdesc','f-type-display'].forEach(id => {
-    const el = document.getElementById(id); if (el) el.value = '';
-  });
+  ['f-name','f-brand','f-price','f-oldprice','f-desc','f-shortdesc','f-type-display'].forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
   document.getElementById('f-category').value = 'phones';
   document.querySelectorAll('.type-card').forEach(c => c.classList.remove('selected'));
   renderVariants();
@@ -638,13 +606,10 @@ window.showAddModal = () => {
 window.editProduct = (id) => {
   const p = allProducts.find(x => x.id === id);
   if (!p) return;
-  editingProductId = id;
-  selectedType = p.type || '';
+  editingProductId = id; selectedType = p.type || '';
   colorVariants = (p.variants || []).map(v => ({
-    color: v.color || '',
-    imageUrl: v.imageUrl || '',
-    imageFile: null,
-    storageOptions: (v.storageOptions || []).map(o => ({ storage: o.storage, stock: o.stock }))
+    color: v.color || '', imageUrl: v.imageUrl || '', imageFile: null,
+    storageOptions: (v.storageOptions || []).map(o => ({ storage: o.storage, price: o.price || 0, stock: o.stock }))
   }));
   document.getElementById('modalTitle').textContent = 'Edit Product';
   document.getElementById('f-name').value = p.name || '';
@@ -655,23 +620,18 @@ window.editProduct = (id) => {
   document.getElementById('f-shortdesc').value = p.shortDesc || '';
   document.getElementById('f-category').value = p.category || 'phones';
   document.getElementById('f-type-display').value = selectedType;
-  // Mark type card
-  document.querySelectorAll('.type-card').forEach(c => {
-    c.classList.toggle('selected', c.dataset.type === selectedType);
-  });
+  document.querySelectorAll('.type-card').forEach(c => c.classList.toggle('selected', c.dataset.type === selectedType));
   renderVariants();
   document.getElementById('productModal').classList.add('show');
-  setStep(2); // Jump to details step since type is known
+  setStep(2);
 };
 
 window.closeModal = () => { document.getElementById('productModal').classList.remove('show'); };
 
-/* ─── SAVE ─── */
 window.handleSubmit = async () => {
-  // Validate
   const name = document.getElementById('f-name').value.trim();
   const price = parseFloat(document.getElementById('f-price').value);
-  if (!name || isNaN(price)) { showToast('Name and price are required.', true); return; }
+  if (!name || isNaN(price)) { showToast('Name and base price are required.', true); return; }
   if (!selectedType) { showToast('Please select a product type.', true); return; }
   if (!colorVariants.length) { showToast('Add at least one color variant.', true); return; }
   for (const v of colorVariants) {
@@ -680,6 +640,7 @@ window.handleSubmit = async () => {
     if (!v.storageOptions.length) { showToast(`Add at least one storage option for: ${v.color}`, true); return; }
     for (const o of v.storageOptions) {
       if (!o.storage.trim()) { showToast(`Storage name missing for color: ${v.color}`, true); return; }
+      if (!o.price || o.price <= 0) { showToast(`Price missing or invalid for ${v.color} – ${o.storage}`, true); return; }
       if (o.stock < 0) { showToast(`Invalid quantity for ${v.color} – ${o.storage}`, true); return; }
     }
   }
@@ -692,14 +653,14 @@ window.handleSubmit = async () => {
     brand: document.getElementById('f-brand').value.trim() || null,
     type: selectedType,
     category: document.getElementById('f-category').value,
-    price,
+    price, // base display price (lowest or representative)
     oldPrice: parseFloat(document.getElementById('f-oldprice').value) || null,
     description: document.getElementById('f-desc').value.trim() || null,
     shortDesc: document.getElementById('f-shortdesc').value.trim() || null,
     variants: colorVariants.map(v => ({
       color: v.color,
       imageUrl: v.imageUrl,
-      storageOptions: v.storageOptions.map(o => ({ storage: o.storage, stock: Number(o.stock) }))
+      storageOptions: v.storageOptions.map(o => ({ storage: o.storage, price: Number(o.price), stock: Number(o.stock) }))
     })),
     updatedAt: new Date().toISOString()
   };
@@ -723,7 +684,6 @@ window.handleSubmit = async () => {
   }
 };
 
-/* ─── DELETE ─── */
 window.deleteProduct = async (id) => {
   if (!confirm('Delete this product? This cannot be undone.')) return;
   await deleteDoc(doc(db, 'products', id));
