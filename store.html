@@ -17,7 +17,7 @@
     body { font-family: 'Inter', sans-serif; background: var(--white); color: var(--dark); }
     .container { width: 90%; max-width: 1200px; margin: 0 auto; padding: 0 15px; }
 
-    /* ── NAV ── */
+    /* NAV */
     nav { background: rgba(255,255,255,0.98); backdrop-filter: blur(10px); padding: 0.8rem 0; position: sticky; top: 0; z-index: 1000; border-bottom: 1px solid rgba(0,0,0,0.05); }
     nav .container { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; }
     .logo-link { display: flex; align-items: center; gap: 8px; text-decoration: none; }
@@ -31,13 +31,13 @@
     .cart-icon-wrap { position: relative; cursor: pointer; }
     .cart-badge { position: absolute; top: -8px; right: -8px; background: #ef4444; color: white; width: 18px; height: 18px; border-radius: 50%; font-size: 10px; font-weight: 700; display: none; align-items: center; justify-content: center; }
 
-    /* ── PAGE HEADER ── */
+    /* PAGE HEADER */
     .page-header { background: url('photos/e.jpeg') center/cover no-repeat; padding: 4rem 1rem; text-align: center; color: white; margin: 10px; border-radius: var(--radius-lg); position: relative; }
     .page-header .overlay { position: absolute; inset: 0; background: rgba(15,23,42,0.75); border-radius: var(--radius-lg); }
     .page-header .inner { position: relative; z-index: 1; }
     .page-header h1 { font-size: 2.5rem; font-weight: 800; margin-bottom: 0.5rem; }
 
-    /* ── FILTERS ── */
+    /* FILTERS */
     .filters { display: flex; justify-content: space-between; align-items: center; margin: 2rem 0; flex-wrap: wrap; gap: 1rem; background: white; padding: 1.25rem 1.5rem; border-radius: var(--radius-lg); box-shadow: var(--shadow); }
     .filter-group { display: flex; gap: 0.75rem; flex-wrap: wrap; }
     .filter-select { padding: 0.65rem 1.1rem; border-radius: 100px; border: 1.5px solid var(--gray-200); background: white; font-family: 'Inter', sans-serif; cursor: pointer; font-size: 0.9rem; outline: none; }
@@ -46,27 +46,32 @@
     .search-box input { border: none; outline: none; padding: 0.45rem 0; width: 100%; font-family: 'Inter', sans-serif; }
     .search-box button { background: var(--primary); border: none; color: white; padding: 0.55rem 1.1rem; border-radius: 100px; cursor: pointer; }
 
-    /* ── PRODUCT GRID ── */
+    /* PRODUCT GRID */
     .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 1.25rem; margin-bottom: 3rem; }
     .product-card { background: white; border-radius: var(--radius-lg); border: 1.5px solid var(--gray-200); transition: 0.3s; cursor: pointer; overflow: hidden; }
     .product-card:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
-    .card-img-wrap { height: 210px; display: flex; align-items: center; justify-content: center; background: var(--gray-100); padding: 1rem; position: relative; }
-    .card-img-wrap img { max-width: 100%; max-height: 100%; object-fit: contain; }
+
+    /* Card image with cycle animation */
+    .card-img-wrap { height: 210px; display: flex; align-items: center; justify-content: center; background: var(--gray-100); padding: 1rem; position: relative; overflow: hidden; }
+    .card-img-wrap img { max-width: 100%; max-height: 100%; object-fit: contain; position: absolute; transition: opacity 0.5s ease; }
+    .card-img-wrap img.hidden { opacity: 0; }
+    .card-img-wrap img.visible { opacity: 1; }
+
+    /* Cycle dots */
+    .cycle-dots { position: absolute; bottom: 6px; left: 50%; transform: translateX(-50%); display: flex; gap: 4px; }
+    .cycle-dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.5); border: 1px solid rgba(0,0,0,0.15); transition: background 0.3s; cursor: pointer; }
+    .cycle-dot.active { background: var(--primary); }
+
     .card-body { padding: 1rem 1.1rem 1.1rem; }
     .card-brand { font-size: 0.7rem; font-weight: 700; color: var(--primary); text-transform: uppercase; }
     .card-name { font-size: 0.92rem; font-weight: 600; margin: 4px 0; }
     .card-price-row { display: flex; align-items: baseline; gap: 0.5rem; margin-bottom: 0.5rem; }
-    .card-price { font-size: 1.2rem; font-weight: 800; color: var(--dark); }
+    .card-price { font-size: 1.1rem; font-weight: 800; color: var(--dark); }
     .card-old-price { font-size: 0.85rem; color: var(--gray-400); text-decoration: line-through; }
 
     /* Color dots on card */
-    .card-colors { display: flex; gap: 0.3rem; flex-wrap: wrap; margin-bottom: 0.6rem; }
-    .card-color-dot {
-      width: 16px; height: 16px; border-radius: 50%;
-      border: 1.5px solid rgba(0,0,0,0.1);
-      background-size: cover; background-position: center;
-      flex-shrink: 0;
-    }
+    .card-colors { display: flex; gap: 0.3rem; flex-wrap: wrap; margin-bottom: 0.6rem; align-items: center; }
+    .card-color-dot { width: 14px; height: 14px; border-radius: 50%; border: 1.5px solid rgba(0,0,0,0.12); background-size: cover; background-position: center; flex-shrink: 0; }
     .card-color-more { font-size: 0.72rem; color: var(--gray-400); align-self: center; }
 
     /* Storage chips on card */
@@ -80,15 +85,18 @@
     /* ── PRODUCT MODAL ── */
     .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.65); backdrop-filter: blur(6px); z-index: 2000; align-items: center; justify-content: center; padding: 1rem; }
     .modal.show { display: flex; }
-    .modal-content { background: white; border-radius: var(--radius-lg); max-width: 960px; width: 100%; max-height: 90vh; overflow: hidden; display: flex; flex-direction: column; animation: fadeUp 0.25s ease; }
+    .modal-content { background: white; border-radius: var(--radius-lg); max-width: 960px; width: 100%; max-height: 92vh; overflow: hidden; display: flex; flex-direction: column; animation: fadeUp 0.25s ease; }
     @keyframes fadeUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
     .modal-top { display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.5rem; border-bottom: 1px solid var(--gray-200); }
     .modal-crumb { font-size: 0.8rem; color: var(--gray-400); }
     .modal-close { width: 34px; height: 34px; border-radius: 50%; background: var(--gray-100); border: none; cursor: pointer; font-size: 1rem; transition: 0.2s; }
     .modal-close:hover { background: #fee2e2; color: #ef4444; }
+
+    /* Modal body: gallery + info */
     .modal-body { display: grid; grid-template-columns: 1fr 1fr; flex: 1; overflow: hidden; }
-    .modal-gallery { background: var(--gray-100); display: flex; align-items: center; justify-content: center; padding: 2rem; }
-    .modal-gallery img { max-width: 100%; max-height: 300px; object-fit: contain; transition: 0.3s; }
+    .modal-gallery { background: var(--gray-100); display: flex; align-items: center; justify-content: center; padding: 2rem; position: relative; }
+    .modal-gallery img { max-width: 100%; max-height: 300px; object-fit: contain; transition: opacity 0.3s; }
+    .modal-gallery img.fading { opacity: 0; }
     .modal-info { padding: 1.75rem; overflow-y: auto; }
     .modal-brand { font-size: 0.7rem; font-weight: 700; color: var(--primary); text-transform: uppercase; }
     .modal-name { font-size: 1.4rem; font-weight: 800; margin: 6px 0; }
@@ -97,30 +105,35 @@
     .modal-old-price { font-size: 1rem; color: var(--gray-400); text-decoration: line-through; }
 
     .opt-label { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; color: var(--gray-400); margin: 0.9rem 0 0.5rem; letter-spacing: 0.04em; }
-    .opt-value { font-size: 0.85rem; font-weight: 600; color: var(--dark); display: inline; }
+    .opt-value { font-size: 0.85rem; font-weight: 600; color: var(--dark); display: inline; text-transform: none; letter-spacing: 0; }
 
-    /* Color swatches — show image thumbnail */
+    /* Color swatches */
     .color-swatches { display: flex; gap: 0.55rem; flex-wrap: wrap; }
     .color-swatch {
       width: 44px; height: 44px; border-radius: 50%; cursor: pointer;
       border: 2.5px solid transparent; transition: 0.2s;
       background-size: cover; background-position: center;
-      position: relative; overflow: hidden;
+      position: relative;
     }
-    .color-swatch:hover { transform: scale(1.05); }
+    .color-swatch:hover { transform: scale(1.06); }
     .color-swatch.selected { border-color: var(--primary); box-shadow: 0 0 0 2px white, 0 0 0 4px var(--primary); }
     .color-swatch-label { font-size: 0.78rem; color: var(--gray-400); margin-top: 0.4rem; }
 
-    /* Storage chips */
-    .storage-options { display: flex; gap: 0.5rem; flex-wrap: wrap; }
-    .storage-chip {
-      padding: 0.5rem 1rem; border: 1.5px solid var(--gray-200); border-radius: 100px;
-      cursor: pointer; font-size: 0.85rem; transition: 0.2s; font-family: 'Inter', sans-serif;
+    /* Storage options — now each has its own price */
+    .storage-options { display: flex; flex-direction: column; gap: 0.5rem; }
+    .storage-option-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0.6rem 1rem; border: 1.5px solid var(--gray-200); border-radius: var(--radius-md);
+      cursor: pointer; transition: 0.2s; font-family: 'Inter', sans-serif;
       background: white;
     }
-    .storage-chip:hover:not(.out-of-stock) { border-color: var(--primary); }
-    .storage-chip.selected { border-color: var(--primary); background: rgba(0,188,212,0.1); color: var(--primary); font-weight: 600; }
-    .storage-chip.out-of-stock { opacity: 0.45; cursor: not-allowed; text-decoration: line-through; }
+    .storage-option-row:hover:not(.out-of-stock) { border-color: var(--primary); background: rgba(0,188,212,0.03); }
+    .storage-option-row.selected { border-color: var(--primary); background: rgba(0,188,212,0.08); }
+    .storage-option-row.out-of-stock { opacity: 0.42; cursor: not-allowed; }
+    .sor-left { display: flex; flex-direction: column; gap: 2px; }
+    .sor-name { font-size: 0.88rem; font-weight: 600; color: var(--dark); }
+    .sor-stock-note { font-size: 0.72rem; color: var(--gray-400); }
+    .sor-price { font-size: 1rem; font-weight: 800; color: var(--primary); }
 
     .qty-row { display: flex; align-items: center; gap: 0.5rem; margin: 1rem 0; }
     .qty-btn { width: 34px; height: 34px; border-radius: 50%; border: 1.5px solid var(--gray-200); background: white; cursor: pointer; font-weight: 700; font-size: 1rem; transition: 0.2s; }
@@ -136,7 +149,9 @@
     .modal-add-btn:hover:not(:disabled) { background: var(--primary-dark); }
     .modal-add-btn:disabled { background: var(--gray-200); color: var(--gray-400); cursor: not-allowed; }
 
-    /* ── CART SIDEBAR ── */
+    .select-prompt { font-size: 0.82rem; color: var(--gray-400); font-style: italic; margin-top: 0.3rem; }
+
+    /* CART SIDEBAR */
     .cart-sidebar { position: fixed; top: 0; right: -420px; width: 400px; height: 100vh; background: white; z-index: 3001; transition: right 0.35s; display: flex; flex-direction: column; box-shadow: -4px 0 20px rgba(0,0,0,0.1); }
     .cart-sidebar.open { right: 0; }
     .cart-header { padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--gray-200); display: flex; justify-content: space-between; align-items: center; }
@@ -158,12 +173,9 @@
     .checkout-btn { width: 100%; padding: 0.9rem; background: var(--primary); color: white; border: none; border-radius: 100px; font-weight: 700; cursor: pointer; font-family: 'Inter', sans-serif; font-size: 0.95rem; }
     .checkout-btn:hover { background: var(--primary-dark); }
 
-    /* ── CART NOTIF ── */
+    /* CART NOTIF */
     .cart-notif { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(80px); background: var(--dark); color: white; padding: 0.8rem 1.4rem; border-radius: 100px; display: flex; gap: 0.8rem; align-items: center; z-index: 9999; transition: 0.35s; opacity: 0; font-size: 0.88rem; }
     .cart-notif.show { transform: translateX(-50%) translateY(0); opacity: 1; }
-
-    /* ── SELECT PROMPT ── */
-    .select-prompt { font-size: 0.82rem; color: var(--gray-400); font-style: italic; margin-top: 0.3rem; }
 
     @media (max-width: 768px) {
       .menu-toggle { display: block; }
@@ -236,7 +248,7 @@
   </div>
 </div>
 
-<!-- ── PRODUCT MODAL ── -->
+<!-- PRODUCT MODAL -->
 <div class="modal" id="productModal">
   <div class="modal-content">
     <div class="modal-top">
@@ -252,7 +264,7 @@
   </div>
 </div>
 
-<!-- ── CART SIDEBAR ── -->
+<!-- CART SIDEBAR -->
 <div class="cart-sidebar" id="cartSidebar">
   <div class="cart-header">
     <h3><i class="fa-solid fa-cart-shopping" style="color:var(--primary)"></i> Your Cart</h3>
@@ -270,7 +282,6 @@
   <span id="notifMsg">Added to cart</span>
 </div>
 
-<!-- ═══════════════ SCRIPT ═══════════════ -->
 <script type="module">
 import { auth, db } from './js/firebase-config.js';
 import { collection, getDocs, query, orderBy, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -280,10 +291,14 @@ let allProducts = [], filteredProducts = [];
 let cartItems = [];
 let notifTimer = null;
 
+/* ── Cycling state per card ── */
+const cardCycleState = {}; // productId → { currentIdx, timer }
+const CYCLE_INTERVAL = 10 * 1000; // 10 seconds
+
 /* ── Modal state ── */
 let modalProduct = null;
-let selectedColor = null;   // color name string
-let selectedStorage = null; // storage string
+let selectedColor = null;
+let selectedStorage = null;
 let modalQty = 1;
 
 /* ── Auth & nav ── */
@@ -318,11 +333,13 @@ function populateFilters() {
 }
 
 /* ─────────────────────────────────────────────
-   PRODUCT CARD
-   Shows: first color image, all color dots,
-   all unique storage sizes, price
+   PRODUCT CARDS with color cycling
 ───────────────────────────────────────────── */
 function displayProducts() {
+  // Clear existing cycle timers
+  Object.values(cardCycleState).forEach(s => clearInterval(s.timer));
+  Object.keys(cardCycleState).forEach(k => delete cardCycleState[k]);
+
   const grid = document.getElementById('productGrid');
   if (!filteredProducts.length) {
     grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:3rem;color:var(--gray-400)">No products found.</div>';
@@ -330,47 +347,97 @@ function displayProducts() {
   }
 
   grid.innerHTML = filteredProducts.map(p => {
-    const firstImg = p.variants?.[0]?.imageUrl || '';
-
-    // Unique colors (up to 4 shown + overflow label)
     const colors = getUniqueColors(p);
+    const uniqueStorages = getUniqueStorages(p);
+    const priceRange = getPriceRange(p);
+    const totalStock = getTotalStock(p);
+    const isOutOfStock = totalStock <= 0;
+
+    // Color dots (up to 4)
     const visibleColors = colors.slice(0, 4);
     const extraColors = colors.length > 4 ? colors.length - 4 : 0;
     const colorDots = visibleColors.map(c =>
       `<div class="card-color-dot" style="background-image:url(${c.imageUrl})" title="${c.color}"></div>`
-    ).join('') + (extraColors ? `<span class="card-color-more">+${extraColors}</span>` : '');
+    ).join('') + (extraColors ? `<span class="card-color-more">+${extraColors} more</span>` : '');
 
-    // Unique storage sizes across ALL colors
-    const storages = getUniqueStorages(p);
-    const storageChips = storages.slice(0, 4).map(s =>
+    // Storage chips
+    const storageChips = uniqueStorages.slice(0, 4).map(s =>
       `<span class="card-storage-chip">${s}</span>`
     ).join('');
 
-    const totalStock = getTotalStock(p);
-    const isOutOfStock = totalStock <= 0;
+    // Price display
+    const priceDisplay = priceRange.min === priceRange.max
+      ? `K${priceRange.min.toLocaleString()}`
+      : `From K${priceRange.min.toLocaleString()}`;
 
     return `
-      <div class="product-card" onclick="openProductModal('${p.id}')">
-        <div class="card-img-wrap">
-          <img src="${firstImg}" alt="${p.name}" onerror="this.src='https://placehold.co/200x200?text=No+Image'">
+      <div class="product-card" id="card-${p.id}" onclick="openProductModal('${p.id}')">
+        <div class="card-img-wrap" id="imgwrap-${p.id}">
+          ${colors.map((c, i) => `<img src="${c.imageUrl}" class="${i === 0 ? 'visible' : 'hidden'}" alt="${p.name}" onerror="this.src='https://placehold.co/200x200?text=No+Image'">`).join('')}
+          ${colors.length > 1 ? `<div class="cycle-dots" id="dots-${p.id}" onclick="event.stopPropagation()">
+            ${colors.map((_, i) => `<div class="cycle-dot ${i === 0 ? 'active' : ''}" onclick="jumpCardColor('${p.id}',${i})"></div>`).join('')}
+          </div>` : ''}
         </div>
         <div class="card-body">
           <div class="card-brand">${p.brand || ''}</div>
           <div class="card-name">${p.name}</div>
           <div class="card-price-row">
-            <span class="card-price">K${(p.price || 0).toLocaleString()}</span>
+            <span class="card-price">${priceDisplay}</span>
             ${p.oldPrice ? `<span class="card-old-price">K${p.oldPrice.toLocaleString()}</span>` : ''}
           </div>
           ${colors.length ? `<div class="card-colors">${colorDots}</div>` : ''}
-          ${storages.length ? `<div class="card-storages">${storageChips}</div>` : ''}
-          <button class="btn-add" onclick="event.stopPropagation(); quickAdd('${p.id}')"
+          ${uniqueStorages.length ? `<div class="card-storages">${storageChips}</div>` : ''}
+          <button class="btn-add" onclick="event.stopPropagation(); openProductModal('${p.id}')"
             ${isOutOfStock ? 'disabled' : ''}>
-            ${isOutOfStock ? 'Out of Stock' : '<i class="fa-solid fa-cart-plus"></i> Add to Cart'}
+            ${isOutOfStock ? 'Out of Stock' : '<i class="fa-solid fa-eye"></i> View Options'}
           </button>
         </div>
       </div>`;
   }).join('');
+
+  // Start cycling for products with multiple colors
+  filteredProducts.forEach(p => {
+    const colors = getUniqueColors(p);
+    if (colors.length > 1) {
+      cardCycleState[p.id] = { currentIdx: 0 };
+      cardCycleState[p.id].timer = setInterval(() => {
+        const state = cardCycleState[p.id];
+        const nextIdx = (state.currentIdx + 1) % colors.length;
+        setCardColor(p.id, nextIdx, colors.length);
+        state.currentIdx = nextIdx;
+      }, CYCLE_INTERVAL);
+    }
+  });
 }
+
+function setCardColor(productId, idx, total) {
+  const wrap = document.getElementById(`imgwrap-${productId}`);
+  if (!wrap) return;
+  const imgs = wrap.querySelectorAll('img');
+  imgs.forEach((img, i) => { img.className = i === idx ? 'visible' : 'hidden'; });
+  const dots = document.getElementById(`dots-${productId}`);
+  if (dots) {
+    dots.querySelectorAll('.cycle-dot').forEach((d, i) => d.classList.toggle('active', i === idx));
+  }
+}
+
+window.jumpCardColor = (productId, idx) => {
+  const p = allProducts.find(x => x.id === productId);
+  if (!p) return;
+  const colors = getUniqueColors(p);
+  if (cardCycleState[productId]) {
+    clearInterval(cardCycleState[productId].timer);
+    cardCycleState[productId].currentIdx = idx;
+    // Resume auto-cycle
+    cardCycleState[productId].timer = setInterval(() => {
+      const state = cardCycleState[productId];
+      const nextIdx = (state.currentIdx + 1) % colors.length;
+      setCardColor(productId, nextIdx, colors.length);
+      state.currentIdx = nextIdx;
+    }, CYCLE_INTERVAL);
+  }
+  setCardColor(productId, idx, colors.length);
+};
 
 /* ── Filter / sort ── */
 window.filterProducts = () => {
@@ -384,29 +451,23 @@ window.filterProducts = () => {
     (brand === 'all' || p.brand === brand) &&
     (!q || p.name?.toLowerCase().includes(q))
   );
-  if (sort === 'price-low') filteredProducts.sort((a, b) => a.price - b.price);
-  if (sort === 'price-high') filteredProducts.sort((a, b) => b.price - a.price);
+  if (sort === 'price-low') filteredProducts.sort((a, b) => getPriceRange(a).min - getPriceRange(b).min);
+  if (sort === 'price-high') filteredProducts.sort((a, b) => getPriceRange(b).min - getPriceRange(a).min);
   displayProducts();
 };
 
 /* ─────────────────────────────────────────────
    PRODUCT MODAL
-   Step 1: User sees image of first color + ALL
-           color swatches + ALL unique storages
-   Step 2: User picks a color → image updates,
-           storage chips update to that color's options
-   Step 3: User picks storage → qty + Add btn enabled
+   Color swatches → click color → shows that
+   color's storage options each with own price
 ───────────────────────────────────────────── */
 window.openProductModal = (id) => {
   modalProduct = allProducts.find(p => p.id === id);
   if (!modalProduct) return;
-
-  // Start with first color pre-selected
   const colors = getUniqueColors(modalProduct);
   selectedColor = colors[0]?.color || null;
   selectedStorage = null;
   modalQty = 1;
-
   renderModal();
   document.getElementById('productModal').classList.add('show');
 };
@@ -414,19 +475,27 @@ window.openProductModal = (id) => {
 function renderModal() {
   const colors = getUniqueColors(modalProduct);
   const currentVariant = modalProduct.variants?.find(v => v.color === selectedColor);
+  const priceRange = getPriceRange(modalProduct);
 
-  // Update gallery image
+  // Update gallery image with fade
   const imgEl = document.getElementById('modalImage');
-  if (imgEl) imgEl.src = currentVariant?.imageUrl || 'https://placehold.co/300x300?text=No+Image';
+  if (imgEl) {
+    imgEl.classList.add('fading');
+    setTimeout(() => {
+      imgEl.src = currentVariant?.imageUrl || 'https://placehold.co/300x300?text=No+Image';
+      imgEl.classList.remove('fading');
+    }, 150);
+  }
 
-  // Crumb
   document.getElementById('modalCrumb').textContent = `${modalProduct.brand || ''} · ${modalProduct.type || modalProduct.category || ''}`;
 
-  // Storage options for selected color
+  // Selected storage option data
   const storageOptions = currentVariant?.storageOptions || [];
-  const selectedStockCount = storageOptions.find(o => o.storage === selectedStorage)?.stock || 0;
+  const selectedOpt = storageOptions.find(o => o.storage === selectedStorage);
+  const selectedStockCount = selectedOpt?.stock || 0;
+  const selectedPrice = selectedOpt?.price || 0;
 
-  // Color swatches HTML
+  // Color swatches
   const swatchesHtml = colors.map(c => `
     <div class="color-swatch ${c.color === selectedColor ? 'selected' : ''}"
       style="background-image:url(${c.imageUrl})"
@@ -434,41 +503,56 @@ function renderModal() {
       onclick="selectColor('${c.color}')"></div>
   `).join('');
 
-  // Storage chips — only show if a color is selected
+  // Display price: if a storage is selected, show its price; else show range
+  let priceDisplay;
+  if (selectedOpt) {
+    priceDisplay = `K${selectedPrice.toLocaleString()}`;
+  } else if (priceRange.min === priceRange.max) {
+    priceDisplay = `K${priceRange.min.toLocaleString()}`;
+  } else {
+    priceDisplay = `K${priceRange.min.toLocaleString()} – K${priceRange.max.toLocaleString()}`;
+  }
+
+  // Storage rows — each shows its own price
   let storageHtml = '';
   if (selectedColor && storageOptions.length) {
+    const rows = storageOptions.map(opt => {
+      const oos = opt.stock <= 0;
+      const lowStock = !oos && opt.stock <= 5;
+      return `
+        <div class="storage-option-row ${opt.storage === selectedStorage ? 'selected' : ''} ${oos ? 'out-of-stock' : ''}"
+          onclick="${!oos ? `selectStorage('${opt.storage}')` : ''}">
+          <div class="sor-left">
+            <div class="sor-name">${opt.storage}</div>
+            <div class="sor-stock-note">${oos ? 'Out of stock' : lowStock ? `Only ${opt.stock} left` : `${opt.stock} in stock`}</div>
+          </div>
+          <div class="sor-price">K${(opt.price || 0).toLocaleString()}</div>
+        </div>`;
+    }).join('');
     storageHtml = `
-      <div class="opt-label">Storage <span class="opt-value">${selectedStorage || ''}</span></div>
-      <div class="storage-options">
-        ${storageOptions.map(opt => `
-          <button class="storage-chip ${opt.storage === selectedStorage ? 'selected' : ''} ${opt.stock <= 0 ? 'out-of-stock' : ''}"
-            onclick="selectStorage('${opt.storage}')"
-            ${opt.stock <= 0 ? 'disabled' : ''}>
-            ${opt.storage}
-            ${opt.stock <= 0 ? ' · Out of stock' : opt.stock <= 5 ? ` · ${opt.stock} left` : ''}
-          </button>`).join('')}
-      </div>`;
-  } else if (selectedColor && !storageOptions.length) {
+      <div class="opt-label">Storage &amp; Price</div>
+      <div class="storage-options">${rows}</div>`;
+  } else if (selectedColor) {
     storageHtml = `<div class="opt-label">Storage</div><p class="select-prompt">No storage options available.</p>`;
   } else {
     storageHtml = `<div class="opt-label">Storage</div><p class="select-prompt">Select a color first.</p>`;
   }
 
-  // Qty + add button
+  // Qty row
   const canAdd = selectedColor && selectedStorage && selectedStockCount > 0;
   const qtyHtml = canAdd ? `
     <div class="qty-row">
       <button class="qty-btn" onclick="changeQty(-1)">−</button>
       <span class="qty-display" id="modalQtyDisplay">${modalQty}</span>
       <button class="qty-btn" onclick="changeQty(1)">+</button>
-      <span class="stock-note">${selectedStockCount} in stock</span>
+      <span class="stock-note">${selectedStockCount} available</span>
     </div>` : '';
 
   document.getElementById('modalInfo').innerHTML = `
     <div class="modal-brand">${modalProduct.brand || ''}</div>
     <div class="modal-name">${modalProduct.name}</div>
     <div class="modal-price-row">
-      <span class="modal-price">K${(modalProduct.price || 0).toLocaleString()}</span>
+      <span class="modal-price" id="modalPriceDisplay">${priceDisplay}</span>
       ${modalProduct.oldPrice ? `<span class="modal-old-price">K${modalProduct.oldPrice.toLocaleString()}</span>` : ''}
     </div>
     ${modalProduct.shortDesc ? `<p style="font-size:0.88rem;color:var(--gray-400);margin-bottom:1rem;line-height:1.5">${modalProduct.shortDesc}</p>` : ''}
@@ -480,30 +564,26 @@ function renderModal() {
     ${qtyHtml}
 
     <button class="modal-add-btn" onclick="addFromModal()" ${!canAdd ? 'disabled' : ''}>
-      ${canAdd ? `<i class="fa-solid fa-cart-plus"></i> Add to Cart` : `Select color &amp; storage`}
+      ${canAdd
+        ? `<i class="fa-solid fa-cart-plus"></i> Add to Cart · K${selectedPrice.toLocaleString()}`
+        : 'Select color &amp; storage'}
     </button>
   `;
 }
 
-/* ── Color selection → update image + storage ── */
 window.selectColor = (color) => {
   selectedColor = color;
   selectedStorage = null;
   modalQty = 1;
-  // Animate image swap
-  const imgEl = document.getElementById('modalImage');
-  if (imgEl) { imgEl.style.opacity = '0'; setTimeout(() => { imgEl.style.opacity = '1'; }, 150); }
   renderModal();
 };
 
-/* ── Storage selection ── */
 window.selectStorage = (storage) => {
   selectedStorage = storage;
   modalQty = 1;
   renderModal();
 };
 
-/* ── Qty ── */
 window.changeQty = (delta) => {
   if (!selectedColor || !selectedStorage) return;
   const variant = modalProduct.variants?.find(v => v.color === selectedColor);
@@ -513,7 +593,6 @@ window.changeQty = (delta) => {
   if (el) el.textContent = modalQty;
 };
 
-/* ── Add from modal ── */
 window.addFromModal = async () => {
   if (!selectedColor || !selectedStorage || !modalProduct) return;
   const variant = modalProduct.variants?.find(v => v.color === selectedColor);
@@ -523,7 +602,7 @@ window.addFromModal = async () => {
   await addToCart({
     id: modalProduct.id,
     name: modalProduct.name,
-    price: modalProduct.price,
+    price: opt.price || modalProduct.price, // use storage-specific price
     color: selectedColor,
     storage: selectedStorage,
     image: variant.imageUrl,
@@ -531,22 +610,6 @@ window.addFromModal = async () => {
   });
   showNotif(`${modalProduct.name} · ${selectedColor} · ${selectedStorage}`);
   closeProductModal();
-};
-
-/* ── Quick add (first color + first available storage) ── */
-window.quickAdd = async (id) => {
-  const p = allProducts.find(x => x.id === id);
-  if (!p) return;
-  const firstVariant = p.variants?.[0];
-  if (!firstVariant) return;
-  const firstStorage = firstVariant.storageOptions?.find(o => o.stock > 0);
-  if (!firstStorage) { alert('This product is out of stock.'); return; }
-  await addToCart({
-    id: p.id, name: p.name, price: p.price,
-    color: firstVariant.color, storage: firstStorage.storage,
-    image: firstVariant.imageUrl, qty: 1
-  });
-  showNotif(`${p.name} · ${firstVariant.color} · ${firstStorage.storage}`);
 };
 
 window.closeProductModal = () => document.getElementById('productModal').classList.remove('show');
@@ -647,28 +710,28 @@ window.removeCartItem = async (idx) => {
 /* ─────────────────────────────────────────────
    HELPERS
 ───────────────────────────────────────────── */
-// Unique colors preserving order, deduped by color name
 function getUniqueColors(p) {
-  const seen = new Set();
-  const result = [];
+  const seen = new Set(), result = [];
   for (const v of (p.variants || [])) {
-    if (!seen.has(v.color)) {
-      seen.add(v.color);
-      result.push({ color: v.color, imageUrl: v.imageUrl });
-    }
+    if (!seen.has(v.color)) { seen.add(v.color); result.push({ color: v.color, imageUrl: v.imageUrl }); }
   }
   return result;
 }
 
-// All unique storage sizes across ALL color variants (for card display)
+// All unique storage sizes across ALL color variants
 function getUniqueStorages(p) {
   const seen = new Set();
   for (const v of (p.variants || [])) {
-    for (const o of (v.storageOptions || [])) {
-      if (o.storage) seen.add(o.storage);
-    }
+    for (const o of (v.storageOptions || [])) { if (o.storage) seen.add(o.storage); }
   }
   return [...seen];
+}
+
+// Min/max price across all storage options
+function getPriceRange(p) {
+  const prices = (p.variants || []).flatMap(v => (v.storageOptions || []).map(o => o.price)).filter(Boolean);
+  if (!prices.length) return { min: p.price || 0, max: p.price || 0 };
+  return { min: Math.min(...prices), max: Math.max(...prices) };
 }
 
 function getTotalStock(p) {
