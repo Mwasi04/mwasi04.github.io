@@ -55,7 +55,7 @@
     .delete-btn{background:#fee2e2;color:#ef4444}
     .modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);backdrop-filter:blur(5px);align-items:center;justify-content:center;z-index:1000;padding:1rem}
     .modal.show{display:flex}
-    .modal-content{background:white;border-radius:var(--radius-lg);max-width:860px;width:95%;max-height:93vh;overflow-y:auto;animation:slideIn .3s ease}
+    .modal-content{background:white;border-radius:var(--radius-lg);max-width:900px;width:95%;max-height:93vh;overflow-y:auto;animation:slideIn .3s ease}
     @keyframes slideIn{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
     .modal-header{padding:1.5rem 2rem;border-bottom:2px solid var(--gray-200);display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:white;z-index:10}
     .modal-header h2{font-size:1.3rem;font-weight:700}
@@ -90,14 +90,14 @@
     .variant-body{display:grid;grid-template-columns:1fr 1fr;gap:1rem;padding:1rem 1.1rem}
     .vsect-label{font-size:.72rem;font-weight:700;text-transform:uppercase;color:var(--gray-400);letter-spacing:.04em;margin-bottom:.5rem}
     .storage-list{display:flex;flex-direction:column;gap:.4rem;margin-bottom:.5rem}
-    .storage-row{display:flex;align-items:center;gap:.35rem}
-    .storage-row input{padding:.48rem .55rem;border:1.5px solid var(--gray-200);border-radius:.6rem;font-family:'Inter',sans-serif;font-size:.8rem;outline:none}
+    .storage-row{display:flex;align-items:center;gap:.3rem}
+    .storage-row input{padding:.48rem .5rem;border:1.5px solid var(--gray-200);border-radius:.6rem;font-family:'Inter',sans-serif;font-size:.8rem;outline:none}
     .storage-row input:focus{border-color:var(--primary)}
-    .sr-name{flex:1.3;min-width:0}.sr-price{flex:1;min-width:0}.sr-qty{width:64px;flex-shrink:0}
+    .sr-name{flex:1.2;min-width:0}.sr-price{flex:1;min-width:0}.sr-compare{flex:1;min-width:0}.sr-qty{width:58px;flex-shrink:0}
     .sr-del{width:26px;height:26px;border:none;border-radius:50%;background:#fee2e2;color:#ef4444;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.75rem;flex-shrink:0}
-    .storage-col-labels{display:flex;gap:.35rem;margin-bottom:.25rem}
-    .storage-col-labels span{font-size:.65rem;font-weight:700;text-transform:uppercase;color:var(--gray-400)}
-    .storage-col-labels .scl-name{flex:1.3}.storage-col-labels .scl-price{flex:1}.storage-col-labels .scl-qty{width:64px}.storage-col-labels .scl-del{width:26px}
+    .storage-col-labels{display:flex;gap:.3rem;margin-bottom:.25rem}
+    .storage-col-labels span{font-size:.62rem;font-weight:700;text-transform:uppercase;color:var(--gray-400)}
+    .storage-col-labels .scl-name{flex:1.2}.storage-col-labels .scl-price{flex:1}.storage-col-labels .scl-compare{flex:1}.storage-col-labels .scl-qty{width:58px}.storage-col-labels .scl-del{width:26px}
     .btn-add-storage{display:flex;align-items:center;gap:.35rem;padding:.38rem .8rem;background:transparent;border:1.5px dashed var(--gray-200);border-radius:100px;font-size:.78rem;font-weight:600;color:var(--gray-400);cursor:pointer;transition:.2s;font-family:'Inter',sans-serif}
     .btn-add-storage:hover{border-color:var(--primary);color:var(--primary)}
     .upload-zone{border:2px dashed var(--gray-200);border-radius:var(--radius-md);padding:.85rem;text-align:center;cursor:pointer;background:var(--gray-100);position:relative;transition:.2s;min-height:90px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.3rem}
@@ -183,17 +183,13 @@
           <div class="form-group"><label>Product Name *</label><input type="text" id="f-name" placeholder="e.g. Samsung Galaxy S24"></div>
           <div class="form-group"><label>Brand</label><input type="text" id="f-brand" placeholder="e.g. Samsung"></div>
         </div>
-        <div class="form-group" style="max-width:320px">
-          <label>Compare Price (K) <span style="font-weight:400;color:var(--gray-400);font-size:.8rem">optional</span></label>
-          <input type="number" id="f-oldprice" step="0.01" placeholder="Shown as strikethrough">
-        </div>
         <div class="form-group"><label>Description</label><textarea id="f-desc" rows="4" placeholder="Product description…"></textarea></div>
       </div>
 
       <div class="form-section">
         <div class="section-title">Color Variants</div>
         <div style="background:rgba(0,188,212,0.06);border:1px solid rgba(0,188,212,0.2);border-radius:var(--radius-md);padding:.75rem 1rem;font-size:.84rem;color:var(--dark);margin-bottom:1.2rem;line-height:1.6">
-          Each <strong>color</strong> has its own image. Each <strong>storage option</strong> within a color has its own price and stock.
+          Each <strong>color</strong> has its own image. Each <strong>storage option</strong> has its own price, compare price (for strikethrough), and stock.
         </div>
         <div class="variants-list" id="variantsList"></div>
         <button class="btn-add-color" onclick="addColorVariant()"><i class="fa-solid fa-plus"></i> Add Color Variant</button>
@@ -332,9 +328,13 @@ function renderVariants(){
       </div>
       <div class="variant-body">
         <div>
-          <div class="vsect-label">Storage · Price · Qty</div>
+          <div class="vsect-label">Storage · Price · Compare · Qty</div>
           <div class="storage-col-labels">
-            <span class="scl-name">Storage</span><span class="scl-price">Price (K)</span><span class="scl-qty">Qty</span><span class="scl-del"></span>
+            <span class="scl-name">Storage</span>
+            <span class="scl-price">Price (K)</span>
+            <span class="scl-compare">Was (K)</span>
+            <span class="scl-qty">Qty</span>
+            <span class="scl-del"></span>
           </div>
           <div class="storage-list" id="sl-${idx}"></div>
           <button class="btn-add-storage" onclick="addStorage(${idx})"><i class="fa-solid fa-plus"></i> Add Storage Option</button>
@@ -353,8 +353,9 @@ function renderVariants(){
     (v.storageOptions||[]).forEach((opt,oi)=>{
       const row=document.createElement('div');row.className='storage-row';
       row.innerHTML=`
-        <input class="sr-name" type="text" placeholder="e.g. 128GB" value="${opt.storage||''}" oninput="updateStorage(${idx},${oi},'storage',this.value)">
+        <input class="sr-name" type="text" placeholder="128GB" value="${opt.storage||''}" oninput="updateStorage(${idx},${oi},'storage',this.value)">
         <input class="sr-price" type="number" placeholder="Price" value="${opt.price||''}" min="0" step="0.01" oninput="updateStorage(${idx},${oi},'price',parseFloat(this.value)||0)">
+        <input class="sr-compare" type="number" placeholder="Was" value="${opt.comparePrice||''}" min="0" step="0.01" title="Compare / strikethrough price" oninput="updateStorage(${idx},${oi},'comparePrice',parseFloat(this.value)||0)">
         <input class="sr-qty" type="number" placeholder="Qty" value="${opt.stock||0}" min="0" oninput="updateStorage(${idx},${oi},'stock',parseInt(this.value)||0)">
         <button class="sr-del" onclick="removeStorage(${idx},${oi})"><i class="fa-solid fa-times"></i></button>`;
       sl.appendChild(row);
@@ -376,7 +377,7 @@ window.pickCustom=(idx,hex)=>{
 window.updateVariantColor=(idx,val)=>{colorVariants[idx].color=val};
 window.addColorVariant=()=>{colorVariants.push({color:'',hex:'',imageUrl:'',storageOptions:[]});renderVariants()};
 window.removeVariant=(idx)=>{colorVariants.splice(idx,1);renderVariants()};
-window.addStorage=(idx)=>{colorVariants[idx].storageOptions.push({storage:'',price:0,stock:0});renderVariants()};
+window.addStorage=(idx)=>{colorVariants[idx].storageOptions.push({storage:'',price:0,comparePrice:0,stock:0});renderVariants()};
 window.removeStorage=(idx,oi)=>{colorVariants[idx].storageOptions.splice(oi,1);renderVariants()};
 window.updateStorage=(idx,oi,field,val)=>{if(colorVariants[idx]?.storageOptions[oi])colorVariants[idx].storageOptions[oi][field]=val};
 
@@ -397,7 +398,7 @@ window.showAddModal=()=>{
   editingProductId=null;selectedType='';colorVariants=[];
   document.getElementById('modalTitle').textContent='Add New Product';
   document.getElementById('productModal').classList.add('show');
-  ['f-name','f-brand','f-oldprice','f-desc'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=''});
+  ['f-name','f-brand','f-desc'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=''});
   document.querySelectorAll('.type-card').forEach(c=>c.classList.remove('selected'));
   renderVariants();
 };
@@ -407,12 +408,11 @@ window.editProduct=(id)=>{
   editingProductId=id;selectedType=p.type||'';
   colorVariants=(p.variants||[]).map(v=>({
     color:v.color||'',hex:v.hex||'',imageUrl:v.imageUrl||'',
-    storageOptions:(v.storageOptions||[]).map(o=>({storage:o.storage,price:o.price||0,stock:o.stock}))
+    storageOptions:(v.storageOptions||[]).map(o=>({storage:o.storage,price:o.price||0,comparePrice:o.comparePrice||0,stock:o.stock}))
   }));
   document.getElementById('modalTitle').textContent='Edit Product';
   document.getElementById('f-name').value=p.name||'';
   document.getElementById('f-brand').value=p.brand||'';
-  document.getElementById('f-oldprice').value=p.oldPrice||'';
   document.getElementById('f-desc').value=p.description||'';
   document.querySelectorAll('.type-card').forEach(c=>c.classList.toggle('selected',c.dataset.type===selectedType));
   renderVariants();
@@ -444,11 +444,15 @@ window.handleSubmit=async()=>{
     brand:document.getElementById('f-brand').value.trim()||null,
     type:selectedType,
     price:allPrices.length?Math.min(...allPrices):0,
-    oldPrice:parseFloat(document.getElementById('f-oldprice').value)||null,
     description:document.getElementById('f-desc').value.trim()||null,
     variants:colorVariants.map(v=>({
       color:v.color,hex:v.hex||'',imageUrl:v.imageUrl,
-      storageOptions:v.storageOptions.map(o=>({storage:o.storage,price:Number(o.price),stock:Number(o.stock)}))
+      storageOptions:v.storageOptions.map(o=>({
+        storage:o.storage,
+        price:Number(o.price),
+        comparePrice:Number(o.comparePrice)||0,
+        stock:Number(o.stock)
+      }))
     })),
     updatedAt:new Date().toISOString()
   };
