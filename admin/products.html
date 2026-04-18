@@ -8,11 +8,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     *{margin:0;padding:0;box-sizing:border-box}
-    :root{
-      --primary:#00bcd4;--primary-dark:#0097a7;--dark:#0f172a;
-      --gray-100:#f1f5f9;--gray-200:#e2e8f0;--gray-400:#94a3b8;
-      --radius-lg:1.5rem;--radius-md:1rem;--shadow:0 4px 6px -1px rgba(0,0,0,0.1);
-    }
+    :root{--primary:#00bcd4;--primary-dark:#0097a7;--dark:#0f172a;--gray-100:#f1f5f9;--gray-200:#e2e8f0;--gray-400:#94a3b8;--radius-lg:1.5rem;--radius-md:1rem;--shadow:0 4px 6px -1px rgba(0,0,0,0.1)}
     body{font-family:'Inter',sans-serif;background:var(--gray-100);color:var(--dark)}
     .admin-container{display:flex;min-height:100vh}
     .admin-sidebar{width:280px;background:var(--dark);color:white;position:fixed;height:100vh;overflow-y:auto}
@@ -57,8 +53,6 @@
     .product-actions button{flex:1;padding:.55rem;border:none;border-radius:var(--radius-md);cursor:pointer;font-size:.8rem;font-family:'Inter',sans-serif;font-weight:600}
     .edit-btn{background:var(--primary);color:white}
     .delete-btn{background:#fee2e2;color:#ef4444}
-
-    /* MODAL */
     .modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);backdrop-filter:blur(5px);align-items:center;justify-content:center;z-index:1000;padding:1rem}
     .modal.show{display:flex}
     .modal-content{background:white;border-radius:var(--radius-lg);max-width:860px;width:95%;max-height:93vh;overflow-y:auto;animation:slideIn .3s ease}
@@ -75,28 +69,21 @@
     .form-group input,.form-group textarea{width:100%;padding:.8rem 1rem;border:2px solid var(--gray-200);border-radius:var(--radius-md);font-family:'Inter',sans-serif;font-size:.9rem;outline:none;transition:border-color .2s}
     .form-group input:focus,.form-group textarea:focus{border-color:var(--primary)}
     .form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
-
-    /* TYPE CARDS */
     .type-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.75rem}
     .type-card{border:2px solid var(--gray-200);border-radius:var(--radius-md);padding:1rem;cursor:pointer;transition:.2s;text-align:center}
     .type-card:hover{border-color:var(--primary)}
     .type-card.selected{border-color:var(--primary);background:rgba(0,188,212,0.06)}
     .type-card .type-icon{font-size:1.8rem;margin-bottom:.3rem}
     .type-card .type-name{font-weight:700;font-size:.85rem}
-
-    /* PALETTE — plain round swatches, nothing else */
     .palette-strip{display:flex;align-items:center;gap:.4rem;flex-wrap:wrap;padding:.65rem 1rem;background:var(--gray-100);border-radius:var(--radius-md);margin-bottom:.75rem}
     .ps-swatch{width:26px;height:26px;border-radius:50%;cursor:pointer;border:2.5px solid transparent;transition:.15s;flex-shrink:0}
     .ps-swatch:hover{transform:scale(1.18)}
     .ps-swatch.sel{border-color:var(--dark);box-shadow:0 0 0 1.5px white,0 0 0 3.5px var(--dark)}
     .ps-custom{width:26px;height:26px;border-radius:50%;cursor:pointer;border:none;padding:0;overflow:hidden;outline:1.5px solid var(--gray-200);flex-shrink:0}
-
-    /* VARIANT CARDS */
     .variants-list{display:flex;flex-direction:column;gap:1.2rem;margin-bottom:1rem}
     .variant-card{border-radius:var(--radius-md);border:1.5px solid var(--gray-200);overflow:hidden;background:white}
     .variant-head{display:flex;align-items:center;justify-content:space-between;padding:.85rem 1.1rem;border-bottom:1.5px solid var(--gray-200);background:var(--gray-100);gap:.75rem}
     .variant-head-left{display:flex;align-items:center;gap:.65rem;flex:1;min-width:0}
-    /* The big preview dot in the header */
     .v-color-dot{width:32px;height:32px;border-radius:50%;flex-shrink:0;border:2.5px solid rgba(0,0,0,0.1);transition:background .2s}
     .color-name-input{flex:1;padding:.45rem .75rem;border:1.5px solid var(--gray-200);border-radius:.75rem;font-family:'Inter',sans-serif;font-size:.88rem;font-weight:600;outline:none;background:white}
     .color-name-input:focus{border-color:var(--primary)}
@@ -106,16 +93,11 @@
     .storage-row{display:flex;align-items:center;gap:.35rem}
     .storage-row input{padding:.48rem .55rem;border:1.5px solid var(--gray-200);border-radius:.6rem;font-family:'Inter',sans-serif;font-size:.8rem;outline:none}
     .storage-row input:focus{border-color:var(--primary)}
-    .sr-name{flex:1.3;min-width:0}
-    .sr-price{flex:1;min-width:0}
-    .sr-qty{width:64px;flex-shrink:0}
+    .sr-name{flex:1.3;min-width:0}.sr-price{flex:1;min-width:0}.sr-qty{width:64px;flex-shrink:0}
     .sr-del{width:26px;height:26px;border:none;border-radius:50%;background:#fee2e2;color:#ef4444;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.75rem;flex-shrink:0}
     .storage-col-labels{display:flex;gap:.35rem;margin-bottom:.25rem}
     .storage-col-labels span{font-size:.65rem;font-weight:700;text-transform:uppercase;color:var(--gray-400)}
-    .storage-col-labels .scl-name{flex:1.3}
-    .storage-col-labels .scl-price{flex:1}
-    .storage-col-labels .scl-qty{width:64px}
-    .storage-col-labels .scl-del{width:26px}
+    .storage-col-labels .scl-name{flex:1.3}.storage-col-labels .scl-price{flex:1}.storage-col-labels .scl-qty{width:64px}.storage-col-labels .scl-del{width:26px}
     .btn-add-storage{display:flex;align-items:center;gap:.35rem;padding:.38rem .8rem;background:transparent;border:1.5px dashed var(--gray-200);border-radius:100px;font-size:.78rem;font-weight:600;color:var(--gray-400);cursor:pointer;transition:.2s;font-family:'Inter',sans-serif}
     .btn-add-storage:hover{border-color:var(--primary);color:var(--primary)}
     .upload-zone{border:2px dashed var(--gray-200);border-radius:var(--radius-md);padding:.85rem;text-align:center;cursor:pointer;background:var(--gray-100);position:relative;transition:.2s;min-height:90px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.3rem}
@@ -129,12 +111,8 @@
     .btn-add-color:hover{border-color:var(--primary);color:var(--primary)}
     .modal-footer{padding:1.1rem 2rem;border-top:2px solid var(--gray-200);display:flex;justify-content:flex-end;gap:.8rem;position:sticky;bottom:0;background:white}
     .toast{position:fixed;bottom:30px;right:30px;background:var(--dark);color:white;padding:.9rem 1.5rem;border-radius:100px;display:flex;align-items:center;gap:10px;transform:translateX(420px);transition:.35s;z-index:9999;font-size:.9rem}
-    .toast.show{transform:translateX(0)}
-    .toast.error{background:#ef4444}
-    @media(max-width:768px){
-      .admin-sidebar{display:none}.admin-main{margin-left:0;padding:1rem}
-      .form-row,.type-grid,.variant-body{grid-template-columns:1fr}
-    }
+    .toast.show{transform:translateX(0)}.toast.error{background:#ef4444}
+    @media(max-width:768px){.admin-sidebar{display:none}.admin-main{margin-left:0;padding:1rem}.form-row,.type-grid,.variant-body{grid-template-columns:1fr}}
   </style>
 </head>
 <body>
@@ -151,7 +129,6 @@
       <div class="menu-item logout"><a href="#" onclick="handleLogout()"><i class="fa-solid fa-sign-out"></i> Logout</a></div>
     </div>
   </aside>
-
   <main class="admin-main">
     <header class="admin-header">
       <div class="header-title"><h1>Products</h1><p>Manage your product catalog</p></div>
@@ -182,7 +159,6 @@
   </main>
 </div>
 
-<!-- MODAL -->
 <div id="productModal" class="modal">
   <div class="modal-content">
     <div class="modal-header">
@@ -191,7 +167,6 @@
     </div>
     <div class="modal-body">
 
-      <!-- PRODUCT TYPE -->
       <div class="form-section">
         <div class="section-title">Product Type</div>
         <div class="type-grid">
@@ -202,21 +177,19 @@
         </div>
       </div>
 
-      <!-- PRODUCT DETAILS -->
       <div class="form-section">
         <div class="section-title">Product Details</div>
         <div class="form-row">
           <div class="form-group"><label>Product Name *</label><input type="text" id="f-name" placeholder="e.g. Samsung Galaxy S24"></div>
           <div class="form-group"><label>Brand</label><input type="text" id="f-brand" placeholder="e.g. Samsung"></div>
         </div>
-        <div class="form-row">
-          <div class="form-group"><label>Compare Price (K) <span style="font-weight:400;color:var(--gray-400);font-size:.8rem">optional</span></label><input type="number" id="f-oldprice" step="0.01" placeholder="Shown as strikethrough"></div>
-          <div class="form-group"><label>Short Description</label><input type="text" id="f-shortdesc" placeholder="Brief summary for cards"></div>
+        <div class="form-group" style="max-width:320px">
+          <label>Compare Price (K) <span style="font-weight:400;color:var(--gray-400);font-size:.8rem">optional</span></label>
+          <input type="number" id="f-oldprice" step="0.01" placeholder="Shown as strikethrough">
         </div>
-        <div class="form-group"><label>Full Description</label><textarea id="f-desc" rows="3" placeholder="Full product description…"></textarea></div>
+        <div class="form-group"><label>Description</label><textarea id="f-desc" rows="4" placeholder="Product description…"></textarea></div>
       </div>
 
-      <!-- COLOR VARIANTS -->
       <div class="form-section">
         <div class="section-title">Color Variants</div>
         <div style="background:rgba(0,188,212,0.06);border:1px solid rgba(0,188,212,0.2);border-radius:var(--radius-md);padding:.75rem 1rem;font-size:.84rem;color:var(--dark);margin-bottom:1.2rem;line-height:1.6">
@@ -361,10 +334,7 @@ function renderVariants(){
         <div>
           <div class="vsect-label">Storage · Price · Qty</div>
           <div class="storage-col-labels">
-            <span class="scl-name">Storage</span>
-            <span class="scl-price">Price (K)</span>
-            <span class="scl-qty">Qty</span>
-            <span class="scl-del"></span>
+            <span class="scl-name">Storage</span><span class="scl-price">Price (K)</span><span class="scl-qty">Qty</span><span class="scl-del"></span>
           </div>
           <div class="storage-list" id="sl-${idx}"></div>
           <button class="btn-add-storage" onclick="addStorage(${idx})"><i class="fa-solid fa-plus"></i> Add Storage Option</button>
@@ -377,8 +347,7 @@ function renderVariants(){
           </div>
           <div id="up-${idx}" class="upload-progress" style="display:none"></div>
         </div>
-      </div>
-    `;
+      </div>`;
     list.appendChild(card);
     const sl=document.getElementById(`sl-${idx}`);
     (v.storageOptions||[]).forEach((opt,oi)=>{
@@ -387,8 +356,8 @@ function renderVariants(){
         <input class="sr-name" type="text" placeholder="e.g. 128GB" value="${opt.storage||''}" oninput="updateStorage(${idx},${oi},'storage',this.value)">
         <input class="sr-price" type="number" placeholder="Price" value="${opt.price||''}" min="0" step="0.01" oninput="updateStorage(${idx},${oi},'price',parseFloat(this.value)||0)">
         <input class="sr-qty" type="number" placeholder="Qty" value="${opt.stock||0}" min="0" oninput="updateStorage(${idx},${oi},'stock',parseInt(this.value)||0)">
-        <button class="sr-del" onclick="removeStorage(${idx},${oi})"><i class="fa-solid fa-times"></i></button>
-      `;sl.appendChild(row);
+        <button class="sr-del" onclick="removeStorage(${idx},${oi})"><i class="fa-solid fa-times"></i></button>`;
+      sl.appendChild(row);
     });
   });
 }
@@ -397,12 +366,12 @@ window.pickPalette=(idx,pi)=>{
   colorVariants[idx].hex=PALETTE[pi].hex;
   if(!colorVariants[idx].color)colorVariants[idx].color=PALETTE[pi].name;
   const dot=document.getElementById(`vdot-${idx}`);if(dot)dot.style.background=PALETTE[pi].hex;
-  document.querySelectorAll(`#variantsList .variant-card`)[idx]?.querySelectorAll('.ps-swatch').forEach((s,i)=>s.classList.toggle('sel',i===pi));
+  document.querySelectorAll('#variantsList .variant-card')[idx]?.querySelectorAll('.ps-swatch').forEach((s,i)=>s.classList.toggle('sel',i===pi));
 };
 window.pickCustom=(idx,hex)=>{
   colorVariants[idx].hex=hex;
   const dot=document.getElementById(`vdot-${idx}`);if(dot)dot.style.background=hex;
-  document.querySelectorAll(`#variantsList .variant-card`)[idx]?.querySelectorAll('.ps-swatch').forEach(s=>s.classList.remove('sel'));
+  document.querySelectorAll('#variantsList .variant-card')[idx]?.querySelectorAll('.ps-swatch').forEach(s=>s.classList.remove('sel'));
 };
 window.updateVariantColor=(idx,val)=>{colorVariants[idx].color=val};
 window.addColorVariant=()=>{colorVariants.push({color:'',hex:'',imageUrl:'',storageOptions:[]});renderVariants()};
@@ -420,11 +389,7 @@ window.uploadImg=async(idx,file)=>{
   task.on('state_changed',
     s=>{const p=Math.round(s.bytesTransferred/s.totalBytes*100);if(prog)prog.textContent=`Uploading… ${p}%`},
     e=>{showToast('Upload failed: '+e.message,true);if(prog)prog.style.display='none'},
-    async()=>{
-      colorVariants[idx].imageUrl=await getDownloadURL(task.snapshot.ref);
-      if(prog)prog.style.display='none';renderVariants();
-      showToast(`Image uploaded for ${colorVariants[idx].color||'variant'}`);
-    }
+    async()=>{colorVariants[idx].imageUrl=await getDownloadURL(task.snapshot.ref);if(prog)prog.style.display='none';renderVariants();showToast(`Image uploaded for ${colorVariants[idx].color||'variant'}`)}
   );
 };
 
@@ -432,7 +397,7 @@ window.showAddModal=()=>{
   editingProductId=null;selectedType='';colorVariants=[];
   document.getElementById('modalTitle').textContent='Add New Product';
   document.getElementById('productModal').classList.add('show');
-  ['f-name','f-brand','f-oldprice','f-desc','f-shortdesc'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=''});
+  ['f-name','f-brand','f-oldprice','f-desc'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=''});
   document.querySelectorAll('.type-card').forEach(c=>c.classList.remove('selected'));
   renderVariants();
 };
@@ -449,7 +414,6 @@ window.editProduct=(id)=>{
   document.getElementById('f-brand').value=p.brand||'';
   document.getElementById('f-oldprice').value=p.oldPrice||'';
   document.getElementById('f-desc').value=p.description||'';
-  document.getElementById('f-shortdesc').value=p.shortDesc||'';
   document.querySelectorAll('.type-card').forEach(c=>c.classList.toggle('selected',c.dataset.type===selectedType));
   renderVariants();
   document.getElementById('productModal').classList.add('show');
@@ -482,7 +446,6 @@ window.handleSubmit=async()=>{
     price:allPrices.length?Math.min(...allPrices):0,
     oldPrice:parseFloat(document.getElementById('f-oldprice').value)||null,
     description:document.getElementById('f-desc').value.trim()||null,
-    shortDesc:document.getElementById('f-shortdesc').value.trim()||null,
     variants:colorVariants.map(v=>({
       color:v.color,hex:v.hex||'',imageUrl:v.imageUrl,
       storageOptions:v.storageOptions.map(o=>({storage:o.storage,price:Number(o.price),stock:Number(o.stock)}))
