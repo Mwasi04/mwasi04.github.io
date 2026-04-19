@@ -8,9 +8,16 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    :root { --primary: #00bcd4; --primary-dark: #0097a7; --dark: #0f172a; --gray-100: #f1f5f9; --gray-200: #e2e8f0; --gray-400: #94a3b8; --radius-lg: 1.5rem; --radius-md: 1rem; --shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
+    :root {
+      --primary: #00bcd4; --primary-dark: #0097a7; --dark: #0f172a;
+      --gray-100: #f1f5f9; --gray-200: #e2e8f0; --gray-400: #94a3b8;
+      --radius-lg: 1.5rem; --radius-md: 1rem;
+      --shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+    }
     body { font-family: 'Inter', sans-serif; background: var(--gray-100); color: var(--dark); }
     .container { width: 90%; max-width: 1200px; margin: 0 auto; padding: 0 15px; }
+
+    /* NAV */
     nav { background: rgba(255,255,255,0.98); backdrop-filter: blur(10px); padding: 0.8rem 0; position: sticky; top: 0; z-index: 1000; border-bottom: 1px solid rgba(0,0,0,0.05); }
     nav .container { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; }
     .logo-link { display: flex; align-items: center; gap: 8px; text-decoration: none; }
@@ -23,6 +30,8 @@
     .nav-icons { display: flex; gap: 1.2rem; font-size: 1.2rem; align-items: center; }
     .cart-icon-wrap { position: relative; cursor: pointer; }
     .cart-badge { position: absolute; top: -8px; right: -8px; background: #ef4444; color: white; width: 18px; height: 18px; border-radius: 50%; font-size: 10px; font-weight: 700; display: none; align-items: center; justify-content: center; }
+
+    /* PAGE */
     .page-wrap { max-width: 1100px; margin: 0 auto; padding: 2rem 1rem 4rem; }
     .page-title { font-size: 1.6rem; font-weight: 800; margin-bottom: 0.25rem; }
     .page-sub { color: var(--gray-400); font-size: 0.88rem; margin-bottom: 1.75rem; }
@@ -32,63 +41,203 @@
     .card-head { padding: 1.1rem 1.5rem; border-bottom: 1px solid var(--gray-200); display: flex; align-items: center; gap: 10px; }
     .card-head h2 { font-size: 0.95rem; font-weight: 700; }
     .card-body { padding: 1.25rem 1.5rem; }
+
+    /* ORDER ITEMS */
     .order-item { display: flex; align-items: center; gap: 12px; padding: 0.85rem 0; border-bottom: 1px solid var(--gray-200); }
+    .order-item:last-child { border-bottom: none; }
+    /* FIX: proper image display in order summary */
+    .oi-img { width: 52px; height: 52px; border-radius: 8px; object-fit: contain; background: var(--gray-100); padding: 4px; flex-shrink: 0; }
     .oi-img-ph { width: 52px; height: 52px; border-radius: 8px; background: var(--gray-100); display: flex; align-items: center; justify-content: center; font-size: 1.3rem; flex-shrink: 0; }
     .oi-info { flex: 1; min-width: 0; }
-    .oi-name { font-size: 0.88rem; font-weight: 600; margin-bottom: 2px; }
+    .oi-name { font-size: 0.88rem; font-weight: 600; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .oi-meta { font-size: 0.75rem; color: var(--gray-400); }
     .oi-price { font-weight: 800; font-size: 0.9rem; white-space: nowrap; }
+
+    /* PAYMENT */
     .method-grid { display: grid; gap: 0.75rem; margin-bottom: 1.25rem; }
     .method-card { border: 2px solid var(--gray-200); border-radius: var(--radius-md); padding: 1rem; cursor: pointer; transition: all 0.2s; background: white; position: relative; }
     .method-card.selected { border-color: var(--primary); background: rgba(0,188,212,0.05); }
-    .method-icon-wrap.momo { background: #fff3e0; color: #e65100; width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 0.6rem; }
+    .method-card input[type="radio"] { position: absolute; opacity: 0; }
+    .method-icon-wrap { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 0.6rem; }
+    .method-icon-wrap.momo { background: #fff3e0; color: #e65100; }
     .method-title { font-size: 0.88rem; font-weight: 700; }
-    .method-check { position: absolute; top: 10px; right: 10px; width: 18px; height: 18px; border-radius: 50%; background: var(--primary); color: white; display: none; align-items: center; justify-content: center; }
+    .method-desc { font-size: 0.75rem; color: var(--gray-400); margin-top: 2px; }
+    .method-check { position: absolute; top: 10px; right: 10px; width: 18px; height: 18px; border-radius: 50%; background: var(--primary); color: white; display: none; align-items: center; justify-content: center; font-size: 0.65rem; }
     .method-card.selected .method-check { display: flex; }
+
+    /* FORM FIELDS */
     .field-label { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; color: var(--gray-400); display: block; margin-bottom: 0.45rem; }
     .field-group { margin-bottom: 1rem; }
     .phone-wrap { display: flex; border: 1.5px solid var(--gray-200); border-radius: 100px; overflow: hidden; transition: border-color 0.2s; }
     .phone-wrap:focus-within { border-color: var(--primary); }
+    .phone-wrap.error { border-color: #ef4444; }
     .phone-code { background: var(--gray-100); padding: 0.75rem 1rem; font-weight: 700; font-size: 0.88rem; white-space: nowrap; border-right: 1.5px solid var(--gray-200); }
     .phone-input { flex: 1; border: none; padding: 0.75rem 1rem; outline: none; font-family: 'Inter', sans-serif; font-size: 0.9rem; }
     .error-text { color: #ef4444; font-size: 0.74rem; margin-top: 4px; display: none; }
     .error-text.show { display: block; }
+    .info-note { font-size: 0.78rem; color: var(--gray-400); background: var(--gray-100); padding: 0.7rem 1rem; border-radius: var(--radius-md); margin-top: 0.75rem; display: flex; align-items: flex-start; gap: 8px; }
+
+    /* SUMMARY */
     .sum-row { display: flex; justify-content: space-between; font-size: 0.88rem; color: var(--gray-400); padding: 0.3rem 0; }
     .sum-row.total { font-size: 1.05rem; font-weight: 800; color: var(--dark); padding-top: 0.8rem; border-top: 1.5px solid var(--gray-200); margin-top: 0.5rem; }
-    .pay-btn { width: 100%; background: var(--primary); color: white; border: none; border-radius: 100px; padding: 1rem; font-family: 'Inter', sans-serif; font-weight: 700; font-size: 0.95rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 9px; margin-top: 1.1rem; }
+    .pay-btn { width: 100%; background: var(--primary); color: white; border: none; border-radius: 100px; padding: 1rem; font-family: 'Inter', sans-serif; font-weight: 700; font-size: 0.95rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 9px; margin-top: 1.1rem; transition: 0.2s; }
+    .pay-btn:hover:not(:disabled) { background: var(--primary-dark); }
     .pay-btn:disabled { background: var(--gray-200); color: var(--gray-400); cursor: not-allowed; }
+    .trust-row { display: flex; justify-content: center; gap: 1.5rem; margin-top: 0.85rem; font-size: 0.75rem; color: var(--gray-400); }
+    .trust-item { display: flex; align-items: center; gap: 5px; }
+    .spin { display: inline-block; width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 0.8s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* OVERLAYS */
     .wait-overlay { display: none; position: fixed; inset: 0; background: rgba(15,23,42,0.8); backdrop-filter: blur(6px); z-index: 5000; align-items: center; justify-content: center; }
     .wait-overlay.show { display: flex; }
-    .wait-box { background: white; border-radius: var(--radius-lg); padding: 2.5rem 2rem; text-align: center; max-width: 340px; }
+    .wait-box { background: white; border-radius: var(--radius-lg); padding: 2.5rem 2rem; text-align: center; max-width: 340px; width: 90%; }
     .wait-spinner { width: 60px; height: 60px; border: 4px solid var(--gray-200); border-top-color: var(--primary); border-radius: 50%; animation: spin 0.9s linear infinite; margin: 0 auto 1.4rem; }
-    @keyframes spin { to { transform: rotate(360deg); } }
+    .wait-box h3 { font-size: 1.2rem; font-weight: 800; margin-bottom: 0.5rem; }
+    .wait-box p { font-size: 0.88rem; color: var(--gray-400); margin-bottom: 0.5rem; }
+    .wait-number { font-size: 1rem; font-weight: 700; margin: 0.75rem 0 1.25rem; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .wait-done { background: var(--primary); color: white; border: none; border-radius: 100px; padding: 0.8rem 1.5rem; font-family: 'Inter', sans-serif; font-weight: 700; cursor: pointer; font-size: 0.9rem; }
+    .wait-done:hover { background: var(--primary-dark); }
     .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(120px); background: var(--dark); color: white; border-radius: 100px; padding: 0.85rem 1.4rem; font-size: 0.88rem; display: flex; align-items: center; gap: 9px; z-index: 9999; opacity: 0; transition: transform 0.4s, opacity 0.3s; }
     .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
-    .debug-panel { background: #1e293b; color: #e2e8f0; border-radius: 8px; margin-top: 20px; padding: 12px 16px; font-family: monospace; font-size: 0.75rem; max-height: 200px; overflow-y: auto; }
+    .toast.error { background: #ef4444; }
+
+    /* RESPONSIVE */
     @media (max-width: 860px) { .checkout-grid { grid-template-columns: 1fr; } }
-    @media (max-width: 768px) { .menu-toggle { display: block; } .nav-links { display: none; position: absolute; top: 100%; left: 0; right: 0; background: white; flex-direction: column; padding: 1rem; } .nav-links.show { display: flex; } }
+    @media (max-width: 768px) {
+      .menu-toggle { display: block; }
+      .nav-links { display: none; position: absolute; top: 100%; left: 0; right: 0; background: white; flex-direction: column; padding: 1rem; box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
+      .nav-links.show { display: flex; }
+    }
   </style>
 </head>
 <body>
-<nav><div class="container"><a href="index.html" class="logo-link"><img class="logo-img" src="photos/logo.png" alt="logo"><span class="logo-text">BMB Electronics</span></a><div class="menu-toggle" onclick="document.getElementById('navLinks').classList.toggle('show')"><i class="fa-solid fa-bars"></i></div><div class="nav-links" id="navLinks"><a href="index.html">Home</a><a href="store.html">Store</a><a href="contact.html">Contact</a><a href="#" id="accountLink">Account</a></div><div class="nav-icons"><div class="cart-icon-wrap" onclick="window.location.href='store.html'"><i class="fa-solid fa-cart-shopping"></i><span class="cart-badge" id="cartBadge"></span></div><a href="#" id="accountIcon"><i class="fa-regular fa-circle-user"></i></a></div></div></nav>
+
+<nav>
+  <div class="container">
+    <a href="index.html" class="logo-link">
+      <img class="logo-img" src="photos/logo.png" alt="BMB logo" onerror="this.style.display='none'">
+      <span class="logo-text">BMB Electronics</span>
+    </a>
+    <div class="menu-toggle" onclick="document.getElementById('navLinks').classList.toggle('show')">
+      <i class="fa-solid fa-bars"></i>
+    </div>
+    <div class="nav-links" id="navLinks">
+      <a href="index.html">Home</a>
+      <a href="store.html">Store</a>
+      <a href="contact.html">Contact</a>
+      <a href="#" id="accountLink">Account</a>
+    </div>
+    <div class="nav-icons">
+      <div class="cart-icon-wrap" onclick="window.location.href='store.html'">
+        <i class="fa-solid fa-cart-shopping"></i>
+        <span class="cart-badge" id="cartBadge"></span>
+      </div>
+      <a href="#" id="accountIcon"><i class="fa-regular fa-circle-user"></i></a>
+    </div>
+  </div>
+</nav>
 
 <div class="page-wrap">
   <h1 class="page-title">Secure Checkout</h1>
   <p class="page-sub">Review your order and complete payment</p>
-  <div id="loadingMsg" style="text-align:center;padding:3rem;color:var(--gray-400);"><div style="width:28px;height:28px;border:3px solid var(--gray-200);border-top-color:var(--primary);border-radius:50%;animation:spin 0.9s linear infinite;margin:0 auto 1rem;"></div>Loading your order…</div>
-  <div class="checkout-grid" id="checkoutGrid" style="display:none;">
-    <div><div class="card"><div class="card-head"><div class="card-head-icon"><i class="fa-solid fa-cart-shopping"></i></div><h2>Order Items</h2></div><div class="card-body" id="orderItemsList"></div></div><div class="card"><div class="card-head"><div class="card-head-icon"><i class="fa-solid fa-credit-card"></i></div><h2>Payment Method</h2></div><div class="card-body"><div class="method-grid"><label class="method-card selected" id="momoCard"><input type="radio" name="payMethod" value="momo" checked><div class="method-icon-wrap momo"><i class="fa-solid fa-mobile-screen-button"></i></div><div class="method-title">Mobile Money</div><div class="method-desc">Airtel · MTN · Zamtel</div><div class="method-check"><i class="fa-solid fa-check"></i></div></label></div><div class="pay-panel active" id="momoPanel"><div class="field-group"><label class="field-label">Mobile Money Number</label><div class="phone-wrap" id="momoPhoneWrap"><div class="phone-code">🇿🇲 +260</div><input type="tel" class="phone-input" id="momoPhone" placeholder="97 654 3210" maxlength="12" oninput="validateMomoPhone()"></div><div class="error-text" id="momoPhoneErr">Enter a valid Zambian number</div></div><div class="info-note"><i class="fa-solid fa-circle-info"></i>After tapping Pay, approve the prompt on your phone.</div></div></div></div></div>
-    <div><div class="card" style="position:sticky;top:80px;"><div class="card-head"><div class="card-head-icon"><i class="fa-solid fa-receipt"></i></div><h2>Order Total</h2></div><div class="card-body"><div id="summaryRows"></div><button class="pay-btn" id="payBtn" onclick="handlePay()"><i class="fa-solid fa-mobile-screen-button"></i><span id="payLabel">Pay Now</span></button><div class="trust-row"><div class="trust-item"><i class="fa-solid fa-shield-halved"></i> Secure</div><div class="trust-item"><i class="fa-solid fa-lock"></i> Encrypted</div></div></div></div></div>
+
+  <div id="loadingMsg" style="text-align:center;padding:3rem;color:var(--gray-400);">
+    <div style="width:28px;height:28px;border:3px solid var(--gray-200);border-top-color:var(--primary);border-radius:50%;animation:spin 0.9s linear infinite;margin:0 auto 1rem;"></div>
+    Loading your order…
   </div>
-  <div class="debug-panel" id="debugPanel"><div class="debug-header"><span><i class="fa-solid fa-bug"></i> Debug Log</span><span class="debug-clear" onclick="clearDebugLog()">Clear</span></div><div id="debugContent"></div></div>
+
+  <div class="checkout-grid" id="checkoutGrid" style="display:none;">
+    <!-- LEFT COLUMN -->
+    <div>
+      <!-- Order items -->
+      <div class="card">
+        <div class="card-head">
+          <i class="fa-solid fa-cart-shopping" style="color:var(--primary)"></i>
+          <h2>Order Items</h2>
+        </div>
+        <div class="card-body" id="orderItemsList"></div>
+      </div>
+
+      <!-- Payment method -->
+      <div class="card">
+        <div class="card-head">
+          <i class="fa-solid fa-credit-card" style="color:var(--primary)"></i>
+          <h2>Payment Method</h2>
+        </div>
+        <div class="card-body">
+          <div class="method-grid">
+            <label class="method-card selected" id="momoCard">
+              <input type="radio" name="payMethod" value="momo" checked>
+              <div class="method-icon-wrap momo"><i class="fa-solid fa-mobile-screen-button"></i></div>
+              <div class="method-title">Mobile Money</div>
+              <div class="method-desc">Airtel · MTN · Zamtel</div>
+              <div class="method-check"><i class="fa-solid fa-check"></i></div>
+            </label>
+          </div>
+          <div class="field-group">
+            <label class="field-label">Mobile Money Number</label>
+            <div class="phone-wrap" id="momoPhoneWrap">
+              <div class="phone-code">🇿🇲 +260</div>
+              <input type="tel" class="phone-input" id="momoPhone"
+                     placeholder="97 654 3210" maxlength="12"
+                     oninput="validateMomoPhone()">
+            </div>
+            <div class="error-text" id="momoPhoneErr">Enter a valid Zambian number (e.g. 97 123 4567)</div>
+          </div>
+          <div class="info-note">
+            <i class="fa-solid fa-circle-info"></i>
+            After tapping Pay, approve the prompt on your phone.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT COLUMN -->
+    <div>
+      <div class="card" style="position:sticky;top:80px;">
+        <div class="card-head">
+          <i class="fa-solid fa-receipt" style="color:var(--primary)"></i>
+          <h2>Order Summary</h2>
+        </div>
+        <div class="card-body">
+          <div id="summaryRows"></div>
+          <button class="pay-btn" id="payBtn" onclick="handlePay()">
+            <i class="fa-solid fa-mobile-screen-button"></i>
+            <span id="payLabel">Pay Now</span>
+          </button>
+          <div class="trust-row">
+            <div class="trust-item"><i class="fa-solid fa-shield-halved"></i> Secure</div>
+            <div class="trust-item"><i class="fa-solid fa-lock"></i> Encrypted</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
-<div class="wait-overlay" id="waitOverlay"><div class="wait-box"><div class="wait-spinner"></div><h3>Check Your Phone</h3><p>A payment request has been sent to:</p><div class="wait-number"><i class="fa-solid fa-mobile-screen-button"></i><span id="waitNumber">—</span></div><button class="wait-done" onclick="goToConfirmation()">I've Approved — View My Order</button></div></div>
+<!-- Waiting overlay -->
+<div class="wait-overlay" id="waitOverlay">
+  <div class="wait-box">
+    <div class="wait-spinner"></div>
+    <h3>Check Your Phone</h3>
+    <p>A payment request has been sent to:</p>
+    <div class="wait-number">
+      <i class="fa-solid fa-mobile-screen-button" style="color:var(--primary)"></i>
+      <span id="waitNumber">—</span>
+    </div>
+    <button class="wait-done" onclick="goToConfirmation()">I've Approved — View My Order</button>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script type="module">
   import { auth, db } from './js/firebase-config.js';
-  import { doc, getDoc, addDoc, collection, serverTimestamp, updateDoc, runTransaction } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+  import {
+    doc, getDoc, collection, serverTimestamp,
+    updateDoc, runTransaction
+  } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
   import { observeAuthState } from './js/auth.js';
 
   const PRIMENET_API_KEY = '7XyHpDXvuxNCLPtZHf71F7xb3b4u1fhfmHLF7fuE9twQ5LUalCTwYC5Yq0J2ONRo';
@@ -98,132 +247,253 @@
   let cart = [], orderSubtotal = 0, orderShipping = 50, orderTax = 0, orderTotal = 0;
   let currentOrderId = null;
 
-  function logDebug(msg, type='info') { const d = document.getElementById('debugContent'); if(d){ const e=document.createElement('div'); e.className=`debug-entry ${type}`; e.innerHTML=`<span class="time">${new Date().toLocaleTimeString()}</span> ${msg}`; d.appendChild(e); d.scrollTop=d.scrollHeight; if(d.children.length>50) d.removeChild(d.children[0]); } console.log(msg); }
-  window.clearDebugLog = () => { document.getElementById('debugContent').innerHTML=''; logDebug('Debug log cleared'); };
-  function showToast(msg, isError=false){ const t=document.getElementById('toast'); t.innerHTML=`<i class="${isError?'fa-regular fa-circle-exclamation':'fa-regular fa-circle-check'}"></i> ${msg}`; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),4500); }
-  function updatePayBtn(){ const btn=document.getElementById('payBtn'); btn.disabled=false; btn.innerHTML=`<i class="fa-solid fa-mobile-screen-button"></i> Pay K${orderTotal.toLocaleString()}`; }
-  function setBtnLoading(label){ const btn=document.getElementById('payBtn'); btn.disabled=true; btn.innerHTML=`<span class="spin"></span> ${label}`; }
-  window.validateMomoPhone = () => { const raw=document.getElementById('momoPhone').value; const fmt=parsePhone(raw); document.getElementById('momoPhoneWrap').classList.toggle('error',!fmt); document.getElementById('momoPhoneErr').classList.toggle('show',!fmt); return fmt; };
-  function parsePhone(raw){ let c=raw.replace(/\D/g,''); if(c.startsWith('0')&&c.length===10) c='260'+c.slice(1); if(c.startsWith('260')&&c.length===12) return c; if(c.length===9) return '260'+c; return null; }
-  function generateExternalReference(){ return `BMB_${Date.now()}`; }
+  /* ── Helpers ── */
+  function showToast(msg, isError = false) {
+    const t = document.getElementById('toast');
+    t.innerHTML = `<i class="${isError ? 'fa-regular fa-circle-exclamation' : 'fa-regular fa-circle-check'}"></i> ${msg}`;
+    t.className = 'toast show' + (isError ? ' error' : '');
+    setTimeout(() => t.classList.remove('show'), 4500);
+  }
 
-  // Stock deduction using Firestore transaction
-  async function deductProductStock(orderItems) {
-    const productRefs = {};
-    for (const item of orderItems) {
-      if (!productRefs[item.id]) productRefs[item.id] = { item, productDocRef: doc(db, 'products', item.id) };
+  function updatePayBtn() {
+    const btn = document.getElementById('payBtn');
+    btn.disabled = false;
+    btn.innerHTML = `<i class="fa-solid fa-mobile-screen-button"></i>&nbsp;Pay K${orderTotal.toLocaleString()}`;
+  }
+
+  function setBtnLoading(label) {
+    const btn = document.getElementById('payBtn');
+    btn.disabled = true;
+    btn.innerHTML = `<span class="spin"></span>&nbsp;${label}`;
+  }
+
+  window.validateMomoPhone = () => {
+    const raw = document.getElementById('momoPhone').value;
+    const fmt = parsePhone(raw);
+    document.getElementById('momoPhoneWrap').classList.toggle('error', !fmt);
+    document.getElementById('momoPhoneErr').classList.toggle('show', !fmt);
+    return fmt;
+  };
+
+  function parsePhone(raw) {
+    let c = raw.replace(/\D/g, '');
+    if (c.startsWith('0') && c.length === 10) c = '260' + c.slice(1);
+    if (c.startsWith('260') && c.length === 12) return c;
+    if (c.length === 9) return '260' + c;
+    return null;
+  }
+
+  function generateExternalReference() {
+    return `BMB_${Date.now()}`;
+  }
+
+  /* ── Load cart & build UI ── */
+  async function load(user) {
+    if (!user) {
+      document.getElementById('loadingMsg').innerHTML =
+        '<p>Please <a href="login.html">log in</a> to checkout.</p>';
+      return;
     }
-    await runTransaction(db, async (transaction) => {
-      for (const pid in productRefs) {
-        const { item, productDocRef } = productRefs[pid];
-        const productSnap = await transaction.get(productDocRef);
-        if (!productSnap.exists()) throw new Error(`Product ${item.id} not found`);
-        const productData = productSnap.data();
-        const variants = productData.variants || [];
-        const variantIndex = variants.findIndex(v => v.attributes.color === item.color && v.attributes.storage === item.storage);
-        if (variantIndex === -1) throw new Error(`Variant ${item.color}/${item.storage} not found for product ${item.name}`);
-        const currentStock = variants[variantIndex].stock;
-        if (currentStock < item.qty) throw new Error(`Insufficient stock for ${item.name} (${item.color}, ${item.storage}). Available: ${currentStock}`);
-        variants[variantIndex].stock = currentStock - item.qty;
-        transaction.update(productDocRef, { variants: variants });
-      }
+
+    const snap = await getDoc(doc(db, 'users', user.uid));
+    cart = snap.data()?.cart || [];
+
+    if (!cart.length) {
+      document.getElementById('loadingMsg').innerHTML =
+        '<p>Your cart is empty. <a href="store.html">Continue shopping</a></p>';
+      return;
+    }
+
+    orderSubtotal = 0;
+    cart.forEach(i => { i._qty = i.qty || 1; orderSubtotal += i.price * i._qty; });
+    orderTax = Math.round(orderSubtotal * 0.16);
+    orderTotal = orderSubtotal + orderShipping + orderTax;
+
+    /* FIX: show product images in order items */
+    document.getElementById('orderItemsList').innerHTML = cart.map(i => {
+      const imgSrc = i.image || '';
+      return `<div class="order-item">
+        ${imgSrc
+          ? `<img class="oi-img" src="${imgSrc}" alt="${i.name}" onerror="this.src='https://placehold.co/52x52?text=📦'">`
+          : `<div class="oi-img-ph">📦</div>`
+        }
+        <div class="oi-info">
+          <div class="oi-name">${i.name}</div>
+          <div class="oi-meta">${i.storage || ''} ${i.color ? '· ' + i.color : ''} | Qty: ${i._qty}</div>
+        </div>
+        <div class="oi-price">K${(i.price * i._qty).toLocaleString()}</div>
+      </div>`;
+    }).join('');
+
+    document.getElementById('summaryRows').innerHTML = `
+      <div class="sum-row"><span>Subtotal</span><span>K${orderSubtotal.toLocaleString()}</span></div>
+      <div class="sum-row"><span>Shipping</span><span>K${orderShipping}</span></div>
+      <div class="sum-row"><span>Tax (16%)</span><span>K${orderTax.toLocaleString()}</span></div>
+      <div class="sum-row total"><span>Total</span><span>K${orderTotal.toLocaleString()}</span></div>`;
+
+    document.getElementById('loadingMsg').style.display = 'none';
+    document.getElementById('checkoutGrid').style.display = 'grid';
+    updatePayBtn();
+  }
+
+  /* ── PrimeNet API ── */
+  async function callPrimeNetAPI(payload) {
+    const jsonBody = JSON.stringify(payload);
+    let response = await fetch(PRIMENET_API_URL, {
+      method: 'POST', mode: 'cors',
+      headers: { 'X-Authorization': PRIMENET_API_KEY, 'Content-Type': 'application/json' },
+      body: jsonBody
     });
-    logDebug('Stock deducted successfully', 'success');
-  }
-
-  async function load(user){
-    if(!user){ document.getElementById('loadingMsg').innerHTML='<p>Please <a href="login.html">log in</a> to checkout.</p>'; return; }
-    const snap=await getDoc(doc(db,'users',user.uid));
-    cart=snap.data()?.cart||[];
-    if(!cart.length){ document.getElementById('loadingMsg').innerHTML='<p>Your cart is empty. <a href="store.html">Continue shopping</a></p>'; return; }
-    orderSubtotal=0; cart.forEach(i=>{ i._qty=i.qty||1; orderSubtotal+=i.price*i._qty; });
-    orderTax=Math.round(orderSubtotal*0.16); orderTotal=orderSubtotal+orderShipping+orderTax;
-    document.getElementById('orderItemsList').innerHTML=cart.map(i=>`<div class="order-item"><div class="oi-img-ph">📦</div><div class="oi-info"><div class="oi-name">${i.name}</div><div class="oi-meta">${i.storage||''} ${i.color||''} | Qty: ${i._qty}</div></div><div class="oi-price">K${(i.price*i._qty).toLocaleString()}</div></div>`).join('');
-    document.getElementById('summaryRows').innerHTML=`<div class="sum-row"><span>Subtotal</span><span>K${orderSubtotal.toLocaleString()}</span></div><div class="sum-row"><span>Shipping</span><span>K${orderShipping}</span></div><div class="sum-row"><span>Tax (16%)</span><span>K${orderTax.toLocaleString()}</span></div><div class="sum-row total"><span>Total</span><span>K${orderTotal.toLocaleString()}</span></div>`;
-    document.getElementById('loadingMsg').style.display='none'; document.getElementById('checkoutGrid').style.display='grid'; updatePayBtn();
-  }
-
-  async function callPrimeNetAPI(payload){
-    const jsonBody=JSON.stringify(payload);
-    let response=await fetch(PRIMENET_API_URL,{method:'POST',mode:'cors',headers:{'X-Authorization':PRIMENET_API_KEY,'Content-Type':'application/json'},body:jsonBody});
-    let result=await response.json();
-    if(result.status==='success') return result;
-    if(result.message&&result.message.includes('non blank')){
-      const formBody=new URLSearchParams(payload).toString();
-      response=await fetch(PRIMENET_API_URL,{method:'POST',mode:'cors',headers:{'X-Authorization':PRIMENET_API_KEY,'Content-Type':'application/x-www-form-urlencoded'},body:formBody});
-      result=await response.json();
+    let result = await response.json();
+    if (result.status === 'success') return result;
+    /* Retry with form-encoded if API complained about blank values */
+    if (result.message && result.message.includes('non blank')) {
+      const formBody = new URLSearchParams(payload).toString();
+      response = await fetch(PRIMENET_API_URL, {
+        method: 'POST', mode: 'cors',
+        headers: { 'X-Authorization': PRIMENET_API_KEY, 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: formBody
+      });
+      result = await response.json();
     }
     return result;
   }
 
+  /* ── Handle Pay ── */
   window.handlePay = async () => {
-    const payerNumber=validateMomoPhone();
-    if(!payerNumber){ showToast('Enter a valid Zambian mobile number',true); return; }
-    const externalRef=generateExternalReference();
-    const narration=`BMB Order: ${cart.map(i=>`${i.name} x${i._qty}`).join(', ')}`.substring(0,80);
+    const payerNumber = validateMomoPhone();
+    if (!payerNumber) { showToast('Enter a valid Zambian mobile number', true); return; }
+
+    const externalRef = generateExternalReference();
+    const narration = `BMB Order: ${cart.map(i => `${i.name} x${i._qty}`).join(', ')}`.substring(0, 80);
+
     setBtnLoading('Sending payment request…');
-    try{
-      // First, check stock and create order in a transaction to prevent overselling
+
+    try {
       let orderId = null;
-      await runTransaction(db, async (transaction) => {
-        // Check stock for all items
+
+      await runTransaction(db, async transaction => {
+        /* ── FIX: correct variant lookup — matches flat storageOptions structure ──
+           The admin saves: variant.color, variant.storageOptions[].storage
+           NOT variant.attributes.color / variant.attributes.storage            */
         for (const item of cart) {
           const productRef = doc(db, 'products', item.id);
           const productSnap = await transaction.get(productRef);
-          if (!productSnap.exists()) throw new Error(`Product ${item.name} not found`);
+          if (!productSnap.exists()) throw new Error(`Product "${item.name}" not found`);
+
           const variants = productSnap.data().variants || [];
-          const variant = variants.find(v => v.attributes.color === item.color && v.attributes.storage === item.storage);
-          if (!variant) throw new Error(`Variant ${item.color}/${item.storage} not found`);
-          if (variant.stock < item.qty) throw new Error(`Not enough stock for ${item.name} (${item.color}, ${item.storage}). Only ${variant.stock} left.`);
+
+          /* Match by color + storage on the flat structure */
+          const variantIdx = variants.findIndex(v => v.color === item.color);
+          if (variantIdx === -1)
+            throw new Error(`Color "${item.color}" not found for ${item.name}`);
+
+          const storageOpts = variants[variantIdx].storageOptions || [];
+          const storageIdx = storageOpts.findIndex(o => o.storage === item.storage);
+          if (storageIdx === -1)
+            throw new Error(`Storage "${item.storage}" not found for ${item.name} (${item.color})`);
+
+          if (storageOpts[storageIdx].stock < item._qty)
+            throw new Error(`Not enough stock for ${item.name} (${item.color}, ${item.storage}). Only ${storageOpts[storageIdx].stock} left.`);
         }
-        // Create order document
+
+        /* Create order document */
         const orderRef = doc(collection(db, 'orders'));
         transaction.set(orderRef, {
           userId: auth.currentUser.uid,
-          items: cart.map(i=>({id:i.id,name:i.name,price:i.price,qty:i.qty,storage:i.storage,color:i.color})),
-          subtotal: orderSubtotal, shipping: orderShipping, tax: orderTax, totalAmount: orderTotal,
-          payerNumber, paymentMethod: 'mobile_money', externalReference: externalRef, narration,
+          items: cart.map(i => ({
+            id: i.id, name: i.name, price: i.price,
+            qty: i._qty, storage: i.storage, color: i.color,
+            image: i.image || ''
+          })),
+          subtotal: orderSubtotal, shipping: orderShipping,
+          tax: orderTax, totalAmount: orderTotal,
+          payerNumber, paymentMethod: 'mobile_money',
+          externalReference: externalRef, narration,
           status: 'pending', createdAt: serverTimestamp()
         });
         orderId = orderRef.id;
-        // Deduct stock
+
+        /* FIX: deduct stock using correct flat structure */
         for (const item of cart) {
           const productRef = doc(db, 'products', item.id);
           const productSnap = await transaction.get(productRef);
-          const variants = productSnap.data().variants;
-          const idx = variants.findIndex(v => v.attributes.color === item.color && v.attributes.storage === item.storage);
-          variants[idx].stock -= item.qty;
+          const variants = [...productSnap.data().variants];
+
+          const variantIdx = variants.findIndex(v => v.color === item.color);
+          const storageOpts = [...(variants[variantIdx].storageOptions || [])];
+          const storageIdx = storageOpts.findIndex(o => o.storage === item.storage);
+
+          storageOpts[storageIdx] = {
+            ...storageOpts[storageIdx],
+            stock: storageOpts[storageIdx].stock - item._qty
+          };
+          variants[variantIdx] = { ...variants[variantIdx], storageOptions: storageOpts };
           transaction.update(productRef, { variants });
         }
-        // Clear user's cart
+
+        /* Clear the user's cart */
         const userRef = doc(db, 'users', auth.currentUser.uid);
         transaction.update(userRef, { cart: [] });
       });
-      currentOrderId = orderId;
-      logDebug(`Order created and stock deducted: ${currentOrderId}`, 'success');
 
-      // Now call PrimeNet API for payment
-      const payload = { payer_number: payerNumber.trim(), external_reference: externalRef.trim(), payment_narration: narration.trim(), currency: "ZMW".trim(), amount: orderTotal.toString().trim(), account_number: PRIMENET_ACCOUNT_NUMBER.trim() };
+      currentOrderId = orderId;
+
+      /* Call PrimeNet payment API */
+      const payload = {
+        payer_number: payerNumber.trim(),
+        external_reference: externalRef.trim(),
+        payment_narration: narration.trim(),
+        currency: 'ZMW',
+        amount: String(orderTotal),
+        account_number: PRIMENET_ACCOUNT_NUMBER.trim()
+      };
+
       const result = await callPrimeNetAPI(payload);
+
       if (result.status === 'success') {
-        await updateDoc(doc(db, 'orders', currentOrderId), { primenetTransactionId: result.transaction_id, status: 'awaiting_payment' });
+        await updateDoc(doc(db, 'orders', currentOrderId), {
+          primenetTransactionId: result.transaction_id,
+          status: 'awaiting_payment'
+        });
         document.getElementById('waitNumber').textContent = `+${payerNumber}`;
         document.getElementById('waitOverlay').classList.add('show');
         updatePayBtn();
       } else {
-        throw new Error(result.message || 'Payment rejected');
+        /* Payment rejected — restore stock by cancelling order */
+        await updateDoc(doc(db, 'orders', currentOrderId), { status: 'payment_failed' });
+        throw new Error(result.message || 'Payment request rejected by payment provider');
       }
+
     } catch (error) {
-      logDebug(`Payment/Stock error: ${error.message}`, 'error');
-      showToast(error.message, true);
+      console.error('Checkout error:', error);
+      showToast(error.message || 'Something went wrong. Please try again.', true);
       updatePayBtn();
     }
   };
 
-  window.goToConfirmation = () => { document.getElementById('waitOverlay').classList.remove('show'); window.location.href='confirmation.html'; };
-  document.getElementById('accountLink').onclick=e=>{ e.preventDefault(); auth.currentUser?window.location.href='profile.html':(confirm('Please log in')&&(window.location.href='login.html')); };
-  document.getElementById('accountIcon').onclick=e=>{ e.preventDefault(); auth.currentUser?window.location.href='profile.html':(confirm('Please log in')&&(window.location.href='login.html')); };
-  observeAuthState(user=>{ document.querySelector('#accountIcon i').className=user?'fa-solid fa-circle-user':'fa-regular fa-circle-user'; load(user); });
+  window.goToConfirmation = () => {
+    document.getElementById('waitOverlay').classList.remove('show');
+    window.location.href = 'confirmation.html';
+  };
+
+  /* ── Auth ── */
+  document.getElementById('accountLink').onclick = e => {
+    e.preventDefault();
+    auth.currentUser ? window.location.href = 'profile.html'
+      : (confirm('Please log in') && (window.location.href = 'login.html'));
+  };
+  document.getElementById('accountIcon').onclick = e => {
+    e.preventDefault();
+    auth.currentUser ? window.location.href = 'profile.html'
+      : (confirm('Please log in') && (window.location.href = 'login.html'));
+  };
+
+  observeAuthState(user => {
+    document.querySelector('#accountIcon i').className =
+      user ? 'fa-solid fa-circle-user' : 'fa-regular fa-circle-user';
+    load(user);
+  });
 </script>
 </body>
 </html>
