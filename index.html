@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EduCore - School Management System</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: Arial, sans-serif; background: #f0f2f5; color: #1a1a2e; font-size: 14px; }
+
+/* ---- LOGIN ---- */
+#loginScreen { display: flex; min-height: 100vh; }
+.loginLeft { background: #1a1a2e; flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 60px; }
+.loginLeft h1 { font-size: 38px; color: #fff; margin-bottom: 12px; }
+.loginLeft h1 span { color: #f0a500; }
+.loginLeft p { color: rgba(255,255,255,0.6); font-size: 15px; line-height: 1.7; max-width: 360px; margin-bottom: 32px; }
+.roleTags { display: flex; flex-wrap: wrap; gap: 8px; }
+.roleTag { padding: 6px 14px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.7); font-size: 12px; }
+
+.loginRight { background: #fff; flex: 1; display: flex; align-items: center; justify-content: center; padding: 60px; }
+.loginBox { width: 100%; max-width: 380px; }
+.loginBox h2 { font-size: 26px; color: #1a1a2e; margin-bottom: 6px; }
+.loginBox .sub { color: #888; margin-bottom: 28px; font-size: 14px; }
+.fGroup { margin-bottom: 16px; }
+.fGroup label { display: block; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #555; margin-bottom: 6px; }
+.fGroup input { width: 100%; padding: 11px 14px; border: 1.5px solid #ddd; border-radius: 8px; font-size: 14px; font-family: Arial; outline: none; }
+.fGroup input:focus { border-color: #1a1a2e; }
+.loginBtn { width: 100%; padding: 12px; background: #1a1a2e; color: #fff; border: none; border-radius: 8px; font-size: 15px; cursor: pointer; margin-top: 4px; }
+.loginBtn:hover { background: #2d2d4e; }
+.errMsg { display: none; background: #fee; color: #c00; padding: 10px 14px; border-radius: 8px; font-size: 13px; margin-bottom: 12px; border: 1px solid #fcc; }
+.demoBox { margin-top: 20px; background: #f7f8fa; border-radius: 10px; padding: 14px; border: 1px solid #e8e8e8; }
+.demoBox p { font-size: 12px; color: #666; font-weight: 700; margin-bottom: 10px; }
+.demoGrid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.demoBtn { background: #fff; border: 1.5px solid #ddd; border-radius: 8px; padding: 10px 12px; cursor: pointer; text-align: left; font-family: Arial; }
+.demoBtn:hover { border-color: #1a1a2e; background: #f0f2f5; }
+.demoBtn .dRole { font-size: 13px; font-weight: 700; color: #1a1a2e; display: block; }
+.demoBtn .dCred { font-size: 11px; color: #888; display: block; margin-top: 2px; }
+
+/* ---- APP SHELL ---- */
+#appScreen { display: none; min-height: 100vh; }
+.appWrap { display: grid; grid-template-rows: 60px 1fr; grid-template-columns: 230px 1fr; min-height: 100vh; }
+
+/* TOPBAR */
+.topbar { grid-column: 1 / -1; background: #1a1a2e; display: flex; align-items: center; padding: 0 24px; gap: 14px; }
+.topLogo { display: flex; align-items: center; gap: 10px; }
+.topIcon { width: 32px; height: 32px; background: #f0a500; border-radius: 7px; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+.topName { color: #fff; font-size: 18px; font-weight: 700; }
+.topSp { flex: 1; }
+.topBadge { padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+.topUser { display: flex; align-items: center; gap: 10px; }
+.topAvatar { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; border: 2px solid rgba(255,255,255,0.2); }
+.topUname { color: rgba(255,255,255,0.8); font-size: 13px; }
+.topLogout { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.15); color: rgba(255,255,255,0.8); padding: 7px 14px; border-radius: 7px; font-size: 13px; cursor: pointer; }
+.topLogout:hover { background: rgba(255,255,255,0.2); }
+
+/* SIDEBAR */
+.sidebar { background: #fff; border-right: 1px solid #e8e8e8; padding: 20px 0; overflow-y: auto; }
+.sbSection { padding: 0 18px 6px; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: #aaa; }
+.sbSection:not(:first-child) { margin-top: 18px; }
+.sbItem { display: flex; align-items: center; gap: 10px; padding: 10px 18px; font-size: 13.5px; color: #555; cursor: pointer; border-left: 3px solid transparent; }
+.sbItem:hover { background: #f7f8fa; color: #1a1a2e; }
+.sbItem.active { border-left-color: var(--acc, #1a1a2e); background: var(--accBg, #f0f2f5); color: var(--acc, #1a1a2e); font-weight: 600; }
+.sbBadge { margin-left: auto; background: #fff3cd; color: #856404; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 20px; }
+
+/* MAIN */
+.mainArea { background: #f0f2f5; padding: 28px 30px; overflow-y: auto; }
+.page { display: none; }
+.page.active { display: block; }
+
+/* PAGE HEADER */
+.pageHead { margin-bottom: 24px; }
+.pageHead h2 { font-size: 26px; color: #1a1a2e; font-weight: 700; }
+.pageHead p { color: #888; font-size: 13px; margin-top: 4px; }
+.pageHeadRow { display: flex; align-items: flex-start; justify-content: space-between; }
+
+/* STATS GRID */
+.statsGrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 14px; margin-bottom: 22px; }
+.statCard { background: #fff; border-radius: 10px; border: 1px solid #e8e8e8; padding: 16px 18px; }
+.statIcon { width: 36px; height: 36px; border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 18px; margin-bottom: 10px; }
+.statVal { font-size: 24px; font-weight: 700; color: #1a1a2e; }
+.statLbl { font-size: 12px; color: #888; margin-top: 3px; }
+.statTrend { font-size: 11px; font-weight: 600; margin-top: 5px; }
+
+/* CARD */
+.card { background: #fff; border-radius: 10px; border: 1px solid #e8e8e8; padding: 18px 20px; }
+.cardTitle { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #555; margin-bottom: 14px; }
+
+/* GRIDS */
+.g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+.g3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; margin-bottom: 16px; }
+.g4 { display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; margin-bottom: 16px; }
+.g13 { display: grid; grid-template-columns: 1fr 3fr; gap: 16px; margin-bottom: 16px; }
+.g31 { display: grid; grid-template-columns: 3fr 1fr; gap: 16px; margin-bottom: 16px; }
+
+/* TABLES */
+table { width: 100%; border-collapse: collapse; }
+th { text-align: left; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #888; padding: 0 10px 10px; border-bottom: 1px solid #e8e8e8; }
+td { padding: 11px 10px; font-size: 13.5px; border-bottom: 1px solid #f0f2f5; }
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: #f7f8fa; }
+
+/* BADGES */
+.b { display: inline-block; font-size: 11px; font-weight: 700; padding: 3px 9px; border-radius: 5px; }
+.bs { background: #d4edda; color: #155724; }
+.bw { background: #fff3cd; color: #856404; }
+.bd { background: #f8d7da; color: #721c24; }
+.bi { background: #d1ecf1; color: #0c5460; }
+.bp { background: #e2d9f3; color: #432874; }
+.bg { background: #f0f2f5; color: #555; }
+
+/* BUTTONS */
+.btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; border: none; font-family: Arial; }
+.btnP { background: #1a1a2e; color: #fff; }
+.btnP:hover { background: #2d2d4e; }
+.btnO { background: #fff; color: #555; border: 1.5px solid #ddd; }
+.btnO:hover { background: #f7f8fa; }
+.btnSm { padding: 6px 12px; font-size: 12px; }
+
+/* NOTICE */
+.notice { padding: 11px 16px; border-radius: 8px; border-left: 4px solid; display: flex; gap: 10px; margin-bottom: 16px; font-size: 13.5px; align-items: flex-start; }
+.noticeI { background: #d1ecf1; border-color: #17a2b8; color: #0c5460; }
+.noticeW { background: #fff3cd; border-color: #f0a500; color: #856404; }
+.noticeD { background: #f8d7da; border-color: #dc3545; color: #721c24; }
+
+/* LIST */
+.listItem { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid #f0f2f5; }
+.listItem:last-child { border-bottom: none; }
+.dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.lt { flex: 1; }
+.lt .lm { font-size: 13.5px; font-weight: 600; }
+.lt .ls { font-size: 12px; color: #888; margin-top: 2px; }
+
+/* PROGRESS */
+.pbWrap { background: #f0f2f5; border-radius: 20px; height: 7px; overflow: hidden; flex: 1; }
+.pb { height: 100%; border-radius: 20px; }
+
+/* MESSAGES */
+.msgList { overflow-y: auto; }
+.msgBubble { padding: 10px 14px; border-radius: 12px; max-width: 76%; font-size: 13.5px; line-height: 1.6; margin-bottom: 10px; }
+.msgBubble.sent { background: #1a1a2e; color: #fff; margin-left: auto; border-bottom-right-radius: 3px; }
+.msgBubble.recv { background: #f0f2f5; color: #1a1a2e; border-bottom-left-radius: 3px; }
+.msgMeta { font-size: 11px; color: #aaa; margin-bottom: 3px; }
+
+/* UPLOAD ZONE */
+.uploadZone { border: 2px dashed #ccc; border-radius: 10px; padding: 28px; text-align: center; cursor: pointer; margin-bottom: 18px; }
+.uploadZone:hover { border-color: #1a1a2e; background: #f7f8fa; }
+.uploadZone .uIcon { font-size: 32px; display: block; margin-bottom: 8px; }
+.uploadZone .uTitle { font-size: 14px; font-weight: 600; }
+.uploadZone .uSub { font-size: 12px; color: #888; margin-top: 4px; }
+
+/* FORMS */
+.formRow { display: flex; gap: 10px; align-items: center; }
+.formInput { flex: 1; padding: 9px 13px; border: 1.5px solid #ddd; border-radius: 8px; font-size: 13.5px; font-family: Arial; outline: none; }
+.formInput:focus { border-color: #1a1a2e; }
+.formSelect { padding: 9px 13px; border: 1.5px solid #ddd; border-radius: 8px; font-size: 13.5px; font-family: Arial; outline: none; background: #fff; }
+.formLabel { display: block; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #555; margin-bottom: 6px; }
+
+/* AVATAR */
+.av { border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; flex-shrink: 0; }
+
+/* SCROLLBAR */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-thumb { background: #ccc; border-radius: 10px; }
+</style>
+</head>
+<body>
+
+<!-- ========== LOGIN ========== -->
+<div id="loginScreen">
+  <div class="loginLeft">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:40px">
+      <div style="width:44px;height:44px;background:#f0a500;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:22px">&#127979;</div>
+      <div>
+        <div style="font-size:24px;font-weight:700;color:#fff">EduCore</div>
+        <div style="font-size:11px;color:#f0a500;letter-spacing:2px;text-transform:uppercase">School Management</div>
+      </div>
+    </div>
+    <h1>One platform,<br><span>every role.</span></h1>
+    <p>Manage students, teachers, finances, and administration from a single unified system.</p>
+    <div class="roleTags">
+      <div class="roleTag">&#127891; Students &amp; Guardians</div>
+      <div class="roleTag">&#128218; Teachers</div>
+      <div class="roleTag">&#128176; Finance</div>
+      <div class="roleTag">&#9881;&#65039; Administration</div>
+    </div>
+  </div>
+
+  <div class="loginRight">
+    <div class="loginBox">
+      <h2>Welcome back</h2>
+      <p class="sub">Sign in to access your dashboard</p>
+
+      <div class="fGroup">
+        <label>Email Address</label>
+        <input type="email" id="inEmail" placeholder="Enter your email...">
+      </div>
+      <div class="fGroup">
+        <label>Password</label>
+        <input type="password" id="inPw" placeholder="Enter your password..." onkeydown="if(event.key==='Enter')doLogin()">
+      </div>
+
+      <div class="errMsg" id="loginErr">&#10006; Invalid email or password. Use the quick-fill buttons below.</div>
+      <button class="loginBtn" onclick="doLogin()">&#8594; Sign in to Dashboard</button>
+
+      <div class="demoBox">
+        <p>DEMO ACCOUNTS &mdash; Click to autofill &amp; sign in:</p>
+        <div class="demoGrid">
+          <button class="demoBtn" onclick="quickLogin('student')">
+            <span class="dRole">&#127891; Student / Guardian</span>
+            <span class="dCred">alex@school.edu</span>
+            <span class="dCred">student123</span>
+          </button>
+          <button class="demoBtn" onclick="quickLogin('teacher')">
+            <span class="dRole">&#128218; Teacher</span>
+            <span class="dCred">chanda@school.edu</span>
+            <span class="dCred">teacher123</span>
+          </button>
+          <button class="demoBtn" onclick="quickLogin('finance')">
+            <span class="dRole">&#128176; Finance Officer</span>
+            <span class="dCred">banda@school.edu</span>
+            <span class="dCred">finance123</span>
+          </button>
+          <button class="demoBtn" onclick="quickLogin('admin')">
+            <span class="dRole">&#9881;&#65039; Administrator</span>
+            <span class="dCred">principal@school.edu</span>
+            <span class="dCred">admin123</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== APP ========== -->
+<div id="appScreen">
+  <div class="appWrap">
+    <div class="topbar">
+      <div class="topLogo">
+        <div class="topIcon">&#127979;</div>
+        <div class="topName">EduCore</div>
+      </div>
+      <div class="topSp"></div>
+      <span class="topBadge" id="topBadge"></span>
+      <div class="topUser">
+        <div class="av topAvatar" id="topAv"></div>
+        <span class="topUname" id="topUname"></span>
+      </div>
+      <button class="topLogout" onclick="doLogout()">&#8592; Sign out</button>
+    </div>
+
+    <nav class="sidebar" id="sidebar"></nav>
+    <main class="mainArea" id="mainArea"></main>
+  </div>
+</div>
+
+<script>
+// ============================================================
+//  HARDCODED DATA
+// ============================================================
+var CREDS = {
+  'alex@school.edu':       { pw: 'student123', role: 'student' },
+  'chanda@school.edu':     { pw: 'teacher123', role: 'teacher' },
+  'banda@school.edu':      { pw: 'finance123', role: 'finance' },
+  'principal@school.edu':  { pw: 'admin123',   role: 'admin'   }
+};
+
+var USERS = {
+  student: { name: 'Alex Mwansa',       initials: 'AM', avBg: '#d4edda', avCol: '#155724', label: 'Student',      acc: '#1D9E75', accBg: '#edf7f3' },
+  teacher: { name: 'Mrs. N. Chanda',    initials: 'NC', avBg: '#d1ecf1', avCol: '#0c5460', label: 'Teacher',      acc: '#378ADD', accBg: '#e8f3fc' },
+  finance: { name: 'Mr. K. Banda',      initials: 'KB', avBg: '#f8d7da', avCol: '#721c24', label: 'Finance',      acc: '#E24B4A', accBg: '#fdf0f0' },
+  admin:   { name: 'Principal Mulenga', initials: 'PM', avBg: '#e2d9f3', avCol: '#432874', label: 'Admin',        acc: '#7F77DD', accBg: '#f0effd' }
+};
+
+var NAV = {
+  student: [
+    { sec: 'Overview', items: [{ id: 's-home', icon: '&#8962;', label: 'Dashboard' }, { id: 's-results', icon: '&#128203;', label: 'My Results' }, { id: 's-attend', icon: '&#128197;', label: 'Attendance' }] },
+    { sec: 'School',   items: [{ id: 's-fees', icon: '&#128179;', label: 'Fee Balance' }, { id: 's-prog', icon: '&#128198;', label: 'Class Programme' }, { id: 's-msg', icon: '&#128172;', label: 'Messages', badge: '3' }] }
+  ],
+  teacher: [
+    { sec: 'Overview', items: [{ id: 't-home', icon: '&#8962;', label: 'Dashboard' }, { id: 't-results', icon: '&#128196;', label: 'Upload Results' }, { id: 't-attend', icon: '&#9989;', label: 'Mark Attendance' }] },
+    { sec: 'Class',    items: [{ id: 't-assign', icon: '&#128214;', label: 'Assignments' }, { id: 't-prog', icon: '&#128198;', label: 'Class Programme' }, { id: 't-msg', icon: '&#128172;', label: 'Messages', badge: '5' }] }
+  ],
+  finance: [
+    { sec: 'Finance',  items: [{ id: 'f-home', icon: '&#8962;', label: 'Dashboard' }, { id: 'f-invoices', icon: '&#128196;', label: 'Invoices' }, { id: 'f-fees', icon: '&#128176;', label: 'Fee Tracking' }] },
+    { sec: 'Reports',  items: [{ id: 'f-reports', icon: '&#128202;', label: 'Financial Reports' }, { id: 'f-payments', icon: '&#128179;', label: 'Payment Records' }] }
+  ],
+  admin: [
+    { sec: 'Management', items: [{ id: 'a-home', icon: '&#8962;', label: 'Dashboard' }, { id: 'a-teachers', icon: '&#128101;', label: 'Teacher Profiles' }, { id: 'a-students', icon: '&#127979;', label: 'Student Registry' }] },
+    { sec: 'System',     items: [{ id: 'a-finance', icon: '&#128202;', label: 'Finance Overview' }, { id: 'a-creds', icon: '&#128273;', label: 'Login Credentials' }, { id: 'a-settings', icon: '&#9881;', label: 'System Settings' }] }
+  ]
+};
+
+var STUDENTS = [
+  { id:'STU-001', name:'Alex Mwansa',    grade:'10B', guardian:'Mrs. Mwansa',  feeStatus:'Partial', status:'Active',   avg:78, attend:91 },
+  { id:'STU-002', name:'Brenda Nkosi',   grade:'10B', guardian:'Mr. Nkosi',    feeStatus:'Paid',    status:'Active',   avg:82, attend:96 },
+  { id:'STU-003', name:'Chanda Zulu',    grade:'9A',  guardian:'Ms. Zulu',     feeStatus:'Overdue', status:'Active',   avg:71, attend:88 },
+  { id:'STU-004', name:'David Phiri',    grade:'11C', guardian:'Mr. Phiri',    feeStatus:'Pending', status:'Active',   avg:65, attend:79 },
+  { id:'STU-005', name:'Evelyn Tembo',   grade:'8B',  guardian:'Mrs. Tembo',   feeStatus:'Overdue', status:'Suspended',avg:58, attend:72 },
+  { id:'STU-006', name:'Frank Banda',    grade:'10A', guardian:'Mr. Banda',    feeStatus:'Paid',    status:'Active',   avg:88, attend:97 },
+  { id:'STU-007', name:'Grace Lungu',    grade:'9B',  guardian:'Mrs. Lungu',   feeStatus:'Paid',    status:'Active',   avg:74, attend:93 },
+  { id:'STU-008', name:'Henry Mutale',   grade:'12A', guardian:'Mr. Mutale',   feeStatus:'Partial', status:'Active',   avg:80, attend:90 }
+];
+
+var TEACHERS = [
+  { init:'NC', name:'Mrs. N. Chanda',   subject:'Mathematics',      classes:'10A, 10B, 11', exp:'12 yrs', status:'Active' },
+  { init:'JM', name:'Mr. J. Mwale',     subject:'English Language', classes:'10B, 9A, 9B',  exp:'8 yrs',  status:'Active' },
+  { init:'SP', name:'Ms. S. Phiri',     subject:'Integrated Science',classes:'10A,10B,11',  exp:'5 yrs',  status:'Active' },
+  { init:'BT', name:'Mr. B. Tembo',     subject:'Social Studies',   classes:'10B, 9A',      exp:'15 yrs', status:'On Leave' },
+  { init:'EK', name:'Mr. E. Kasonde',   subject:'Physical Education',classes:'All Grades',   exp:'9 yrs',  status:'Active' },
+  { init:'ML', name:'Mrs. M. Lungu',    subject:'Civic Education',  classes:'10A, 10B',     exp:'7 yrs',  status:'Active' }
+];
+
+var RESULTS = [
+  { subject:'Mathematics',    teacher:'Mrs. Chanda', score:82, grade:'A',  remark:'Excellent progress' },
+  { subject:'English Lang.',  teacher:'Mr. Mwale',   score:76, grade:'B+', remark:'Good performance' },
+  { subject:'Integr. Science',teacher:'Ms. Phiri',   score:88, grade:'A',  remark:'Outstanding work' },
+  { subject:'Social Studies', teacher:'Mr. Tembo',   score:72, grade:'B',  remark:'Satisfactory' },
+  { subject:'Civic Education',teacher:'Mrs. Lungu',  score:68, grade:'B-', remark:'Needs improvement' },
+  { subject:'Physical Ed.',   teacher:'Mr. Kasonde', score:90, grade:'A+', remark:'Exceptional effort' }
+];
+
+var INVOICES = [
+  { id:'INV-0142', student:'Alex Mwansa',   grade:'10B', desc:'Term 2 Tuition',            amount:'K6,000',  issued:'01 Apr', due:'15 Jul', status:'Partial' },
+  { id:'INV-0141', student:'Brenda Nkosi',  grade:'10B', desc:'Term 2 Tuition + Activity', amount:'K6,800',  issued:'01 Apr', due:'15 Jul', status:'Paid' },
+  { id:'INV-0140', student:'Chanda Zulu',   grade:'9A',  desc:'Term 2 Tuition',            amount:'K6,000',  issued:'01 Apr', due:'30 Jun', status:'Overdue' },
+  { id:'INV-0139', student:'David Phiri',   grade:'11C', desc:'Term 2 Tuition',            amount:'K6,000',  issued:'01 Apr', due:'15 Jul', status:'Pending' },
+  { id:'INV-0138', student:'Evelyn Tembo',  grade:'8B',  desc:'Term 2 Full Balance',       amount:'K12,000', issued:'01 Apr', due:'15 Jun', status:'Overdue' },
+  { id:'INV-0137', student:'Frank Banda',   grade:'10A', desc:'Term 2 Tuition',            amount:'K6,000',  issued:'01 Apr', due:'15 Jul', status:'Paid' }
+];
+
+var PAYMENTS = [
+  { id:'TXN-8841', student:'Brenda Nkosi', amount:'K6,800', method:'Bank Transfer', date:'07 Jul 09:14', by:'System',    status:'Confirmed' },
+  { id:'TXN-8840', student:'Frank Banda',  amount:'K3,000', method:'Mobile Money',  date:'07 Jul 08:52', by:'System',    status:'Confirmed' },
+  { id:'TXN-8839', student:'Grace Lungu',  amount:'K6,000', method:'Cash',          date:'06 Jul 14:30', by:'Mr. Banda', status:'Confirmed' },
+  { id:'TXN-8838', student:'Henry Mutale', amount:'K1,200', method:'Cheque',        date:'06 Jul 11:00', by:'Mr. Banda', status:'Processing' }
+];
+
+var CRED_LIST = [
+  { name:'Mrs. N. Chanda',    role:'Teacher', email:'chanda@school.edu',    last:'Today 07:22',  tfa:'Enabled',  status:'Active' },
+  { name:'Mr. K. Banda',      role:'Finance', email:'banda@school.edu',     last:'Yesterday',    tfa:'Enabled',  status:'Active' },
+  { name:'Alex Mwansa',       role:'Student', email:'alex@school.edu',      last:'Today 06:55',  tfa:'Disabled', status:'Active' },
+  { name:'Mr. B. Tembo',      role:'Teacher', email:'b.tembo@school.edu',   last:'94 days ago',  tfa:'Disabled', status:'Inactive' },
+  { name:'Principal Mulenga', role:'Admin',   email:'principal@school.edu', last:'Today 08:00',  tfa:'Enabled',  status:'Active' }
+];
+
+// ============================================================
+//  AUTH
+// ============================================================
+var activeRole = null;
+var activePage = null;
+
+function quickLogin(role) {
+  var map = {
+    student: ['alex@school.edu',       'student123'],
+    teacher: ['chanda@school.edu',     'teacher123'],
+    finance: ['banda@school.edu',      'finance123'],
+    admin:   ['principal@school.edu',  'admin123']
+  };
+  document.getElementById('inEmail').value = map[role][0];
+  document.getElementById('inPw').value    = map[role][1];
+  document.getElementById('loginErr').style.display = 'none';
+  doLogin();
+}
+
+function doLogin() {
+  var email = document.getElementById('inEmail').value.trim().toLowerCase();
+  var pw    = document.getElementById('inPw').value.trim();
+  var err   = document.getElementById('loginErr');
+  var c     = CREDS[email];
+  if (!c || c.pw !== pw) { err.style.display = 'block'; return; }
+  err.style.display = 'none';
+  activeRole = c.role;
+  launchApp();
+}
+
+function doLogout() {
+  document.getElementById('loginScreen').style.display = 'flex';
+  document.getElementById('appScreen').style.display = 'none';
+  document.getElementById('inEmail').value = '';
+  document.getElementById('inPw').value = '';
+  activeRole = null; activePage = null;
+}
+
+function launchApp() {
+  var u = USERS[activeRole];
+  document.documentElement.style.setProperty('--acc',   u.acc);
+  document.documentElement.style.setProperty('--accBg', u.accBg);
+
+  document.getElementById('topBadge').textContent = u.label;
+  document.getElementById('topBadge').style.background = u.accBg;
+  document.getElementById('topBadge').style.color = u.acc;
+
+  document.getElementById('topUname').textContent = u.name;
+  var av = document.getElementById('topAv');
+  av.textContent = u.initials;
+  av.style.width = '34px'; av.style.height = '34px';
+  av.style.fontSize = '13px';
+  av.style.background = u.avBg; av.style.color = u.avCol;
+
+  buildSidebar();
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('appScreen').style.display = 'block';
+  showPage(NAV[activeRole][0].items[0].id);
+}
+
+function buildSidebar() {
+  var html = '';
+  NAV[activeRole].forEach(function(group) {
+    html += '<div class="sbSection">' + group.sec + '</div>';
+    group.items.forEach(function(item) {
+      var badge = item.badge ? '<span class="sbBadge">' + item.badge + '</span>' : '';
+      html += '<div class="sbItem" id="nav-' + item.id + '" onclick="showPage(\'' + item.id + '\')">' +
+              '<span>' + item.icon + '</span>' + item.label + badge + '</div>';
+    });
+  });
+  document.getElementById('sidebar').innerHTML = html;
+}
+
+function showPage(id) {
+  if (activePage) {
+    var old = document.getElementById('nav-' + activePage);
+    if (old) old.classList.remove('active');
+  }
+  activePage = id;
+  var el = document.getElementById('nav-' + id);
+  if (el) el.classList.add('active');
+  document.getElementById('mainArea').innerHTML = buildPage(id);
+}
+
+// ============================================================
+//  HELPERS
+// ============================================================
+function bc(s) {
+  var m = { Paid:'bs', Active:'bs', Confirmed:'bs', Enabled:'bs', Open:'bs',
+            Partial:'bw', Pending:'bw', Processing:'bw', 'On Leave':'bw',
+            Overdue:'bd', Inactive:'bd', Suspended:'bd',
+            Disabled:'bg', Closed:'bg', Draft:'bw',
+            Teacher:'bi', Finance:'bd', Student:'bs', Admin:'bp' };
+  return m[s] || 'bg';
+}
+function gc(g) { return g && g[0]==='A' ? 'bs' : g && g[0]==='B' ? 'bi' : 'bw'; }
+
+function pbar(pct, color) {
+  return '<div class="pbWrap"><div class="pb" style="width:' + pct + '%;background:' + (color||'var(--acc)') + '"></div></div>';
+}
+
+// ============================================================
+//  PAGE BUILDER
+// ============================================================
+function buildPage(id) {
+
+  // ─── STUDENT DASHBOARD ───────────────────────────────────
+  if (id === 's-home') return '<div class="pageHead"><div class="pageHeadRow"><div><h2>Good morning, Alex &#128075;</h2><p>Grade 10B &bull; Second Term 2025</p></div><button class="btn btnO btnSm">&#128276; Notifications</button></div></div>' +
+    '<div class="notice noticeW"><strong>&#9888; Fee Reminder:</strong>&nbsp;Term 2 balance of K2,400 is due by 15 July 2025. Visit the Fee Balance tab for details.</div>' +
+    '<div class="statsGrid">' +
+    '<div class="statCard"><div class="statIcon" style="background:#d4edda;color:#155724">&#128203;</div><div class="statVal">78%</div><div class="statLbl">Average Grade</div><div class="statTrend" style="color:#1D9E75">&#8593; +4% this term</div></div>' +
+    '<div class="statCard"><div class="statIcon" style="background:#d1ecf1;color:#0c5460">&#128197;</div><div class="statVal">91%</div><div class="statLbl">Attendance Rate</div><div class="statTrend" style="color:#1D9E75">&#10003; On track</div></div>' +
+    '<div class="statCard"><div class="statIcon" style="background:#f8d7da;color:#721c24">&#128179;</div><div class="statVal">K2,400</div><div class="statLbl">Outstanding Fees</div><div class="statTrend" style="color:#dc3545">&#9679; Due soon</div></div>' +
+    '<div class="statCard"><div class="statIcon" style="background:#fff3cd;color:#856404">&#128214;</div><div class="statVal">3</div><div class="statLbl">Pending Assignments</div><div class="statTrend" style="color:#856404">&#8987; This week</div></div>' +
+    '</div>' +
+    '<div class="g2">' +
+    '<div class="card"><div class="cardTitle">&#128198; Upcoming Events</div>' +
+    '<div class="listItem"><div class="dot" style="background:#1D9E75"></div><div class="lt"><div class="lm">Mathematics Test</div><div class="ls">Thursday, 10 July &bull; Period 3</div></div><span class="b bw">2 days</span></div>' +
+    '<div class="listItem"><div class="dot" style="background:#378ADD"></div><div class="lt"><div class="lm">Science Lab Report Due</div><div class="ls">Friday, 11 July &bull; Submit online</div></div><span class="b bi">3 days</span></div>' +
+    '<div class="listItem"><div class="dot" style="background:#7F77DD"></div><div class="lt"><div class="lm">Inter-school Sports Day</div><div class="ls">Monday, 14 July &bull; All day event</div></div><span class="b bp">Next week</span></div>' +
+    '</div>' +
+    '<div class="card"><div class="cardTitle">&#128172; Recent Messages</div>' +
+    '<div class="listItem"><div class="av" style="width:34px;height:34px;font-size:12px;background:#d1ecf1;color:#0c5460">NC</div><div class="lt"><div class="lm">Mrs. Chanda &mdash; Mathematics</div><div class="ls">Please review Chapter 7 before Thursday...</div></div><span class="b bd">New</span></div>' +
+    '<div class="listItem"><div class="av" style="width:34px;height:34px;font-size:12px;background:#d4edda;color:#155724">JM</div><div class="lt"><div class="lm">Mr. Mwale &mdash; English</div><div class="ls">Great essay submission! Here is your feedback...</div></div><span class="b bg">Yesterday</span></div>' +
+    '</div></div>';
+
+  // ─── STUDENT RESULTS ─────────────────────────────────────
+  if (id === 's-results') {
+    var html = '<div class="pageHead"><h2>My Results</h2><p>Academic performance &mdash; Second Term 2025</p></div>' +
+    '<div class="g2" style="margin-bottom:16px">' +
+    '<div class="card" style="display:flex;align-items:center;gap:24px">' +
+    '<div style="text-align:center"><div style="font-size:50px;font-weight:700;color:#1D9E75;line-height:1">78%</div><div style="font-size:12px;color:#888;margin-top:4px">Overall Average</div></div>' +
+    '<div><div style="font-size:13px;color:#555">Class Position</div><div style="font-size:22px;font-weight:700;color:#1a1a2e;margin-top:2px">5th / 32</div><div style="margin-top:10px"><span class="b bs">B+ Standing</span></div></div>' +
+    '</div>' +
+    '<div class="card"><div class="cardTitle">Grade Distribution</div>';
+    RESULTS.forEach(function(r) {
+      var color = r.score >= 85 ? '#1D9E75' : r.score >= 70 ? '#378ADD' : '#f0a500';
+      html += '<div style="display:flex;align-items:center;gap:10px;margin-bottom:9px;font-size:13px">' +
+              '<span style="width:110px;color:#555;flex-shrink:0">' + r.subject + '</span>' +
+              pbar(r.score, color) +
+              '<span style="width:32px;text-align:right;font-weight:700">' + r.score + '%</span></div>';
+    });
+    html += '</div></div><div class="card"><div class="cardTitle">Subject Results</div><table><thead><tr><th>Subject</th><th>Teacher</th><th>Score</th><th>Grade</th><th>Remarks</th></tr></thead><tbody>';
+    RESULTS.forEach(function(r) {
+      html += '<tr><td><strong>' + r.subject + '</strong></td><td style="color:#555">' + r.teacher + '</td><td>' + r.score + '/100</td><td><span class="b ' + gc(r.grade) + '">' + r.grade + '</span></td><td style="color:#555">' + r.remark + '</td></tr>';
+    });
+    html += '</tbody></table></div>';
+    return html;
+  }
+
+  // ─── STUDENT ATTENDANCE ──────────────────────────────────
+  if (id === 's-attend') return '<div class="pageHead"><h2>Attendance Record</h2><p>Term 2 &mdash; July 2025</p></div>' +
+    '<div class="statsGrid">' +
+    '<div class="statCard"><div class="statVal">91%</div><div class="statLbl">Attendance Rate</div><span class="b bs" style="display:inline-block;margin-top:8px">Good Standing</span></div>' +
+    '<div class="statCard"><div class="statVal">47</div><div class="statLbl">Days Present</div><span class="b bi" style="display:inline-block;margin-top:8px">This term</span></div>' +
+    '<div class="statCard"><div class="statVal">4</div><div class="statLbl">Days Absent</div><span class="b bw" style="display:inline-block;margin-top:8px">Excused x3</span></div>' +
+    '<div class="statCard"><div class="statVal">2</div><div class="statLbl">Late Arrivals</div><span class="b bg" style="display:inline-block;margin-top:8px">Recorded</span></div>' +
+    '</div>' +
+    '<div class="card"><div class="cardTitle">&#128197; Weekly Attendance &mdash; Current Month</div>' +
+    '<table><thead><tr><th>Week</th><th>Mon</th><th>Tue</th><th>Wed</th><th>Thu</th><th>Fri</th><th>Summary</th></tr></thead><tbody>' +
+    '<tr><td><strong>Week 1 (Jun 30)</strong></td><td><span class="b bs">Present</span></td><td><span class="b bs">Present</span></td><td><span class="b bs">Present</span></td><td><span class="b bs">Present</span></td><td><span class="b bs">Present</span></td><td style="color:#555">Full week</td></tr>' +
+    '<tr><td><strong>Week 2 (Jul 7)</strong></td><td><span class="b bs">Present</span></td><td><span class="b bs">Present</span></td><td><span class="b bd">Absent</span></td><td><span class="b bs">Present</span></td><td><span class="b bs">Present</span></td><td style="color:#555">1 absence</td></tr>' +
+    '<tr><td><strong>Week 3 (Jul 14)</strong></td><td><span class="b bs">Present</span></td><td><span class="b bw">Late</span></td><td><span class="b bs">Present</span></td><td><span class="b bs">Present</span></td><td><span class="b bs">Present</span></td><td style="color:#555">1 late</td></tr>' +
+    '<tr><td><strong>Week 4 (Jul 21)</strong></td><td><span class="b bs">Present</span></td><td><span class="b bs">Present</span></td><td><span class="b bs">Present</span></td><td><span class="b bd">Absent</span></td><td><span class="b bs">Present</span></td><td style="color:#555">1 absence</td></tr>' +
+    '</tbody></table></div>';
+
+  // ─── STUDENT FEES ────────────────────────────────────────
+  if (id === 's-fees') return '<div class="pageHead"><h2>Fee Balance</h2><p>Academic Year 2025 &bull; Grade 10B</p></div>' +
+    '<div class="notice noticeW"><strong>&#9888; Payment Due:</strong>&nbsp;Term 2 balance of <strong>K2,400</strong> is due by 15 July 2025. Contact the finance office to arrange payment.</div>' +
+    '<div class="g3" style="margin-bottom:16px">' +
+    '<div class="statCard"><div class="statLbl" style="margin-bottom:5px">Total Annual Fees</div><div class="statVal">K18,000</div><div class="statLbl">Full year</div></div>' +
+    '<div class="statCard"><div class="statLbl" style="margin-bottom:5px">Amount Paid</div><div class="statVal" style="color:#1D9E75">K15,600</div><div class="statLbl">As of today</div></div>' +
+    '<div class="statCard"><div class="statLbl" style="margin-bottom:5px">Balance Due</div><div class="statVal" style="color:#E24B4A">K2,400</div><div class="statLbl">Term 2</div></div>' +
+    '</div>' +
+    '<div class="card"><div class="cardTitle">&#129534; Payment History</div><table><thead><tr><th>Date</th><th>Description</th><th>Amount</th><th>Method</th><th>Status</th></tr></thead><tbody>' +
+    '<tr><td>15 Jan 2025</td><td>Term 1 Tuition Fee</td><td><strong>K6,000</strong></td><td style="color:#555">Bank Transfer</td><td><span class="b bs">Paid</span></td></tr>' +
+    '<tr><td>03 Feb 2025</td><td>Term 1 Activity Fee</td><td><strong>K800</strong></td><td style="color:#555">Cash</td><td><span class="b bs">Paid</span></td></tr>' +
+    '<tr><td>15 Apr 2025</td><td>Term 2 Partial Payment</td><td><strong>K3,600</strong></td><td style="color:#555">Mobile Money</td><td><span class="b bs">Paid</span></td></tr>' +
+    '<tr><td>01 Jul 2025</td><td>Term 2 Remaining Balance</td><td><strong>K2,400</strong></td><td style="color:#555">&mdash;</td><td><span class="b bw">Pending</span></td></tr>' +
+    '</tbody></table></div>';
+
+  // ─── STUDENT PROGRAMME ───────────────────────────────────
+  if (id === 's-prog') return '<div class="pageHead"><h2>Class Programme</h2><p>Grade 10B &mdash; Week of 8 July 2025</p></div>' +
+    '<div class="card" style="margin-bottom:16px"><div class="cardTitle">&#128198; Weekly Timetable</div><div style="overflow-x:auto">' +
+    '<table><thead><tr><th>Time</th><th>Monday</th><th>Tuesday</th><th>Wednesday</th><th>Thursday</th><th>Friday</th></tr></thead><tbody>' +
+    '<tr><td style="color:#888;font-size:12px;white-space:nowrap">07:30&ndash;08:20</td><td>Mathematics</td><td>English</td><td>Science</td><td>Mathematics</td><td>Civics</td></tr>' +
+    '<tr><td style="color:#888;font-size:12px;white-space:nowrap">08:20&ndash;09:10</td><td>English</td><td>Science</td><td>Social Studies</td><td>English</td><td>Physical Ed.</td></tr>' +
+    '<tr><td style="color:#888;font-size:12px;white-space:nowrap">09:10&ndash;09:30</td><td colspan="5" style="text-align:center;color:#888;font-style:italic">&mdash; Break &mdash;</td></tr>' +
+    '<tr><td style="color:#888;font-size:12px;white-space:nowrap">09:30&ndash;10:20</td><td>Science</td><td>Mathematics</td><td>English</td><td>Social Studies</td><td>Mathematics</td></tr>' +
+    '<tr><td style="color:#888;font-size:12px;white-space:nowrap">10:20&ndash;11:10</td><td>Social Studies</td><td>Civics</td><td>Mathematics</td><td>Science</td><td>English</td></tr>' +
+    '<tr><td style="color:#888;font-size:12px;white-space:nowrap">11:10&ndash;12:00</td><td>Physical Ed.</td><td>Social Studies</td><td>Civics</td><td>Physical Ed.</td><td>Science</td></tr>' +
+    '</tbody></table></div></div>' +
+    '<div class="card"><div class="cardTitle">&#128205; Class Trips &amp; Events</div>' +
+    '<div class="listItem"><div class="dot" style="background:#7F77DD"></div><div class="lt"><div class="lm">Science Museum Field Trip</div><div class="ls">28 July 2025 &bull; Grade 10B &bull; K150 per student &bull; Permission slip required</div></div><span class="b bp">Approved</span></div>' +
+    '<div class="listItem"><div class="dot" style="background:#1D9E75"></div><div class="lt"><div class="lm">Inter-school Sports Day</div><div class="ls">5 August 2025 &bull; Full day &bull; Selection trials: 20 July</div></div><span class="b bs">Open</span></div>' +
+    '</div>';
+
+  // ─── STUDENT MESSAGES ────────────────────────────────────
+  if (id === 's-msg') return '<div class="pageHead"><h2>Messages</h2><p>Communication with your teachers</p></div>' +
+    '<div style="display:grid;grid-template-columns:220px 1fr;gap:16px;height:560px">' +
+    '<div class="card" style="padding:0;overflow:hidden">' +
+    '<div style="padding:12px 16px;border-bottom:1px solid #e8e8e8;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#888">Conversations</div>' +
+    '<div style="padding:11px 14px;border-bottom:1px solid #f0f2f5;cursor:pointer;background:#edf7f3;border-left:3px solid #1D9E75"><div style="display:flex;align-items:center;gap:9px"><div class="av" style="width:30px;height:30px;font-size:11px;background:#d1ecf1;color:#0c5460">NC</div><div style="flex:1;min-width:0"><div style="font-size:13px;font-weight:600">Mrs. Chanda</div><div style="font-size:11px;color:#888;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Math test prep</div></div><div style="font-size:11px;color:#aaa">2m</div></div></div>' +
+    '<div style="padding:11px 14px;border-bottom:1px solid #f0f2f5;cursor:pointer"><div style="display:flex;align-items:center;gap:9px"><div class="av" style="width:30px;height:30px;font-size:11px;background:#d4edda;color:#155724">JM</div><div style="flex:1;min-width:0"><div style="font-size:13px;font-weight:600">Mr. Mwale</div><div style="font-size:11px;color:#888;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Essay feedback</div></div><div style="font-size:11px;color:#aaa">1h</div></div></div>' +
+    '<div style="padding:11px 14px;cursor:pointer"><div style="display:flex;align-items:center;gap:9px"><div class="av" style="width:30px;height:30px;font-size:11px;background:#e2d9f3;color:#432874">SP</div><div style="flex:1;min-width:0"><div style="font-size:13px;font-weight:600">Ms. Phiri</div><div style="font-size:11px;color:#888;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Lab report</div></div><div style="font-size:11px;color:#aaa">Yesterday</div></div></div>' +
+    '</div>' +
+    '<div class="card" style="display:flex;flex-direction:column;padding:0;overflow:hidden">' +
+    '<div style="padding:14px 18px;border-bottom:1px solid #e8e8e8;display:flex;align-items:center;gap:10px"><div class="av" style="width:36px;height:36px;font-size:13px;background:#d1ecf1;color:#0c5460">NC</div><div><div style="font-weight:700">Mrs. Chanda</div><div style="font-size:12px;color:#888">Mathematics Teacher &bull; Grade 10</div></div></div>' +
+    '<div style="flex:1;padding:18px;overflow-y:auto">' +
+    '<div class="msgMeta">Mrs. Chanda &bull; Mon 07 Jul, 14:32</div><div class="msgBubble recv">Hi Alex, just a reminder that the Chapter 7 test is on Thursday. Please review integration by parts and the sample problems I gave you last week.</div>' +
+    '<div class="msgMeta" style="text-align:right">You &bull; Mon 07 Jul, 15:10</div><div class="msgBubble sent">Thank you Mrs. Chanda! I will go through all the practice problems tonight. Is the test only Chapter 7 or will it include Chapter 6 as well?</div>' +
+    '<div class="msgMeta">Mrs. Chanda &bull; Mon 07 Jul, 15:45</div><div class="msgBubble recv">Good question! Focus on Chapter 7 but there may be 1-2 revision questions from Chapter 6. Prepare well!</div>' +
+    '</div>' +
+    '<div style="padding:12px 16px;border-top:1px solid #e8e8e8"><div class="formRow"><input class="formInput" type="text" placeholder="Type a message to your teacher..."><button class="btn btnP btnSm">&#9658; Send</button></div></div>' +
+    '</div></div>';
+
+  // ─── TEACHER DASHBOARD ───────────────────────────────────
+  if (id === 't-home') return '<div class="pageHead"><div class="pageHeadRow"><div><h2>Good morning, Mrs. Chanda &#128218;</h2><p>Mathematics Department &bull; Grade 10A &amp; 10B</p></div><button class="btn btnO btnSm">&#128197; View Schedule</button></div></div>' +
+    '<div class="statsGrid">' +
+    '<div class="statCard"><div class="statIcon" style="background:#d1ecf1;color:#0c5460">&#128101;</div><div class="statVal">62</div><div class="statLbl">Total Students</div></div>' +
+    '<div class="statCard"><div class="statIcon" style="background:#f8d7da;color:#721c24">&#128196;</div><div class="statVal">3</div><div class="statLbl">Pending Submissions</div></div>' +
+    '<div class="statCard"><div class="statIcon" style="background:#e2d9f3;color:#432874">&#128172;</div><div class="statVal">5</div><div class="statLbl">Unread Messages</div></div>' +
+    '<div class="statCard"><div class="statIcon" style="background:#fff3cd;color:#856404">&#128205;</div><div class="statVal">1</div><div class="statLbl">Trip Pending</div></div>' +
+    '</div>' +
+    '<div class="g2">' +
+    '<div class="card"><div class="cardTitle">&#128336; Today\'s Schedule</div>' +
+    '<div class="listItem"><div style="width:95px;font-size:12px;color:#888;flex-shrink:0">07:30&ndash;08:20</div><div class="lt"><div class="lm">Grade 10A &bull; Mathematics</div><div class="ls">Room 12</div></div></div>' +
+    '<div class="listItem"><div style="width:95px;font-size:12px;color:#888;flex-shrink:0">09:30&ndash;10:20</div><div class="lt"><div class="lm">Grade 10B &bull; Mathematics</div><div class="ls">Room 12</div></div></div>' +
+    '<div class="listItem"><div style="width:95px;font-size:12px;color:#888;flex-shrink:0">10:20&ndash;11:10</div><div class="lt"><div class="lm">Grade 11 &bull; Advanced Math</div><div class="ls">Room 7</div></div></div>' +
+    '<div class="listItem"><div style="width:95px;font-size:12px;color:#888;flex-shrink:0">14:00&ndash;15:00</div><div class="lt"><div class="lm">Staff Meeting</div><div class="ls">Conference Room</div></div></div>' +
+    '</div>' +
+    '<div class="card"><div class="cardTitle">&#128203; Pending Actions</div>' +
+    '<div class="listItem"><div class="dot" style="background:#E24B4A"></div><div class="lt"><div class="lm">Upload Term 2 results &mdash; Grade 10A</div><div class="ls">Deadline: 12 July 2025</div></div><span class="b bd">Urgent</span></div>' +
+    '<div class="listItem"><div class="dot" style="background:#f0a500"></div><div class="lt"><div class="lm">Submit attendance &mdash; Wednesday</div><div class="ls">3 students unrecorded</div></div><span class="b bw">Today</span></div>' +
+    '<div class="listItem"><div class="dot" style="background:#378ADD"></div><div class="lt"><div class="lm">Grade Assignment #4 submissions</div><div class="ls">18 / 31 submitted</div></div><span class="b bi">In progress</span></div>' +
+    '</div></div>';
+
+  // ─── TEACHER UPLOAD RESULTS ──────────────────────────────
+  if (id === 't-results') {
+    var html = '<div class="pageHead"><h2>Upload Results</h2><p>Enter and submit student assessment scores</p></div>' +
+    '<div class="g2" style="margin-bottom:0">' +
+    '<div class="card"><div class="cardTitle">Assessment Details</div>' +
+    '<div style="display:flex;flex-direction:column;gap:12px">' +
+    '<div><label class="formLabel">Class</label><select class="formSelect" style="width:100%"><option>Grade 10A</option><option selected>Grade 10B</option><option>Grade 11</option></select></div>' +
+    '<div><label class="formLabel">Assessment Type</label><select class="formSelect" style="width:100%"><option>End of Term Exam</option><option>Mid-Term Test</option><option>Class Test</option><option>Assignment</option></select></div>' +
+    '<div><label class="formLabel">Subject</label><input class="formInput" style="width:100%" value="Mathematics"></div>' +
+    '<div><label class="formLabel">Date</label><input class="formInput" style="width:100%" type="date" value="2025-07-10"></div>' +
+    '<div><label class="formLabel">Max Score</label><input class="formInput" style="width:100%" type="number" value="100"></div>' +
+    '<button class="btn btnP" style="width:100%">&#8679; Upload CSV File</button>' +
+    '</div></div>' +
+    '<div class="card"><div class="cardTitle">Grade 10B &mdash; Manual Entry</div>' +
+    '<table><thead><tr><th>#</th><th>Student</th><th>Score (/100)</th><th>Grade</th></tr></thead><tbody>';
+    STUDENTS.filter(function(s){ return s.grade === '10B'; }).forEach(function(s, i) {
+      var sc = s.avg;
+      var g = sc>=90?'A+':sc>=80?'A':sc>=75?'B+':sc>=70?'B':sc>=65?'B-':'C+';
+      html += '<tr><td style="color:#888">' + String(i+1).padStart(2,'0') + '</td><td>' + s.name + '</td>' +
+              '<td><input type="number" value="' + sc + '" style="width:65px;padding:4px 8px;border:1px solid #ddd;border-radius:5px;font-size:13px"></td>' +
+              '<td><span class="b ' + gc(g) + '">' + g + '</span></td></tr>';
+    });
+    html += '</tbody></table><button class="btn btnP btnSm" style="margin-top:14px">&#10003; Save &amp; Submit Results</button></div></div>';
+    return html;
+  }
+
+  // ─── TEACHER MARK ATTENDANCE ─────────────────────────────
+  if (id === 't-attend') {
+    var html = '<div class="pageHead"><h2>Mark Attendance</h2><p>Grade 10B &bull; 8 July 2025 &bull; Period 1</p></div>' +
+    '<div class="card"><div class="cardTitle">Student List &mdash; ' + STUDENTS.length + ' Students</div>' +
+    '<table><thead><tr><th>#</th><th>Student Name</th><th>Grade</th><th>Present</th><th>Absent</th><th>Late</th><th>Note</th></tr></thead><tbody>';
+    STUDENTS.forEach(function(s, i) {
+      html += '<tr><td style="color:#888">' + String(i+1).padStart(2,'0') + '</td><td><strong>' + s.name + '</strong></td><td style="color:#555">' + s.grade + '</td>' +
+              '<td><input type="radio" name="att' + i + '" value="P" checked></td>' +
+              '<td><input type="radio" name="att' + i + '" value="A"></td>' +
+              '<td><input type="radio" name="att' + i + '" value="L"></td>' +
+              '<td><input class="formInput" type="text" placeholder="Note..." style="padding:5px 9px;font-size:12px;width:130px"></td></tr>';
+    });
+    html += '</tbody></table><div style="display:flex;gap:10px;margin-top:14px"><button class="btn btnP">&#10003; Submit Attendance</button><button class="btn btnO">&#8635; Reset</button></div></div>';
+    return html;
+  }
+
+  // ─── TEACHER ASSIGNMENTS ─────────────────────────────────
+  if (id === 't-assign') return '<div class="pageHead"><div class="pageHeadRow"><div><h2>Assignments</h2><p>Create and manage class assignments</p></div><button class="btn btnP">+ New Assignment</button></div></div>' +
+    '<div class="uploadZone"><span class="uIcon">&#9650;</span><div class="uTitle">Upload Assignment Materials</div><div class="uSub">Drag &amp; drop PDF, Word, or image files &mdash; or click to browse</div></div>' +
+    '<div class="card"><div class="cardTitle">Active Assignments</div>' +
+    '<table><thead><tr><th>Title</th><th>Class</th><th>Due Date</th><th>Submissions</th><th>Status</th><th>Action</th></tr></thead><tbody>' +
+    '<tr><td><strong>Chapter 7 Practice Problems</strong></td><td style="color:#555">Grade 10A</td><td>10 Jul 2025</td><td>28/31</td><td><span class="b bs">Open</span></td><td><button class="btn btnO btnSm">&#128065; View</button></td></tr>' +
+    '<tr><td><strong>Essay: Climate Change</strong></td><td style="color:#555">Grade 10B</td><td>12 Jul 2025</td><td>18/32</td><td><span class="b bs">Open</span></td><td><button class="btn btnO btnSm">&#128065; View</button></td></tr>' +
+    '<tr><td><strong>Mid-term Revision Sheet</strong></td><td style="color:#555">Grade 11</td><td>15 Jul 2025</td><td>0/28</td><td><span class="b bw">Draft</span></td><td><button class="btn btnO btnSm">&#128065; View</button></td></tr>' +
+    '<tr><td><strong>Chapter 6 Homework</strong></td><td style="color:#555">Grade 10A</td><td>5 Jul 2025</td><td>31/31</td><td><span class="b bg">Closed</span></td><td><button class="btn btnO btnSm">&#128065; View</button></td></tr>' +
+    '</tbody></table></div>';
+
+  // ─── TEACHER CLASS PROGRAMME ─────────────────────────────
+  if (id === 't-prog') return '<div class="pageHead"><h2>Class Programme</h2><p>Manage timetable and class events</p></div>' +
+    '<div class="g2">' +
+    '<div class="card"><div class="cardTitle">&#128205; Class Trips &amp; Events</div>' +
+    '<div class="listItem"><div class="dot" style="background:#7F77DD"></div><div class="lt"><div class="lm">Science Museum Field Trip</div><div class="ls">28 July 2025 &bull; Grade 10B &bull; 42 students registered</div></div><span class="b bp">Approved</span></div>' +
+    '<div class="listItem"><div class="dot" style="background:#f0a500"></div><div class="lt"><div class="lm">Math Olympiad Preparation</div><div class="ls">Every Saturday &bull; 08:00&ndash;10:00 &bull; Optional</div></div><span class="b bw">Ongoing</span></div>' +
+    '<button class="btn btnO btnSm" style="margin-top:14px">+ Propose New Event</button></div>' +
+    '<div class="card"><div class="cardTitle">&#128336; My Weekly Schedule</div>' +
+    '<div style="display:flex;gap:12px;padding:9px 0;border-bottom:1px solid #f0f2f5"><div style="width:75px;font-weight:700;font-size:13px">Monday</div><div style="font-size:13px;color:#555">10A Math (07:30), 10B Math (09:30)</div></div>' +
+    '<div style="display:flex;gap:12px;padding:9px 0;border-bottom:1px solid #f0f2f5"><div style="width:75px;font-weight:700;font-size:13px">Tuesday</div><div style="font-size:13px;color:#555">11 Adv Math (08:20), Dept Mtg (14:00)</div></div>' +
+    '<div style="display:flex;gap:12px;padding:9px 0;border-bottom:1px solid #f0f2f5"><div style="width:75px;font-weight:700;font-size:13px">Wednesday</div><div style="font-size:13px;color:#555">10A Math (07:30), 10B Math (09:30)</div></div>' +
+    '<div style="display:flex;gap:12px;padding:9px 0;border-bottom:1px solid #f0f2f5"><div style="width:75px;font-weight:700;font-size:13px">Thursday</div><div style="font-size:13px;color:#555">10B Test (09:30), Staff Dev (14:00)</div></div>' +
+    '<div style="display:flex;gap:12px;padding:9px 0"><div style="width:75px;font-weight:700;font-size:13px">Friday</div><div style="font-size:13px;color:#555">10A Math (07:30), 11 Math (09:30)</div></div>' +
+    '</div></div>';
+
+  // ─── TEACHER MESSAGES ────────────────────────────────────
+  if (id === 't-msg') return '<div class="pageHead"><h2>Messages</h2><p>Communication with students and staff</p></div>' +
+    '<div style="display:grid;grid-template-columns:220px 1fr;gap:16px;height:560px">' +
+    '<div class="card" style="padding:0;overflow:hidden">' +
+    '<div style="padding:12px 16px;border-bottom:1px solid #e8e8e8;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#888">Inbox (5 unread)</div>' +
+    '<div style="padding:11px 14px;border-bottom:1px solid #f0f2f5;cursor:pointer;background:#e8f3fc;border-left:3px solid #378ADD"><div style="display:flex;align-items:center;gap:9px"><div class="av" style="width:30px;height:30px;font-size:11px;background:#d4edda;color:#155724">AM</div><div style="flex:1;min-width:0"><div style="font-size:13px;font-weight:600">Alex Mwansa</div><div style="font-size:11px;color:#888;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Chapter 7 question</div></div><div style="font-size:11px;color:#aaa">2m</div></div></div>' +
+    '<div style="padding:11px 14px;border-bottom:1px solid #f0f2f5;cursor:pointer"><div style="display:flex;align-items:center;gap:9px"><div class="av" style="width:30px;height:30px;font-size:11px;background:#d1ecf1;color:#0c5460">BN</div><div style="flex:1;min-width:0"><div style="font-size:13px;font-weight:600">Brenda Nkosi</div><div style="font-size:11px;color:#888;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Assignment extension</div></div><div style="font-size:11px;color:#aaa">45m</div></div></div>' +
+    '<div style="padding:11px 14px;cursor:pointer"><div style="display:flex;align-items:center;gap:9px"><div class="av" style="width:30px;height:30px;font-size:11px;background:#e2d9f3;color:#432874">DP</div><div style="flex:1;min-width:0"><div style="font-size:13px;font-weight:600">David Phiri</div><div style="font-size:11px;color:#888;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Extra help needed</div></div><div style="font-size:11px;color:#aaa">2h</div></div></div>' +
+    '</div>' +
+    '<div class="card" style="display:flex;flex-direction:column;padding:0;overflow:hidden">' +
+    '<div style="padding:14px 18px;border-bottom:1px solid #e8e8e8;display:flex;align-items:center;gap:10px"><div class="av" style="width:36px;height:36px;font-size:13px;background:#d4edda;color:#155724">AM</div><div><div style="font-weight:700">Alex Mwansa</div><div style="font-size:12px;color:#888">Grade 10B Student</div></div></div>' +
+    '<div style="flex:1;padding:18px;overflow-y:auto"><div class="msgMeta">Alex Mwansa &bull; 08 Jul, 13:22</div><div class="msgBubble recv">Good afternoon Mrs. Chanda. I am reviewing Chapter 7. Do I need to know the formula derivations or just the final formulas for the test?</div><div class="msgMeta" style="text-align:right">You &bull; 08 Jul, 14:05</div><div class="msgBubble sent">Hi Alex! You only need to apply the formulas &mdash; derivations will not be tested. Focus on worked examples in sections 7.3 and 7.4. Well done for preparing early!</div></div>' +
+    '<div style="padding:12px 16px;border-top:1px solid #e8e8e8"><div class="formRow"><input class="formInput" type="text" placeholder="Reply to student..."><button class="btn btnP btnSm">&#9658; Send</button></div></div>' +
+    '</div></div>';
+
+  // ─── FINANCE DASHBOARD ───────────────────────────────────
+  if (id === 'f-home') {
+    var html = '<div class="pageHead"><h2>Finance Dashboard</h2><p>Academic Year 2025 &bull; Second Term</p></div>' +
+    '<div class="statsGrid">' +
+    '<div class="statCard"><div class="statIcon" style="background:#d1ecf1;color:#0c5460">&#128196;</div><div class="statVal">K2.4M</div><div class="statLbl">Total Billed</div></div>' +
+    '<div class="statCard"><div class="statIcon" style="background:#d4edda;color:#155724">&#128176;</div><div class="statVal">K1.9M</div><div class="statLbl">Collected</div></div>' +
+    '<div class="statCard"><div class="statIcon" style="background:#f8d7da;color:#721c24">&#9888;</div><div class="statVal">K485K</div><div class="statLbl">Outstanding</div></div>' +
+    '<div class="statCard"><div class="statIcon" style="background:#e2d9f3;color:#432874">&#128202;</div><div class="statVal">94%</div><div class="statLbl">Collection Rate</div></div>' +
+    '</div>' +
+    '<div class="g2">' +
+    '<div class="card"><div class="cardTitle">&#9888; Students with Outstanding Fees</div>' +
+    '<table><thead><tr><th>Student</th><th>Grade</th><th>Balance</th><th>Status</th></tr></thead><tbody>';
+    STUDENTS.filter(function(s){ return s.feeStatus !== 'Paid'; }).forEach(function(s) {
+      var bal = s.feeStatus === 'Partial' ? 'K2,400' : 'K6,000';
+      var st  = s.feeStatus === 'Overdue' ? 'Final Notice' : s.feeStatus === 'Partial' ? 'Notice Sent' : 'New';
+      html += '<tr><td><strong>' + s.name + '</strong></td><td style="color:#555">' + s.grade + '</td><td style="font-weight:700;color:#E24B4A">' + bal + '</td><td><span class="b ' + bc(s.feeStatus) + '">' + st + '</span></td></tr>';
+    });
+    html += '</tbody></table></div>' +
+    '<div class="card"><div class="cardTitle">&#128202; Monthly Collections</div>';
+    [['Jan','K620K',90],['Feb','K280K',40],['Mar','K180K',26],['Apr','K480K',70],['May','K220K',32],['Jun','K120K',17]].forEach(function(row) {
+      html += '<div style="display:flex;align-items:center;gap:10px;margin-bottom:9px;font-size:13px"><span style="width:30px;color:#555">' + row[0] + '</span>' + pbar(row[2]) + '<span style="width:46px;text-align:right;font-weight:700">' + row[1] + '</span></div>';
+    });
+    html += '</div></div>';
+    return html;
+  }
+
+  // ─── FINANCE INVOICES ────────────────────────────────────
+  if (id === 'f-invoices') {
+    var html = '<div class="pageHead"><div class="pageHeadRow"><div><h2>Invoices</h2><p>Manage student fee invoices</p></div><button class="btn btnP">+ Generate Invoice</button></div></div>' +
+    '<div class="card" style="margin-bottom:16px"><div style="display:flex;gap:10px;flex-wrap:wrap"><input class="formInput" type="text" placeholder="Search student or invoice number..." style="max-width:280px"><select class="formSelect"><option>All Status</option><option>Paid</option><option>Pending</option><option>Overdue</option></select><button class="btn btnO btnSm">&#8659; Export</button></div></div>' +
+    '<div class="card"><div class="cardTitle">All Invoices</div><table><thead><tr><th>Invoice #</th><th>Student</th><th>Grade</th><th>Description</th><th>Amount</th><th>Issued</th><th>Due</th><th>Status</th></tr></thead><tbody>';
+    INVOICES.forEach(function(inv) {
+      html += '<tr><td style="color:#378ADD;font-weight:700">' + inv.id + '</td><td><strong>' + inv.student + '</strong></td><td style="color:#555">' + inv.grade + '</td><td style="color:#555">' + inv.desc + '</td><td style="font-weight:700">' + inv.amount + '</td><td>' + inv.issued + '</td><td>' + inv.due + '</td><td><span class="b ' + bc(inv.status) + '">' + inv.status + '</span></td></tr>';
+    });
+    html += '</tbody></table></div>';
+    return html;
+  }
+
+  // ─── FINANCE FEE TRACKING ────────────────────────────────
+  if (id === 'f-fees') {
+    var html = '<div class="pageHead"><h2>Fee Tracking</h2><p>Monitor payments and outstanding balances</p></div>' +
+    '<div class="notice noticeI"><strong>&#8505; Term 2 deadline:</strong>&nbsp;15 July 2025. Currently 14 students have outstanding balances.</div>' +
+    '<div class="g3" style="margin-bottom:16px"><div class="statCard"><div class="statLbl" style="margin-bottom:4px">Total Students</div><div class="statVal">312</div><div class="statLbl">Enrolled</div></div><div class="statCard"><div class="statLbl" style="margin-bottom:4px">Fully Paid</div><div class="statVal" style="color:#1D9E75">298</div><div class="statLbl">95.5%</div></div><div class="statCard"><div class="statLbl" style="margin-bottom:4px">Outstanding</div><div class="statVal" style="color:#E24B4A">14</div><div class="statLbl">Require follow-up</div></div></div>' +
+    '<div class="card"><div class="cardTitle">Fee Collection by Grade</div>';
+    [['Grade 8','K315,000','K320,000',98],['Grade 9','K342,000','K360,000',95],['Grade 10','K386,400','K420,000',92],['Grade 11','K376,000','K400,000',94],['Grade 12','K360,100','K380,000',95]].forEach(function(row) {
+      var color = row[3] >= 95 ? '#1D9E75' : '#f0a500';
+      html += '<div style="display:flex;align-items:center;gap:12px;margin-bottom:11px"><div style="width:70px;font-weight:700;font-size:13px">' + row[0] + '</div>' + pbar(row[3], color) + '<div style="width:34px;text-align:right;font-size:13px;font-weight:700">' + row[3] + '%</div><div style="width:105px;text-align:right;font-size:12px;color:#888">' + row[1] + ' / ' + row[2] + '</div></div>';
+    });
+    html += '<button class="btn btnP btnSm" style="margin-top:8px">&#9993; Send Payment Reminders</button></div>';
+    return html;
+  }
+
+  // ─── FINANCE REPORTS ─────────────────────────────────────
+  if (id === 'f-reports') return '<div class="pageHead"><div class="pageHeadRow"><div><h2>Financial Reports</h2><p>Term and annual summaries</p></div><button class="btn btnO">&#8659; Export PDF</button></div></div>' +
+    '<div class="g2">' +
+    '<div class="card"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px"><div style="font-size:15px;font-weight:700">Term 1 Report 2025</div><span class="b bs">Finalised</span></div><div style="font-size:12px;color:#888;margin-bottom:8px">Jan &ndash; Mar 2025</div><div style="font-size:13.5px;color:#555">K820,000 collected &bull; 98.2% collection rate</div><button class="btn btnO btnSm" style="margin-top:12px">&#128196; View Report</button></div>' +
+    '<div class="card"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px"><div style="font-size:15px;font-weight:700">Term 2 Report 2025</div><span class="b bw">In Progress</span></div><div style="font-size:12px;color:#888;margin-bottom:8px">Apr &ndash; Jun 2025</div><div style="font-size:13.5px;color:#555">K1.1M projected &bull; 94% collected so far</div><button class="btn btnO btnSm" style="margin-top:12px">&#128196; View Report</button></div>' +
+    '<div class="card"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px"><div style="font-size:15px;font-weight:700">Annual Report 2024</div><span class="b bg">Archived</span></div><div style="font-size:12px;color:#888;margin-bottom:8px">Full Year 2024</div><div style="font-size:13.5px;color:#555">K2.3M total &bull; 96% collection rate</div><button class="btn btnO btnSm" style="margin-top:12px">&#128196; View Report</button></div>' +
+    '<div class="card"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px"><div style="font-size:15px;font-weight:700">Budget vs Actual 2025</div><span class="b bi">Live</span></div><div style="font-size:12px;color:#888;margin-bottom:8px">Year to Date</div><div style="font-size:13.5px;color:#555">92% budget utilisation &bull; Updated daily</div><button class="btn btnO btnSm" style="margin-top:12px">&#128196; View Report</button></div>' +
+    '</div>';
+
+  // ─── FINANCE PAYMENT RECORDS ─────────────────────────────
+  if (id === 'f-payments') {
+    var html = '<div class="pageHead"><h2>Payment Records</h2><p>All transactions &mdash; July 2025</p></div>' +
+    '<div class="card"><div class="cardTitle">Recent Transactions</div><table><thead><tr><th>Transaction ID</th><th>Student</th><th>Amount</th><th>Method</th><th>Date &amp; Time</th><th>Received by</th><th>Status</th></tr></thead><tbody>';
+    PAYMENTS.forEach(function(p) {
+      html += '<tr><td style="color:#E24B4A;font-weight:700">' + p.id + '</td><td><strong>' + p.student + '</strong></td><td style="font-weight:700">' + p.amount + '</td><td><span class="b bg">' + p.method + '</span></td><td style="color:#555">' + p.date + '</td><td style="color:#555">' + p.by + '</td><td><span class="b ' + bc(p.status) + '">' + p.status + '</span></td></tr>';
+    });
+    html += '</tbody></table></div>';
+    return html;
+  }
+
+  // ─── ADMIN DASHBOARD ─────────────────────────────────────
+  if (id === 'a-home') return '<div class="pageHead"><h2>Administration Dashboard</h2><p>St. Mary\'s Secondary School &bull; 2025 Academic Year</p></div>' +
+    '<div class="statsGrid">' +
+    '<div class="statCard"><div class="statIcon" style="background:#d4edda;color:#155724">&#127979;</div><div class="statVal">312</div><div class="statLbl">Students Enrolled</div></div>' +
+    '<div class="statCard"><div class="statIcon" style="background:#d1ecf1;color:#0c5460">&#128101;</div><div class="statVal">28</div><div class="statLbl">Teaching Staff</div></div>' +
+    '<div class="statCard"><div class="statIcon" style="background:#f8d7da;color:#721c24">&#128176;</div><div class="statVal">94%</div><div class="statLbl">Fee Collection</div></div>' +
+    '<div class="statCard"><div class="statIcon" style="background:#e2d9f3;color:#432874">&#9888;</div><div class="statVal">6</div><div class="statLbl">Open Issues</div></div>' +
+    '</div>' +
+    '<div class="g2">' +
+    '<div class="card"><div class="cardTitle">&#128202; School Overview by Grade</div>' +
+    '<div style="display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid #f0f2f5;font-size:13.5px"><strong>Grade 8</strong><span style="color:#555">64 students &bull; 3 classes &bull; 8 teachers</span></div>' +
+    '<div style="display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid #f0f2f5;font-size:13.5px"><strong>Grade 9</strong><span style="color:#555">60 students &bull; 3 classes &bull; 7 teachers</span></div>' +
+    '<div style="display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid #f0f2f5;font-size:13.5px"><strong>Grade 10</strong><span style="color:#555">62 students &bull; 3 classes &bull; 8 teachers</span></div>' +
+    '<div style="display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid #f0f2f5;font-size:13.5px"><strong>Grade 11</strong><span style="color:#555">64 students &bull; 3 classes &bull; 8 teachers</span></div>' +
+    '<div style="display:flex;justify-content:space-between;padding:9px 0;font-size:13.5px"><strong>Grade 12</strong><span style="color:#555">62 students &bull; 3 classes &bull; 7 teachers</span></div>' +
+    '</div>' +
+    '<div class="card"><div class="cardTitle">&#128276; Recent Activity</div>' +
+    '<div class="listItem"><div class="dot" style="background:#378ADD"></div><div class="lt"><div class="lm">Mrs. Chanda uploaded Term 2 results</div><div class="ls">Grade 10A &bull; 2 hours ago</div></div></div>' +
+    '<div class="listItem"><div class="dot" style="background:#1D9E75"></div><div class="lt"><div class="lm">3 new student enrollments processed</div><div class="ls">Grade 8 &bull; Today</div></div></div>' +
+    '<div class="listItem"><div class="dot" style="background:#E24B4A"></div><div class="lt"><div class="lm">Finance: 4 overdue accounts flagged</div><div class="ls">Requires action &bull; Yesterday</div></div></div>' +
+    '<div class="listItem"><div class="dot" style="background:#7F77DD"></div><div class="lt"><div class="lm">System backup completed successfully</div><div class="ls">Automated &bull; Last night 02:00</div></div></div>' +
+    '</div></div>';
+
+  // ─── ADMIN TEACHER PROFILES ──────────────────────────────
+  if (id === 'a-teachers') {
+    var html = '<div class="pageHead"><div class="pageHeadRow"><div><h2>Teacher Profiles</h2><p>' + TEACHERS.length + ' staff members registered</p></div><button class="btn btnP">+ Add Teacher</button></div></div>' +
+    '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px">';
+    TEACHERS.forEach(function(t) {
+      html += '<div class="card"><div style="display:flex;align-items:center;gap:12px;margin-bottom:12px"><div class="av" style="width:44px;height:44px;font-size:15px;background:#d1ecf1;color:#0c5460">' + t.init + '</div><div style="flex:1"><div style="font-weight:700;font-size:14px">' + t.name + '</div><div style="font-size:12px;color:#888">' + t.subject + '</div></div><span class="b ' + bc(t.status) + '">' + t.status + '</span></div>' +
+             '<div style="font-size:12px;color:#555;line-height:1.9"><div><strong>Classes:</strong> ' + t.classes + '</div><div><strong>Experience:</strong> ' + t.exp + '</div></div>' +
+             '<div style="display:flex;gap:8px;margin-top:12px"><button class="btn btnO btnSm">&#9998; Edit</button><button class="btn btnO btnSm">&#128065; View</button></div></div>';
+    });
+    html += '</div>';
+    return html;
+  }
+
+  // ─── ADMIN STUDENT REGISTRY ──────────────────────────────
+  if (id === 'a-students') {
+    var html = '<div class="pageHead"><div class="pageHeadRow"><div><h2>Student Registry</h2><p>312 students enrolled</p></div><button class="btn btnP">+ Enroll Student</button></div></div>' +
+    '<div class="card" style="margin-bottom:16px"><div style="display:flex;gap:10px;flex-wrap:wrap">' +
+    '<input class="formInput" type="text" placeholder="Search students..." style="flex:2;min-width:180px">' +
+    '<select class="formSelect"><option>All Grades</option><option>Grade 8</option><option>Grade 9</option><option>Grade 10</option><option>Grade 11</option><option>Grade 12</option></select>' +
+    '<select class="formSelect"><option>All Status</option><option>Active</option><option>Suspended</option></select></div></div>' +
+    '<div class="card"><div class="cardTitle">All Students</div><table><thead><tr><th>Student ID</th><th>Name</th><th>Grade</th><th>Guardian</th><th>Fee Status</th><th>Status</th><th>Actions</th></tr></thead><tbody>';
+    STUDENTS.forEach(function(s) {
+      html += '<tr><td style="color:#7F77DD;font-weight:700">' + s.id + '</td><td><strong>' + s.name + '</strong></td><td style="color:#555">' + s.grade + '</td><td style="color:#555">' + s.guardian + '</td><td><span class="b ' + bc(s.feeStatus) + '">' + s.feeStatus + '</span></td><td><span class="b ' + bc(s.status) + '">' + s.status + '</span></td><td><button class="btn btnO btnSm">&#9998; Edit</button></td></tr>';
+    });
+    html += '</tbody></table></div>';
+    return html;
+  }
+
+  // ─── ADMIN FINANCE OVERVIEW ──────────────────────────────
+  if (id === 'a-finance') {
+    var html = '<div class="pageHead"><h2>Finance Overview</h2><p>Administrative summary &mdash; 2025 Academic Year</p></div>' +
+    '<div class="g4" style="margin-bottom:16px">' +
+    '<div class="statCard"><div class="statLbl" style="margin-bottom:4px">Annual Budget</div><div class="statVal">K4.8M</div><span class="b bi" style="display:inline-block;margin-top:8px">Allocated</span></div>' +
+    '<div class="statCard"><div class="statLbl" style="margin-bottom:4px">Collected YTD</div><div class="statVal">K1.92M</div><span class="b bs" style="display:inline-block;margin-top:8px">On track</span></div>' +
+    '<div class="statCard"><div class="statLbl" style="margin-bottom:4px">Outstanding</div><div class="statVal">K485K</div><span class="b bd" style="display:inline-block;margin-top:8px">Action needed</span></div>' +
+    '<div class="statCard"><div class="statLbl" style="margin-bottom:4px">Projected Term 2</div><div class="statVal">K2.4M</div><span class="b bp" style="display:inline-block;margin-top:8px">Projected</span></div>' +
+    '</div>' +
+    '<div class="g2">' +
+    '<div class="card"><div class="cardTitle">Budget Allocation</div>';
+    [['Teacher Salaries','K2,880,000',60,'#378ADD'],['Infrastructure','K480,000',10,'#f0a500'],['Learning Materials','K384,000',8,'#1D9E75'],['Administration','K336,000',7,'#7F77DD'],['Student Welfare','K240,000',5,'#E24B4A'],['Contingency','K480,000',10,'#888']].forEach(function(row) {
+      html += '<div style="display:flex;align-items:center;gap:9px;margin-bottom:9px;font-size:13px"><div style="width:9px;height:9px;border-radius:2px;background:' + row[3] + ';flex-shrink:0"></div><span style="flex:1;color:#555;font-size:12px">' + row[0] + '</span>' + pbar(row[2], row[3]) + '<span style="width:70px;text-align:right;font-weight:700;font-size:12px">' + row[1] + '</span></div>';
+    });
+    html += '</div><div class="card"><div class="cardTitle">Finance Actions Required</div>' +
+    '<div class="listItem"><div class="dot" style="background:#E24B4A"></div><div class="lt"><div class="lm">Approve teacher salary disbursement</div><div class="ls">K240,000 &bull; Due 10 July 2025</div></div><span class="b bd">Urgent</span></div>' +
+    '<div class="listItem"><div class="dot" style="background:#f0a500"></div><div class="lt"><div class="lm">Review library renovation quote</div><div class="ls">Submitted by infrastructure team</div></div><span class="b bw">Pending</span></div>' +
+    '<div class="listItem"><div class="dot" style="background:#1D9E75"></div><div class="lt"><div class="lm">Approve 3 bursary applications</div><div class="ls">Reviewed by finance officer</div></div><span class="b bi">Ready</span></div>' +
+    '</div></div>';
+    return html;
+  }
+
+  // ─── ADMIN LOGIN CREDENTIALS ─────────────────────────────
+  if (id === 'a-creds') {
+    var html = '<div class="pageHead"><div class="pageHeadRow"><div><h2>Login Credentials</h2><p>Manage system access and user accounts</p></div><button class="btn btnP">+ Create Account</button></div></div>' +
+    '<div class="notice noticeD"><strong>&#128274; Security Notice:</strong>&nbsp;2 accounts have not been accessed in over 90 days and may need review or deactivation.</div>' +
+    '<div class="card"><div class="cardTitle">All User Accounts</div><table><thead><tr><th>Name</th><th>Role</th><th>Email</th><th>Last Login</th><th>2FA</th><th>Status</th><th>Actions</th></tr></thead><tbody>';
+    CRED_LIST.forEach(function(c) {
+      html += '<tr><td><strong>' + c.name + '</strong></td><td><span class="b ' + bc(c.role) + '">' + c.role + '</span></td><td style="color:#555;font-size:12px">' + c.email + '</td><td style="color:#555">' + c.last + '</td><td><span class="b ' + bc(c.tfa) + '">' + c.tfa + '</span></td><td><span class="b ' + bc(c.status) + '">' + c.status + '</span></td>' +
+             '<td><div style="display:flex;gap:6px"><button class="btn btnO btnSm">&#128273; Reset</button><button class="btn btnO btnSm">&#9998;</button></div></td></tr>';
+    });
+    html += '</tbody></table></div>';
+    return html;
+  }
+
+  // ─── ADMIN SYSTEM SETTINGS ───────────────────────────────
+  if (id === 'a-settings') return '<div class="pageHead"><h2>System Settings</h2><p>Configure school and platform settings</p></div>' +
+    '<div class="g2">' +
+    '<div class="card"><div class="cardTitle">&#127979; School Information</div><div style="display:flex;flex-direction:column;gap:12px">' +
+    '<div><label class="formLabel">School Name</label><input class="formInput" style="width:100%" value="St. Mary\'s Secondary School"></div>' +
+    '<div><label class="formLabel">Academic Year</label><input class="formInput" style="width:100%" value="2025"></div>' +
+    '<div><label class="formLabel">School Motto</label><input class="formInput" style="width:100%" value="Excellence in Education"></div>' +
+    '<div><label class="formLabel">Contact Email</label><input class="formInput" style="width:100%" value="admin@stmarys.edu"></div>' +
+    '<div><label class="formLabel">Phone Number</label><input class="formInput" style="width:100%" value="+260 97 123 4567"></div>' +
+    '<button class="btn btnP btnSm">&#128190; Save Changes</button></div></div>' +
+    '<div class="card"><div class="cardTitle">&#128214; Academic Settings</div><div style="display:flex;flex-direction:column;gap:12px">' +
+    '<div><label class="formLabel">Current Term</label><select class="formSelect" style="width:100%"><option>Term 1</option><option selected>Term 2</option><option>Term 3</option></select></div>' +
+    '<div><label class="formLabel">Term Start Date</label><input class="formInput" style="width:100%" type="date" value="2025-04-01"></div>' +
+    '<div><label class="formLabel">Term End Date</label><input class="formInput" style="width:100%" type="date" value="2025-07-28"></div>' +
+    '<div><label class="formLabel">Pass Mark (%)</label><input class="formInput" style="width:100%" type="number" value="50"></div>' +
+    '<div><label class="formLabel">Grading Scale</label><input class="formInput" style="width:100%" value="A, B, C, D, F"></div>' +
+    '<button class="btn btnP btnSm">&#128190; Save Changes</button></div></div>' +
+    '<div class="card"><div class="cardTitle">&#128176; Fee Settings</div><div style="display:flex;flex-direction:column;gap:12px">' +
+    '<div><label class="formLabel">Term 1 Fee (K)</label><input class="formInput" style="width:100%" type="number" value="6000"></div>' +
+    '<div><label class="formLabel">Term 2 Fee (K)</label><input class="formInput" style="width:100%" type="number" value="6000"></div>' +
+    '<div><label class="formLabel">Term 3 Fee (K)</label><input class="formInput" style="width:100%" type="number" value="6000"></div>' +
+    '<div><label class="formLabel">Late Payment Fee (K)</label><input class="formInput" style="width:100%" type="number" value="300"></div>' +
+    '<div><label class="formLabel">Bursary Fund (K)</label><input class="formInput" style="width:100%" type="number" value="120000"></div>' +
+    '<button class="btn btnP btnSm">&#128190; Save Changes</button></div></div>' +
+    '<div class="card"><div class="cardTitle">&#128276; Notification Settings</div><div style="display:flex;flex-direction:column;gap:12px">' +
+    '<div><label class="formLabel">Fee Reminders</label><select class="formSelect" style="width:100%"><option selected>Enabled &mdash; 7 days before due</option><option>Disabled</option></select></div>' +
+    '<div><label class="formLabel">Result Notifications</label><select class="formSelect" style="width:100%"><option selected>Enabled &mdash; on upload</option><option>Disabled</option></select></div>' +
+    '<div><label class="formLabel">Attendance Alerts</label><select class="formSelect" style="width:100%"><option selected>Enabled &mdash; below 85%</option><option>Disabled</option></select></div>' +
+    '<div><label class="formLabel">Event Reminders</label><select class="formSelect" style="width:100%"><option selected>Enabled &mdash; 3 days prior</option><option>Disabled</option></select></div>' +
+    '<div><label class="formLabel">System Updates</label><select class="formSelect" style="width:100%"><option selected>Admin only</option><option>All users</option></select></div>' +
+    '<button class="btn btnP btnSm">&#128190; Save Changes</button></div></div>' +
+    '</div>';
+
+  return '<div class="pageHead"><h2>Page not found</h2></div>';
+}
+</script>
+</body>
+</html>
