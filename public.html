@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hope Registry — Public Search</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Source+Sans+3:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --teal-deep:#1a4a4a;--teal-mid:#2d6e6e;--teal-soft:#4a9e9e;
+  --teal-pale:#c8e8e8;--teal-ghost:#eaf5f5;
+  --sage:#5a7a5a;--sky:#4a7fb5;--sky-light:#ccdff0;
+  --cream:#fafaf7;--white:#fff;--stone-light:#d0d8d8;
+  --text-dark:#1c2e2e;--text-mid:#3d5252;--text-soft:#6a8080;--text-muted:#9aabab;
+  --missing-bg:#fff5e6;--missing-txt:#7a4a10;
+  --unid-bg:#e8f0fa;--unid-txt:#1a3a6a;
+  --unclaimed-bg:#f0f8f0;--unclaimed-txt:#1a4a1a;
+  --shadow-sm:0 1px 4px rgba(26,74,74,.08);
+  --shadow-md:0 4px 16px rgba(26,74,74,.12);
+  --shadow-lg:0 12px 40px rgba(26,74,74,.16);
+  --radius-lg:14px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Source Sans 3',sans-serif;background:var(--cream);color:var(--text-dark);min-height:100vh;display:flex;flex-direction:column;line-height:1.6}
+
+/* HEADER */
+.site-header{background:var(--teal-deep);color:#fff;position:sticky;top:0;z-index:200;border-bottom:1px solid rgba(255,255,255,.08)}
+.header-inner{display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:54px;max-width:1100px;margin:0 auto}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+.logo-mark{width:30px;height:30px;border-radius:7px;background:var(--teal-soft);display:flex;align-items:center;justify-content:center}
+.logo-mark svg{width:16px;height:16px;fill:#fff}
+.logo-text{font-family:'Lora',serif;font-size:17px;color:#fff;letter-spacing:.2px}
+.logo-text span{color:var(--teal-pale)}
+.header-tagline{font-size:12px;color:rgba(255,255,255,.40);font-style:italic}
+
+/* TABS */
+.tabs-wrap{background:var(--white);border-bottom:1px solid var(--stone-light);position:sticky;top:54px;z-index:100}
+.tabs{max-width:1100px;margin:0 auto;display:flex;padding:0 2rem}
+.tab-btn{padding:14px 20px;border:none;background:transparent;font-family:'Source Sans 3',sans-serif;font-size:14px;font-weight:500;cursor:pointer;color:var(--text-soft);border-bottom:3px solid transparent;margin-bottom:-1px;transition:color .18s;display:flex;align-items:center;gap:8px}
+.tab-btn:hover{color:var(--teal-mid)}
+.tab-btn.active{color:var(--teal-deep);border-bottom-color:var(--teal-soft)}
+.tab-pill{font-size:11px;font-weight:600;padding:2px 7px;border-radius:20px;background:var(--teal-ghost);color:var(--teal-mid)}
+.tab-btn.active .tab-pill{background:var(--teal-soft);color:#fff}
+
+/* MAIN */
+.main{max-width:1100px;margin:0 auto;padding:1.5rem 2rem 2.5rem;flex:1}
+
+/* FILTER BAR */
+.filter-bar{background:var(--white);border:1px solid var(--stone-light);border-radius:var(--radius-lg);padding:1rem 1.25rem;margin-bottom:1.5rem;box-shadow:var(--shadow-sm);display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap}
+.fg{flex:1;min-width:120px}
+.fg label{display:block;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.7px;color:var(--text-soft);margin-bottom:5px}
+.fg input{width:100%;padding:9px 12px;border:1.5px solid var(--stone-light);border-radius:8px;font-family:'Source Sans 3',sans-serif;font-size:13px;color:var(--text-dark);background:var(--cream);outline:none;transition:border-color .18s,box-shadow .18s}
+.fg input:focus{border-color:var(--teal-soft);box-shadow:0 0 0 3px rgba(74,158,158,.12);background:#fff}
+.fg input::placeholder{color:var(--text-muted)}
+.btn-clear{padding:9px 16px;border-radius:8px;background:var(--cream);color:var(--text-soft);border:1.5px solid var(--stone-light);font-family:'Source Sans 3',sans-serif;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all .18s;white-space:nowrap}
+.btn-clear:hover{background:#fff;color:var(--text-dark)}
+
+/* LOADING */
+.loading-state{text-align:center;padding:3rem 1rem;color:var(--text-muted)}
+.spinner{width:32px;height:32px;border:3px solid var(--teal-ghost);border-top-color:var(--teal-soft);border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 12px}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* RESULTS */
+.results-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem}
+.results-count{font-size:13px;color:var(--text-soft)}
+.results-count strong{color:var(--text-dark);font-weight:600}
+
+/* PANELS */
+.section-panel{display:none}
+.section-panel.active{display:block}
+
+/* CHIPS */
+.status-chip{display:inline-flex;align-items:center;font-size:10px;font-weight:700;letter-spacing:.6px;padding:3px 9px;border-radius:20px;text-transform:uppercase;white-space:nowrap}
+.chip-missing{background:var(--missing-bg);color:var(--missing-txt);border:1px solid #f5c878}
+.chip-unidentified{background:var(--unid-bg);color:var(--unid-txt);border:1px solid var(--sky-light)}
+.chip-unclaimed{background:var(--unclaimed-bg);color:var(--unclaimed-txt);border:1px solid #90c890}
+.gender-tag{font-size:11px;color:var(--text-soft);background:var(--cream);border:1px solid var(--stone-light);padding:2px 8px;border-radius:20px;font-weight:500}
+
+/* EMPTY */
+.empty-state{text-align:center;padding:4rem 1rem;color:var(--text-muted);background:var(--white);border:1px solid var(--stone-light);border-radius:var(--radius-lg)}
+.empty-state svg{width:48px;height:48px;stroke:var(--stone-light);fill:none;display:block;margin:0 auto 1rem;stroke-width:1.5}
+.empty-state h3{font-family:'Lora',serif;font-size:18px;color:var(--text-soft);margin-bottom:6px}
+.empty-state p{font-size:13px}
+
+/* MISSING — GRID CARDS */
+.missing-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:16px}
+.mc{background:var(--white);border:1px solid var(--stone-light);border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow-sm);animation:cardIn .35s ease both;transition:box-shadow .2s,transform .2s,border-color .2s;display:flex;flex-direction:column}
+.mc:hover{box-shadow:var(--shadow-md);transform:translateY(-3px);border-color:var(--teal-pale)}
+@keyframes cardIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.mc-photo{width:100%;aspect-ratio:4/3;overflow:hidden;background:var(--teal-ghost);position:relative;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.mc-photo img{width:100%;height:100%;object-fit:cover;display:block}
+.mc-photo-placeholder{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:var(--text-muted);width:100%;height:100%}
+.mc-photo-placeholder svg{width:44px;height:44px;stroke:var(--teal-pale);fill:none;stroke-width:1.5}
+.mc-caseno{position:absolute;top:8px;left:8px;background:rgba(26,74,74,.78);backdrop-filter:blur(4px);color:#fff;font-size:9px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;padding:3px 8px;border-radius:5px}
+.mc-body{padding:13px 14px;flex:1;display:flex;flex-direction:column;gap:5px}
+.mc-name{font-family:'Lora',serif;font-size:16px;font-weight:500;color:var(--text-dark);line-height:1.2}
+.mc-chips{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.mc-detail-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:2px}
+.mc-detail-row span{font-size:11px;color:var(--text-soft)}
+.mc-location{font-size:11px;color:var(--text-soft);line-height:1.4}
+.mc-desc{font-size:12px;color:var(--text-soft);line-height:1.55;margin-top:4px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.mc-footer{border-top:1px solid var(--teal-ghost);padding:8px 14px;font-size:10px;color:var(--text-muted);font-style:italic;background:var(--cream)}
+
+/* ROWS — UNIDENTIFIED / UNCLAIMED */
+.row-table{background:var(--white);border:1px solid var(--stone-light);border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow-sm)}
+.row-table-head{display:grid;grid-template-columns:48px 1fr 1fr 80px 110px 28px;padding:10px 16px;gap:12px;background:var(--cream);border-bottom:1px solid var(--stone-light)}
+.row-table-head span{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text-muted)}
+.expand-row{border-bottom:1px solid var(--teal-ghost);animation:rowIn .3s ease both}
+.expand-row:last-child{border-bottom:none}
+@keyframes rowIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+.expand-row-head{display:grid;grid-template-columns:48px 1fr 1fr 80px 110px 28px;padding:11px 16px;gap:12px;align-items:center;cursor:pointer;transition:background .15s;user-select:none}
+.expand-row-head:hover{background:var(--teal-ghost)}
+.rt-thumb{width:38px;height:38px;border-radius:7px;overflow:hidden;flex-shrink:0;background:var(--teal-ghost);border:1px solid var(--teal-pale);display:flex;align-items:center;justify-content:center}
+.rt-thumb img{width:100%;height:100%;object-fit:cover}
+.rt-thumb svg{width:20px;height:20px;stroke:var(--teal-soft);fill:none;stroke-width:1.5}
+.rt-first{font-size:14px;font-weight:500;color:var(--text-dark)}
+.rt-last{font-size:14px;color:var(--text-mid)}
+.rt-age{font-size:13px;color:var(--text-soft)}
+.row-eye{width:20px;height:20px;stroke:var(--teal-soft);fill:none;stroke-width:2;flex-shrink:0;transition:transform .18s}
+.expand-row-head:hover .row-eye{transform:scale(1.2)}
+
+/* DETAIL MODAL */
+.detail-backdrop{position:fixed;inset:0;z-index:600;background:rgba(13,31,46,.55);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;padding:1rem;opacity:0;pointer-events:none;transition:opacity .25s}
+.detail-backdrop.open{opacity:1;pointer-events:all}
+.detail-modal{background:var(--white);border-radius:20px;width:100%;max-width:640px;max-height:90vh;overflow-y:auto;box-shadow:0 24px 64px rgba(13,31,46,.22);transform:translateY(24px) scale(.97);opacity:0;transition:transform .28s cubic-bezier(.34,1.4,.64,1),opacity .25s}
+.detail-backdrop.open .detail-modal{transform:translateY(0) scale(1);opacity:1}
+.dm-photo-hero{width:100%;height:220px;overflow:hidden;position:relative;background:var(--teal-ghost);display:flex;align-items:center;justify-content:center}
+.dm-photo-hero img{width:100%;height:100%;object-fit:cover;display:block}
+.dm-photo-hero-placeholder{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;color:var(--text-muted)}
+.dm-photo-hero-placeholder svg{width:52px;height:52px;stroke:var(--teal-pale);fill:none;stroke-width:1.2}
+.dm-photo-hero-placeholder span{font-size:11px;text-transform:uppercase;letter-spacing:1.2px}
+.dm-case-overlay{position:absolute;bottom:12px;left:12px;background:rgba(26,74,74,.80);backdrop-filter:blur(4px);color:#fff;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:5px 11px;border-radius:7px}
+.dm-close{position:absolute;top:12px;right:12px;width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.90);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s,transform .15s;box-shadow:0 2px 8px rgba(0,0,0,.15)}
+.dm-close:hover{background:#fff;transform:scale(1.08)}
+.dm-close svg{width:16px;height:16px;stroke:var(--text-dark);fill:none;stroke-width:2.5}
+.dm-body{padding:20px 24px 24px}
+.dm-chips{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:8px}
+.dm-name{font-family:'Lora',serif;font-size:22px;font-weight:500;color:var(--text-dark);line-height:1.2;margin-bottom:16px}
+.dm-divider{border:none;border-top:1px solid var(--stone-light);margin:14px 0}
+.dm-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px 16px;margin-bottom:14px}
+.dm-item label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text-muted);display:block;margin-bottom:3px}
+.dm-item value{font-size:13px;color:var(--text-dark);font-weight:500;display:block}
+.dm-wide{grid-column:1/-1}
+.dm-section-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text-muted);margin-bottom:6px}
+.dm-desc-box{font-size:13px;color:var(--text-mid);line-height:1.75;background:var(--cream);padding:12px 14px;border-radius:9px;border:1px solid var(--stone-light)}
+.dm-reported{font-size:11px;color:var(--text-muted);text-align:right;font-style:italic;margin-top:14px}
+
+footer{background:#0f2e2e;color:rgba(255,255,255,.30);text-align:center;padding:1rem 2rem;font-size:12px}
+.toast{position:fixed;bottom:1.5rem;right:1.5rem;z-index:9999;padding:11px 18px;border-radius:10px;font-size:13px;font-weight:500;background:var(--sage);color:#fff;display:flex;align-items:center;gap:9px;box-shadow:var(--shadow-lg);opacity:0;transform:translateY(8px);transition:all .22s;pointer-events:none}
+.toast.show{opacity:1;transform:translateY(0)}
+
+@media(max-width:700px){
+  .missing-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}
+  .row-table-head,.expand-row-head{grid-template-columns:38px 1fr 80px 24px}
+  .row-table-head span:nth-child(3),.row-table-head span:nth-child(4){display:none}
+  .rt-last,.rt-age{display:none}
+  .dm-grid{grid-template-columns:1fr 1fr}
+  .dm-photo-hero{height:160px}
+  .header-inner,.main{padding-left:1rem;padding-right:1rem}
+  .tabs{padding:0 1rem}
+  .header-tagline{display:none}
+}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <div class="logo">
+      <div class="logo-mark"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg></div>
+      <span class="logo-text">Hope <span>Registry</span></span>
+    </div>
+    <div class="header-tagline">National Missing Persons Database</div>
+  </div>
+</header>
+
+<div class="tabs-wrap">
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('missing',this)">Missing <span class="tab-pill" id="pill-missing">—</span></button>
+    <button class="tab-btn" onclick="switchTab('unidentified',this)">Unidentified <span class="tab-pill" id="pill-unidentified">—</span></button>
+    <button class="tab-btn" onclick="switchTab('unclaimed',this)">Unclaimed <span class="tab-pill" id="pill-unclaimed">—</span></button>
+  </div>
+</div>
+
+<main class="main">
+  <div class="filter-bar">
+    <div class="fg"><label>Case No.</label><input type="text" id="f-case" placeholder="HR-2025-…" oninput="applyFilters()"></div>
+    <div class="fg"><label>First Name</label><input type="text" id="f-first" placeholder="First name…" oninput="applyFilters()"></div>
+    <div class="fg"><label>Last Name</label><input type="text" id="f-last" placeholder="Last name…" oninput="applyFilters()"></div>
+    <div class="fg" style="max-width:100px"><label>Min Age</label><input type="number" id="f-age-min" placeholder="18" oninput="applyFilters()"></div>
+    <div class="fg" style="max-width:100px"><label>Max Age</label><input type="number" id="f-age-max" placeholder="60" oninput="applyFilters()"></div>
+    <button class="btn-clear" onclick="clearFilters()">✕ Clear</button>
+  </div>
+  <div id="panel-missing" class="section-panel active"></div>
+  <div id="panel-unidentified" class="section-panel"></div>
+  <div id="panel-unclaimed" class="section-panel"></div>
+</main>
+
+<footer>&copy; 2025 Hope Registry — National Missing Persons Database</footer>
+
+<!-- DETAIL MODAL -->
+<div class="detail-backdrop" id="detail-backdrop" onclick="closeBdOnBack(event)">
+  <div class="detail-modal" role="dialog" aria-modal="true">
+    <div class="dm-photo-hero" id="dm-photo-hero">
+      <button class="dm-close" onclick="closeModal()"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+      <div class="dm-case-overlay" id="dm-case-no"></div>
+    </div>
+    <div class="dm-body">
+      <div class="dm-chips" id="dm-chips"></div>
+      <div class="dm-name" id="dm-name"></div>
+      <div class="dm-grid">
+        <div class="dm-item"><label>Age</label><value id="dm-age"></value></div>
+        <div class="dm-item"><label>Gender</label><value id="dm-gender"></value></div>
+        <div class="dm-item"><label>Height</label><value id="dm-height"></value></div>
+        <div class="dm-item"><label>Weight</label><value id="dm-weight"></value></div>
+        <div class="dm-item"><label>Build</label><value id="dm-build"></value></div>
+        <div class="dm-item"><label>Complexion</label><value id="dm-complexion"></value></div>
+        <div class="dm-item"><label>Hair</label><value id="dm-hair"></value></div>
+        <div class="dm-item"><label>Eyes</label><value id="dm-eyes"></value></div>
+        <div class="dm-item dm-wide"><label>Nationality</label><value id="dm-nationality"></value></div>
+        <div class="dm-item dm-wide"><label>Scars / Marks</label><value id="dm-scars"></value></div>
+        <div class="dm-item dm-wide"><label>Clothing</label><value id="dm-clothing"></value></div>
+        <div class="dm-item dm-wide"><label>Last Known Location</label><value id="dm-location"></value></div>
+        <div class="dm-item dm-wide"><label>Date</label><value id="dm-date"></value></div>
+      </div>
+      <hr class="dm-divider">
+      <div class="dm-section-lbl">Description &amp; Circumstances</div>
+      <div class="dm-desc-box" id="dm-desc"></div>
+      <div class="dm-reported" id="dm-reported"></div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"><span id="toast-msg"></span></div>
+
+<script>
+/* ══ SUPABASE INIT ══ */
+const { createClient } = supabase;
+const sb = createClient(
+  'https://ckcpstucwliaaxezmgty.supabase.co',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNrY3BzdHVjd2xpYWF4ZXptZ3R5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc3NTM3MDIsImV4cCI6MjA5MzMyOTcwMn0.9R5mAFNFz8K43nD0Ntzn_QIILbGOFrYZM94XH9I_3sM'
+);
+const BUCKET = 'lumitruck';
+
+function photoUrl(path) {
+  if (!path) return null;
+  const { data } = sb.storage.from(BUCKET).getPublicUrl(path);
+  return data?.publicUrl || null;
+}
+
+function genCaseNo(id, created) {
+  const yr = created ? new Date(created).getFullYear() : new Date().getFullYear();
+  let h = 0; for (let i = 0; i < id.length; i++) h = ((h<<5)-h+id.charCodeAt(i))|0;
+  return `HR-${yr}-${String(Math.abs(h)%9000+1000).padStart(4,'0')}`;
+}
+
+/* ══ STATE ══ */
+let allRecords = [];
+let currentTab = 'missing';
+
+/* ══ LOAD ══ */
+async function loadRecords() {
+  ['missing','unidentified','unclaimed'].forEach(cat => {
+    document.getElementById('panel-'+cat).innerHTML =
+      `<div class="loading-state"><div class="spinner"></div>Loading records…</div>`;
+  });
+  const { data, error } = await sb.from('persons').select('*').order('created_at', { ascending: false });
+  if (error) {
+    console.error(error);
+    document.getElementById('panel-'+currentTab).innerHTML =
+      `<div class="empty-state"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/></svg><h3>Could not load records</h3><p>${error.message}</p></div>`;
+    return;
+  }
+  allRecords = data || [];
+  applyFilters();
+}
+
+/* ══ FILTERS ══ */
+function applyFilters() {
+  const caseQ  = document.getElementById('f-case').value.trim().toLowerCase();
+  const first  = document.getElementById('f-first').value.trim().toLowerCase();
+  const last   = document.getElementById('f-last').value.trim().toLowerCase();
+  const ageMin = parseFloat(document.getElementById('f-age-min').value) || 0;
+  const ageMax = parseFloat(document.getElementById('f-age-max').value) || 999;
+
+  ['missing','unidentified','unclaimed'].forEach(cat => {
+    const sub = allRecords.filter(p => {
+      if (p.category !== cat) return false;
+      if (caseQ && !genCaseNo(p.id, p.created_at).toLowerCase().includes(caseQ)) return false;
+      if (first && !(p.first_name||'').toLowerCase().includes(first)) return false;
+      if (last  && !(p.last_name ||'').toLowerCase().includes(last))  return false;
+      const ageNum = parseFloat(p.age);
+      if (p.age && !isNaN(ageNum) && (ageNum < ageMin || ageNum > ageMax)) return false;
+      return true;
+    });
+    document.getElementById('pill-'+cat).textContent = sub.length;
+    if (cat === currentTab) renderPanel(cat, sub);
+  });
+}
+
+function switchTab(tab, btn) {
+  currentTab = tab;
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.section-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('panel-'+tab).classList.add('active');
+  applyFilters();
+}
+
+/* ══ RENDER MISSING — GRID ══ */
+function renderMissing(data) {
+  if (!data.length) return emptyState();
+  return `
+    <div class="results-header"><div class="results-count"><strong>${data.length}</strong> record${data.length!==1?'s':''}</div></div>
+    <div class="missing-grid">
+      ${data.map((p,i) => {
+        const cn = genCaseNo(p.id, p.created_at);
+        const ph = photoUrl(p.photo_path);
+        const added = p.created_at ? new Date(p.created_at).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}) : '';
+        return `
+        <div class="mc" style="animation-delay:${i*.05}s">
+          <div class="mc-photo">
+            ${ph ? `<img src="${ph}" alt="${p.first_name||''} ${p.last_name||''}" loading="lazy">` :
+              `<div class="mc-photo-placeholder"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>`}
+            <span class="mc-caseno">${cn}</span>
+          </div>
+          <div class="mc-body">
+            <div class="mc-name">${p.first_name||''} ${p.last_name||''}</div>
+            <div class="mc-chips">
+              <span class="status-chip chip-missing">Missing</span>
+              ${p.gender ? `<span class="gender-tag">${p.gender}</span>` : ''}
+            </div>
+            <div class="mc-detail-row">
+              ${p.age ? `<span>Age: ${p.age}</span>` : ''}
+              ${p.height ? `<span>${p.height}</span>` : ''}
+              ${p.weight ? `<span>${p.weight}</span>` : ''}
+            </div>
+            ${p.location ? `<div class="mc-location">📍 ${p.location}</div>` : ''}
+            ${p.scars && p.scars!=='—' ? `<div class="mc-desc" style="font-size:11px;color:var(--text-muted)">Marks: ${p.scars}</div>` : ''}
+            <div class="mc-desc">${p.description||''}</div>
+          </div>
+          ${added ? `<div class="mc-footer">Reported ${added}</div>` : ''}
+        </div>`;
+      }).join('')}
+    </div>`;
+}
+
+/* ══ RENDER ROWS — UNIDENTIFIED / UNCLAIMED ══ */
+function renderRows(cat, data) {
+  if (!data.length) return emptyState();
+  const cc = {unidentified:'chip-unidentified',unclaimed:'chip-unclaimed'}[cat];
+  const cl = {unidentified:'Unidentified',unclaimed:'Unclaimed'}[cat];
+  const rows = data.map((p,i) => {
+    const ph = photoUrl(p.photo_path);
+    return `
+    <div class="expand-row" style="animation-delay:${i*.045}s">
+      <div class="expand-row-head" onclick="openDetailModal('${p.id}')" role="button" tabindex="0"
+           onkeydown="if(event.key==='Enter')openDetailModal('${p.id}')"
+           aria-label="View details for ${p.first_name||'Unknown'} ${p.last_name||''}">
+        <div class="rt-thumb">${ph ? `<img src="${ph}" alt="" loading="lazy">` : `<svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>`}</div>
+        <div class="rt-first">${p.first_name||'Unknown'}</div>
+        <div class="rt-last">${p.last_name||''}</div>
+        <div class="rt-age">${p.age||'—'}</div>
+        <div><span class="status-chip ${cc}">${cl}</span></div>
+        <svg class="row-eye" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+      </div>
+    </div>`;
+  }).join('');
+  return `
+    <div class="results-header"><div class="results-count"><strong>${data.length}</strong> record${data.length!==1?'s':''} — click a row to view full details</div></div>
+    <div class="row-table">
+      <div class="row-table-head"><span></span><span>First Name</span><span>Last Name</span><span>Age</span><span>Status</span><span></span></div>
+      ${rows}
+    </div>`;
+}
+
+function renderPanel(cat, data) {
+  document.getElementById('panel-'+cat).innerHTML =
+    cat === 'missing' ? renderMissing(data) : renderRows(cat, data);
+}
+
+function emptyState() {
+  return `<div class="empty-state"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="8" y1="11" x2="14" y2="11"/></svg><h3>No records found</h3><p>Try adjusting your search filters.</p></div>`;
+}
+
+/* ══ MODAL ══ */
+function openDetailModal(id) {
+  const p = allRecords.find(x => x.id === id);
+  if (!p) return;
+  const cn = genCaseNo(p.id, p.created_at);
+  const cc = {unidentified:'chip-unidentified',unclaimed:'chip-unclaimed'}[p.category];
+  const cl = {unidentified:'Unidentified',unclaimed:'Unclaimed'}[p.category];
+  const added = p.created_at ? new Date(p.created_at).toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'}) : '';
+  const ph = photoUrl(p.photo_path);
+  const hero = document.getElementById('dm-photo-hero');
+  hero.querySelectorAll('img,.dm-photo-hero-placeholder').forEach(el => el.remove());
+  if (ph) {
+    const img = document.createElement('img'); img.src = ph; hero.insertBefore(img, hero.firstChild);
+  } else {
+    const d = document.createElement('div'); d.className = 'dm-photo-hero-placeholder';
+    d.innerHTML = `<svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span>No photo</span>`;
+    hero.insertBefore(d, hero.firstChild);
+  }
+  document.getElementById('dm-case-no').textContent   = cn;
+  document.getElementById('dm-chips').innerHTML       = `<span class="status-chip ${cc}">${cl}</span>${p.gender?`<span class="gender-tag">${p.gender}</span>`:''}`;
+  document.getElementById('dm-name').textContent      = `${p.first_name||''} ${p.last_name||''}`.trim()||'Unknown';
+  document.getElementById('dm-age').textContent       = p.age         || '—';
+  document.getElementById('dm-gender').textContent    = p.gender      || '—';
+  document.getElementById('dm-height').textContent    = p.height      || '—';
+  document.getElementById('dm-weight').textContent    = p.weight      || '—';
+  document.getElementById('dm-build').textContent     = p.build       || '—';
+  document.getElementById('dm-complexion').textContent= p.complexion  || '—';
+  document.getElementById('dm-hair').textContent      = p.hair        || '—';
+  document.getElementById('dm-eyes').textContent      = p.eyes        || '—';
+  document.getElementById('dm-nationality').textContent=p.nationality || '—';
+  document.getElementById('dm-scars').textContent     = p.scars       || '—';
+  document.getElementById('dm-clothing').textContent  = p.clothing    || '—';
+  document.getElementById('dm-location').textContent  = p.location    || '—';
+  document.getElementById('dm-date').textContent      = p.date_recorded|| '—';
+  document.getElementById('dm-desc').textContent      = p.description || 'No description provided.';
+  document.getElementById('dm-reported').textContent  = added ? `Record added ${added}` : '';
+  document.getElementById('detail-backdrop').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() { document.getElementById('detail-backdrop').classList.remove('open'); document.body.style.overflow=''; }
+function closeBdOnBack(e) { if (e.target===document.getElementById('detail-backdrop')) closeModal(); }
+document.addEventListener('keydown', e => { if (e.key==='Escape') closeModal(); });
+
+function clearFilters() {
+  ['f-case','f-first','f-last','f-age-min','f-age-max'].forEach(id => document.getElementById(id).value='');
+  applyFilters();
+}
+
+/* ══ REALTIME ══ */
+sb.channel('persons-changes')
+  .on('postgres_changes', { event: '*', schema: 'public', table: 'persons' }, () => loadRecords())
+  .subscribe();
+
+loadRecords();
+</script>
+</body>
+</html>
