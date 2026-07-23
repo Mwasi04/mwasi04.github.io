@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Mwasimba Juma — developer and entrepreneur in Ndola, Zambia. Flutter, Firebase, and web development portfolio.">
+<title>Mwasimba Juma — Developer &amp; Entrepreneur</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#eef1f6;
+    --bg-alt:#e7ebf2;
+    --card:#eef1f6;
+    --card-hi:#e4e9f1;
+    --copper:#7c3aed;
+    --copper-light:#9d5cf5;
+    --teal:#5b21b6;
+    --text:#16212e;
+    --text-dim:#5b6675;
+    --line:rgba(124,58,237,0.22);
+    --radius:10px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:
+      radial-gradient(ellipse at 15% 0%, rgba(124,58,237,0.05), transparent 55%),
+      radial-gradient(ellipse at 85% 100%, rgba(91,33,182,0.05), transparent 55%),
+      var(--bg);
+    color:var(--text);
+    font-family:'Inter',sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.display{
+    font-family:'Sora',sans-serif;
+  }
+  a{color:inherit;}
+  .wrap{max-width:1280px;margin:0 auto;padding:0 40px;}
+
+  /* NAV */
+  nav{
+    position:sticky;top:0;z-index:100;
+    background:rgba(255,255,255,0.62);
+    backdrop-filter:blur(20px) saturate(180%);
+    -webkit-backdrop-filter:blur(20px) saturate(180%);
+    border-bottom:1px solid rgba(20,30,45,0.06);
+    transition:background .3s ease;
+  }
+  nav .wrap{
+    display:grid;grid-template-columns:1fr auto 1fr;align-items:center;
+    height:78px;gap:20px;
+  }
+  .brand{
+    font-family:'Sora',sans-serif;font-weight:800;font-size:1.1rem;
+    letter-spacing:0.01em;color:var(--text);text-decoration:none;
+    display:flex;align-items:center;gap:11px;justify-self:start;
+  }
+  .brand .nav-avatar{
+    width:32px;height:32px;border-radius:50%;
+    background:linear-gradient(135deg,var(--copper),var(--copper-light));
+    color:#fff;display:flex;align-items:center;justify-content:center;
+    font-size:0.66rem;font-weight:700;flex-shrink:0;font-family:'Sora',sans-serif;
+  }
+  .navlinks{display:flex;gap:30px;justify-self:center;position:relative;}
+  .navlinks a{
+    font-family:'Inter',sans-serif;font-weight:500;
+    font-size:0.9rem;color:var(--text-dim);text-decoration:none;
+    padding:8px 2px;position:relative;transition:color .25s ease;
+  }
+  .navlinks a:hover{color:var(--text);}
+  .navlinks a.active{color:var(--text);font-weight:600;}
+  .nav-indicator{
+    position:absolute;bottom:0;height:2px;border-radius:2px;
+    background:var(--copper);transition:left .3s cubic-bezier(.4,0,.2,1),width .3s cubic-bezier(.4,0,.2,1);
+    opacity:0;
+  }
+  .nav-cta{
+    font-family:'Sora',sans-serif;font-weight:600;font-size:0.82rem;
+    background:var(--text);color:#fff;padding:11px 24px;border-radius:999px;
+    text-decoration:none;white-space:nowrap;letter-spacing:0.01em;
+    justify-self:end;transition:transform .25s ease,background .25s ease;
+  }
+  .nav-cta:hover{background:var(--copper);transform:translateY(-1px);}
+
+  .menu-toggle{
+    display:none;justify-self:end;background:none;border:none;cursor:pointer;
+    width:38px;height:38px;position:relative;
+  }
+  .menu-toggle span{
+    position:absolute;left:8px;right:8px;height:2px;background:var(--text);
+    border-radius:2px;transition:transform .3s ease,opacity .3s ease;
+  }
+  .menu-toggle span:nth-child(1){top:13px;}
+  .menu-toggle span:nth-child(2){top:19px;}
+  .menu-toggle span:nth-child(3){top:25px;}
+  .menu-toggle.open span:nth-child(1){transform:translateY(6px) rotate(45deg);}
+  .menu-toggle.open span:nth-child(2){opacity:0;}
+  .menu-toggle.open span:nth-child(3){transform:translateY(-6px) rotate(-45deg);}
+
+  .mobile-menu{
+    position:fixed;top:0;right:0;height:100vh;width:78%;max-width:320px;
+    background:rgba(255,255,255,0.98);backdrop-filter:blur(20px);
+    box-shadow:-10px 0 40px rgba(20,20,20,0.08);
+    display:flex;flex-direction:column;gap:6px;padding:100px 32px 32px;
+    transform:translateX(100%);transition:transform .35s cubic-bezier(.4,0,.2,1);
+    z-index:99;
+  }
+  .mobile-menu.open{transform:translateX(0);}
+  .mobile-menu a{
+    font-family:'Sora',sans-serif;font-size:1.15rem;font-weight:600;
+    color:var(--text);text-decoration:none;padding:14px 0;
+    border-bottom:1px solid rgba(0,0,0,0.06);
+  }
+  .mobile-menu .nav-cta{margin-top:22px;text-align:center;}
+  .menu-scrim{
+    position:fixed;inset:0;background:rgba(15,20,30,0.25);z-index:98;
+    opacity:0;pointer-events:none;transition:opacity .3s ease;
+  }
+  .menu-scrim.open{opacity:1;pointer-events:auto;}
+
+  section.view{display:none;padding:64px 0 90px;}
+  section.view.active{display:block;animation:fadein .5s ease;}
+  @keyframes fadein{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+
+  /* ME — HERO */
+  .hero{
+    display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center;
+  }
+  .eyebrow{
+    font-family:'IBM Plex Mono',monospace;font-size:0.78rem;color:var(--copper-light);
+    text-transform:uppercase;letter-spacing:0.12em;margin-bottom:14px;
+    display:flex;align-items:center;gap:10px;
+  }
+  .eyebrow::before{content:'';width:26px;height:1px;background:var(--copper);}
+  .hero h1{font-size:2.6rem;line-height:1.15;margin:0 0 18px;font-weight:700;}
+  .hero h1 span{color:var(--copper-light);}
+  .hero h1 .accent-name{color:var(--copper);}
+  .hero h1 .cursor{color:var(--copper-light);animation:blink 1.1s step-start infinite;font-weight:400;}
+  @keyframes blink{50%{opacity:0;}}
+  .hero p{color:var(--text-dim);font-size:1.02rem;line-height:1.7;margin:0 0 14px;}
+  .hero-loc{
+    font-family:'IBM Plex Mono',monospace;font-size:0.8rem;color:var(--teal);
+    margin-top:18px;
+  }
+
+  /* ORBIT */
+  .orbit-stage{
+    position:relative;width:100%;aspect-ratio:1/1;max-width:460px;margin:0 auto;
+  }
+  .ring{
+    position:absolute;border-radius:50%;
+    border:1px solid rgba(124,58,237,0.18);
+    top:50%;left:50%;transform:translate(-50%,-50%);
+  }
+  .ring.r1{width:100%;height:100%;}
+  .ring.r2{width:74%;height:74%;border-color:rgba(76,140,130,0.22);}
+  .avatar{
+    position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+    width:34%;aspect-ratio:1/1;border-radius:50%;
+    background:linear-gradient(150deg,var(--card-hi),var(--card));
+    border:2px solid var(--copper-light);
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Sora',sans-serif;font-weight:800;font-size:2.2rem;color:var(--copper-light);
+    box-shadow:0 0 40px rgba(124,58,237,0.15), inset 0 0 30px rgba(124,58,237,0.06);
+    z-index:5;
+  }
+  .orbiter{
+    position:absolute;top:50%;left:50%;width:100%;height:100%;
+    margin-top:-50%;margin-left:-50%;
+    animation:spin linear infinite;
+    animation-duration:var(--dur);
+  }
+  .orbiter.reverse{animation-direction:reverse;}
+  .node{
+    position:absolute;top:0;left:50%;
+    transform:translate(-50%,-50%);
+    animation:spin linear infinite reverse;
+    animation-duration:var(--dur);
+  }
+  .orbiter.reverse .node{animation-direction:normal;}
+  .node .badge{
+    display:flex;flex-direction:column;align-items:center;gap:6px;
+  }
+  .node .ico-circle{
+    width:42px;height:42px;border-radius:50%;
+    background:#ffffff;border:1px solid rgba(124,58,237,0.14);
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:0 4px 14px rgba(20,40,90,0.10);
+  }
+  .node .ico-circle svg{width:22px;height:22px;display:block;}
+  .node .label{
+    font-family:'IBM Plex Mono',monospace;font-size:0.66rem;
+    color:var(--text-dim);white-space:nowrap;
+    background:var(--bg);padding:1px 6px;border-radius:4px;
+  }
+  @keyframes spin{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
+  @media (prefers-reduced-motion:reduce){
+    .orbiter,.node,.cursor{animation:none;}
+  }
+
+  /* WHAT I BUILD */
+  .section-label{
+    font-family:'Sora',sans-serif;font-weight:700;font-size:0.98rem;color:var(--text);
+    text-transform:uppercase;letter-spacing:0.06em;margin:88px 0 0;
+    padding-bottom:12px;border-bottom:2px solid var(--copper);
+  }
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:24px;}
+  .card{
+    background:var(--card);border:1px solid rgba(124,58,237,0.12);
+    border-radius:var(--radius);padding:26px 22px;
+  }
+  .card h3{margin:0 0 10px;font-size:1.05rem;color:var(--copper);}
+  .card p{margin:0;color:var(--text-dim);font-size:0.9rem;line-height:1.6;}
+
+  /* TIMELINE — Facebook-style */
+  .fb-cover{
+    height:190px;border-radius:20px;position:relative;overflow:hidden;
+    background:linear-gradient(135deg,var(--copper),var(--copper-light));
+    margin-bottom:60px;
+  }
+  .fb-cover::after{
+    content:'';position:absolute;inset:0;
+    background:radial-gradient(circle at 80% 15%, rgba(255,255,255,0.22), transparent 60%);
+  }
+  .fb-cover-profile{
+    position:absolute;left:36px;bottom:-32px;display:flex;align-items:flex-end;gap:16px;
+  }
+  .fb-cover-avatar{
+    width:80px;height:80px;border-radius:50%;background:#fff;border:5px solid #fff;
+    box-shadow:0 8px 22px rgba(20,20,20,0.15);display:flex;align-items:center;justify-content:center;
+    font-family:'Sora',sans-serif;font-weight:800;font-size:1.4rem;color:var(--copper);flex-shrink:0;
+  }
+  .fb-cover-name{padding-bottom:8px;}
+  .fb-cover-name h2{margin:0;font-size:1.25rem;color:#fff;text-shadow:0 2px 10px rgba(0,0,0,0.18);}
+  .fb-cover-name span{
+    display:block;font-family:'Inter',sans-serif;font-size:0.82rem;color:#fff;opacity:0.92;
+    text-shadow:0 2px 10px rgba(0,0,0,0.18);margin-top:2px;
+  }
+
+  .tl-head{margin-top:50px;}
+  .tl-head h2{font-size:1.7rem;margin:0 0 8px;}
+  .tl-head p{color:var(--text-dim);margin:0 0 50px;max-width:520px;line-height:1.6;}
+
+  .timeline{position:relative;margin-top:10px;}
+  .timeline::before{
+    content:'';position:absolute;left:50%;top:0;bottom:0;width:3px;
+    background:linear-gradient(var(--copper),rgba(124,58,237,0.12));
+    transform:translateX(-50%);border-radius:3px;
+  }
+  .tl-item{
+    position:relative;display:grid;grid-template-columns:1fr 44px 1fr;
+    align-items:start;margin-bottom:44px;
+  }
+  .tl-item:last-child{margin-bottom:0;}
+  .tl-item::before{
+    content:'';grid-column:2;justify-self:center;margin-top:22px;
+    width:14px;height:14px;border-radius:50%;
+    background:var(--bg);border:3px solid var(--copper);position:relative;z-index:2;
+  }
+  .tl-card{
+    background:#fff;border-radius:14px;padding:20px 22px;
+    box-shadow:0 10px 28px rgba(20,20,20,0.06);max-width:440px;
+  }
+  .tl-item:nth-child(odd) .tl-card{grid-column:1;justify-self:end;text-align:right;}
+  .tl-item:nth-child(even) .tl-card{grid-column:3;justify-self:start;text-align:left;}
+  .tl-item:nth-child(odd) .chips{justify-content:flex-end;}
+  .tl-tag{
+    font-family:'IBM Plex Mono',monospace;font-size:0.7rem;letter-spacing:0.08em;
+    text-transform:uppercase;color:var(--teal);margin-bottom:6px;display:inline-block;
+    border:1px solid rgba(124,58,237,0.35);padding:3px 10px;border-radius:999px;
+  }
+  .tl-item h3{margin:8px 0 8px;font-size:1.1rem;}
+  .tl-item p{margin:0 0 12px;color:var(--text-dim);font-size:0.9rem;line-height:1.6;}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;}
+  .chip{
+    font-family:'IBM Plex Mono',monospace;font-size:0.7rem;color:var(--text-dim);
+    background:var(--bg-alt);border:1px solid rgba(0,0,0,0.07);
+    padding:5px 10px;border-radius:6px;
+  }
+
+  footer{border-top:1px solid rgba(124,58,237,0.12);padding:34px 0;}
+  .footer-grid{
+    display:grid;grid-template-columns:1fr 1fr 1fr;align-items:center;gap:16px;
+    font-size:0.85rem;color:var(--text-dim);
+  }
+  .footer-name{font-family:'Sora',sans-serif;font-weight:700;color:var(--text);}
+  .footer-loc{font-family:'IBM Plex Mono',monospace;font-size:0.78rem;margin-top:2px;}
+  .footer-contact{display:flex;flex-direction:column;gap:4px;text-align:center;}
+  .footer-contact a{color:var(--text-dim);text-decoration:none;font-family:'IBM Plex Mono',monospace;font-size:0.78rem;}
+  .footer-contact a:hover{color:var(--copper);}
+  .footer-org{text-align:right;font-family:'IBM Plex Mono',monospace;font-size:0.78rem;}
+
+  .exed{display:grid;grid-template-columns:1fr 1fr;gap:40px;}
+  .exed h4{
+    font-family:'IBM Plex Mono',monospace;font-size:0.72rem;letter-spacing:0.1em;
+    text-transform:uppercase;color:var(--teal);margin:0 0 18px;
+  }
+  .exed-item{padding:16px 0;border-top:1px solid rgba(0,0,0,0.07);}
+  .exed-item:first-of-type{border-top:none;padding-top:0;}
+  .exed-row{display:flex;justify-content:space-between;align-items:baseline;gap:14px;}
+  .exed-item h5{margin:0;font-size:0.98rem;font-family:'Sora',sans-serif;}
+  .exed-date{
+    font-family:'IBM Plex Mono',monospace;font-size:0.7rem;color:var(--text-dim);
+    white-space:nowrap;
+  }
+  .exed-org{color:var(--copper-light);font-size:0.85rem;margin:3px 0 6px;}
+  .exed-item p{margin:0;color:var(--text-dim);font-size:0.86rem;line-height:1.6;}
+
+  .find-skill{display:flex;gap:52px;margin-top:30px;flex-wrap:wrap;}
+  .fs-label{
+    font-family:'IBM Plex Mono',monospace;font-size:0.68rem;letter-spacing:0.1em;
+    text-transform:uppercase;color:var(--text-dim);margin-bottom:12px;
+  }
+  .fs-icons{display:flex;gap:10px;}
+  .sq-icon{
+    width:42px;height:42px;border-radius:11px;background:#fff;
+    border:1px solid rgba(0,0,0,0.07);display:flex;align-items:center;justify-content:center;
+    box-shadow:0 6px 16px rgba(20,20,20,0.05);text-decoration:none;
+  }
+  .sq-icon svg{width:19px;height:19px;}
+
+  /* WHAT I DO */
+  .svc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:24px;}
+  .svc-card{
+    background:#fff;border:1px solid rgba(0,0,0,0.06);border-radius:14px;
+    padding:28px 24px;box-shadow:0 10px 26px rgba(20,20,20,0.04);
+  }
+  .svc-icon{
+    width:46px;height:46px;border-radius:12px;background:var(--card);
+    display:flex;align-items:center;justify-content:center;margin-bottom:18px;
+  }
+  .svc-icon svg{width:22px;height:22px;stroke:var(--copper);fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;}
+  .svc-card h3{margin:0 0 8px;font-size:1.05rem;}
+  .svc-card p{margin:0;color:var(--text-dim);font-size:0.88rem;line-height:1.6;}
+
+  /* ABOUT / PHILOSOPHY / VALUES */
+  .about-text{max-width:760px;margin-top:22px;}
+  .about-text p{color:var(--text-dim);font-size:0.98rem;line-height:1.8;margin:0 0 16px;}
+  .phil-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:24px;}
+  .phil-card{padding:22px 20px;border-left:3px solid var(--copper);background:#fff;border-radius:0 12px 12px 0;box-shadow:0 10px 26px rgba(20,20,20,0.04);}
+  .phil-card h3{margin:0 0 8px;font-size:0.98rem;}
+  .phil-card p{margin:0;color:var(--text-dim);font-size:0.86rem;line-height:1.6;}
+  .skills-explain{display:grid;grid-template-columns:1fr 1fr;gap:18px 40px;margin-top:24px;}
+  .skill-explain-row h4{
+    margin:0 0 4px;font-family:'Sora',sans-serif;font-size:0.96rem;color:var(--copper);
+  }
+  .skill-explain-row p{margin:0;color:var(--text-dim);font-size:0.87rem;line-height:1.6;}
+  .values-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:24px;}
+  .value-card{text-align:center;padding:24px 14px;background:#fff;border-radius:12px;box-shadow:0 10px 26px rgba(20,20,20,0.04);}
+  .value-card h4{margin:0 0 6px;font-size:0.92rem;}
+  .value-card p{margin:0;color:var(--text-dim);font-size:0.8rem;line-height:1.5;}
+  .contact-band{
+    margin-top:88px;padding:44px 36px;border-radius:18px;
+    background:linear-gradient(135deg,var(--copper),var(--copper-light));
+    color:#fff;text-align:center;
+  }
+  .contact-band h2{margin:0 0 12px;font-size:1.5rem;}
+  .contact-band p{margin:0 auto 20px;max-width:520px;font-size:0.96rem;line-height:1.7;opacity:0.94;}
+  .contact-band a.nav-cta{background:#fff;color:var(--copper);}
+
+  @media (max-width:760px){
+    .wrap{padding:0 20px;}
+    nav .wrap{height:68px;grid-template-columns:1fr auto;}
+    .navlinks{display:none;}
+    .nav-cta{display:none;}
+    .menu-toggle{display:block;}
+    .brand{font-size:1rem;}
+    .hero{grid-template-columns:1fr;gap:34px;}
+    .hero h1{font-size:2.1rem;}
+    .grid3{grid-template-columns:1fr;}
+    .svc-grid{grid-template-columns:1fr;}
+    .skills-explain{grid-template-columns:1fr;}
+    .phil-grid{grid-template-columns:1fr;}
+    .values-grid{grid-template-columns:1fr 1fr;}
+    .contact-band{padding:32px 22px;margin-top:60px;}
+    .find-skill{gap:32px;}
+    .orbit-stage{max-width:340px;}
+    .exed{grid-template-columns:1fr;gap:36px;}
+    section.view{padding:40px 0 70px;}
+    .section-label{margin-top:60px;}
+    .fb-cover{height:150px;margin-bottom:48px;}
+    .fb-cover-avatar{width:64px;height:64px;font-size:1.1rem;border-width:4px;}
+    .fb-cover-profile{left:22px;bottom:-26px;gap:12px;}
+    .fb-cover-name h2{font-size:1.05rem;}
+    .fb-cover-name span{font-size:0.74rem;}
+    .tl-head{margin-top:36px;}
+    .timeline::before{left:17px;}
+    .tl-item{grid-template-columns:34px 1fr;margin-bottom:32px;}
+    .tl-item::before{grid-column:1;justify-self:start;margin-top:20px;margin-left:11px;}
+    .tl-item .tl-card{grid-column:2 !important;justify-self:start !important;text-align:left !important;max-width:none;}
+    .tl-item .chips{justify-content:flex-start !important;}
+  }
+
+  @media (max-width:480px){
+    .wrap{padding:0 16px;}
+    .find-skill{gap:24px;}
+    .sq-icon{width:38px;height:38px;}
+    .brand{font-size:0.92rem;gap:6px;}
+    .brand .nav-avatar{width:24px;height:24px;font-size:0.6rem;}
+    .eyebrow{font-size:0.7rem;}
+    .hero h1{font-size:1.7rem;}
+    .hero p{font-size:0.94rem;}
+    .orbit-stage{max-width:260px;}
+    .avatar{font-size:1.5rem;border-width:2px;}
+    .node .ico-circle{width:32px;height:32px;}
+    .node .ico-circle svg{width:16px;height:16px;}
+    .node .label{font-size:0.56rem;padding:1px 4px;}
+    .card{padding:20px 16px;}
+    .tl-head h2{font-size:1.6rem;}
+    .exed-row{flex-direction:column;align-items:flex-start;gap:2px;}
+    .footer-grid{grid-template-columns:1fr;gap:14px;text-align:center;}
+    .footer-contact{text-align:center;}
+    .footer-org{text-align:center;}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a class="brand" href="#" data-view="me"><span class="nav-avatar">MJ</span>Mwasimba Juma</a>
+    <div class="navlinks" id="navlinks">
+      <a href="#" data-view="me" class="active">Me</a>
+      <a href="#" data-view="timeline">Timeline</a>
+      <span class="nav-indicator"></span>
+    </div>
+    <button class="menu-toggle" id="menuToggle" aria-label="Open menu"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+<div class="menu-scrim" id="menuScrim"></div>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#" data-view="me">Me</a>
+  <a href="#" data-view="timeline">Timeline</a>
+</div>
+
+<!-- ME -->
+<section class="view active" id="view-me">
+  <div class="wrap" id="top">
+    <div class="hero">
+      <div>
+        <div class="eyebrow">Welcome to my world</div>
+        <h1>Hi, I'm <span class="accent-name">Mwasimba Juma</span><br>a <span>Software Engineer.</span><span class="cursor">|</span></h1>
+        <p>I'm from Ndola, Zambia. I build mobile apps, business tools, and websites with Flutter, Firebase, Python, and the web — because I believe software should solve real problems, not just look impressive.</p>
+        <div class="hero-loc">&gt; Available for freelance, contract &amp; full-time opportunities</div>
+
+        <div class="find-skill">
+          <div>
+            <div class="fs-label">Find With Me</div>
+            <div class="fs-icons">
+              <a class="sq-icon" href="https://github.com/Mwasi403" target="_blank" rel="noopener" aria-label="GitHub"><svg viewBox="0 0 16 16"><use href="#ico-github"/></svg></a>
+              <a class="sq-icon" href="https://linkedin.com/in/mwasimba-juma-97925a326" target="_blank" rel="noopener" aria-label="LinkedIn"><svg viewBox="0 0 24 24"><use href="#ico-linkedin"/></svg></a>
+            </div>
+          </div>
+          <div>
+            <div class="fs-label">Best Skill On</div>
+            <div class="fs-icons">
+              <span class="sq-icon"><svg viewBox="0 0 24 24"><use href="#ico-flutter"/></svg></span>
+              <span class="sq-icon"><svg viewBox="0 0 24 24"><use href="#ico-firebase"/></svg></span>
+              <span class="sq-icon"><svg viewBox="0 0 24 24"><use href="#ico-python"/></svg></span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="orbit-stage">
+        <svg width="0" height="0" style="position:absolute">
+          <defs>
+            <symbol id="ico-flutter" viewBox="0 0 24 24">
+              <polygon points="4,14 14,4 20,4 8,16" fill="#54C5F8"/>
+              <polygon points="9,20 15,14 20,14 12,22" fill="#01579B"/>
+              <polygon points="8,16 12,20 9,20" fill="#29B6F6"/>
+            </symbol>
+            <symbol id="ico-firebase" viewBox="0 0 24 24">
+              <path d="M8 20l2.3-16.6a.5.5 0 01.94-.15L14 9.3 8 20z" fill="#FFA000"/>
+              <path d="M8 20l1.2-8.2 4.3 4.4L8 20z" fill="#F57C00"/>
+              <path d="M8 20l8-14.7 2.6 14.1a.4.4 0 01-.6.44L8 20z" fill="#FFCA28"/>
+            </symbol>
+            <symbol id="ico-github" viewBox="0 0 16 16">
+              <path fill="#181717" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0016 8c0-4.42-3.58-8-8-8z"/>
+            </symbol>
+            <symbol id="ico-linkedin" viewBox="0 0 24 24">
+              <rect x="2" y="2" width="20" height="20" rx="4" fill="#0A66C2"/>
+              <circle cx="7.3" cy="8" r="1.6" fill="#fff"/>
+              <rect x="5.9" y="10.4" width="2.8" height="8.1" fill="#fff"/>
+              <path d="M11 10.4h2.7v1.2c.5-.8 1.5-1.4 2.9-1.4 2.2 0 3.6 1.4 3.6 4.1v4.7h-2.8v-4.2c0-1.1-.5-1.9-1.6-1.9-1 0-1.7.7-1.7 1.9v4.2H11V10.4z" fill="#fff"/>
+            </symbol>
+            <symbol id="ico-python" viewBox="0 0 24 24">
+              <path d="M12 2c-3 0-3 1.3-3 1.3v2.4h3v.4H6.8S4 5.8 4 9.6s2.5 3.9 2.5 3.9h1.5v-2s0-2.2 2.2-2.2h3.6s2.1 0 2.1-2V4.3S16.2 2 12 2z" fill="#3776AB"/>
+              <path d="M12 22c3 0 3-1.3 3-1.3v-2.4h-3v-.4h5.2S20 18.2 20 14.4s-2.5-3.9-2.5-3.9h-1.5v2s0 2.2-2.2 2.2H10.2s-2.1 0-2.1 2v3.6S7.8 22 12 22z" fill="#FFD43B"/>
+              <circle cx="8.3" cy="4.5" r=".7" fill="#fff"/>
+              <circle cx="15.7" cy="19.5" r=".7" fill="#fff"/>
+            </symbol>
+            <symbol id="ico-cpp" viewBox="0 0 24 24">
+              <polygon points="12,2 21,7 21,17 12,22 3,17 3,7" fill="#00599C"/>
+              <text x="12" y="15.5" font-size="7.5" font-family="Arial, sans-serif" font-weight="700" text-anchor="middle" fill="#ffffff">C++</text>
+            </symbol>
+            <symbol id="ico-html" viewBox="0 0 24 24">
+              <polygon points="3,3 21,3 3,21" fill="#E44D26"/>
+              <polygon points="21,3 21,21 3,21" fill="#1572B6"/>
+              <path d="M8 9l-3 3 3 3M16 9l3 3-3 3M13 7l-2 10" stroke="#fff" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            </symbol>
+            <symbol id="ico-vscode" viewBox="0 0 24 24">
+              <rect x="3" y="3" width="18" height="18" rx="5" fill="#007ACC"/>
+              <path d="M8 8l-3 4 3 4M16 8l3 4-3 4M13.5 7l-3 10" stroke="#fff" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            </symbol>
+            <symbol id="ico-android" viewBox="0 0 24 24">
+              <rect x="3" y="3" width="18" height="18" rx="5" fill="#3DDC84"/>
+              <rect x="6.6" y="10" width="1.4" height="4.2" rx=".7" fill="#fff"/>
+              <rect x="16" y="10" width="1.4" height="4.2" rx=".7" fill="#fff"/>
+              <path d="M8.3 10a3.7 3.7 0 017.4 0v4.2a.9.9 0 01-.9.9H9.2a.9.9 0 01-.9-.9V10z" fill="#fff"/>
+              <path d="M9.2 7.6l-1-1.6M14.8 7.6l1-1.6" stroke="#fff" stroke-width="1.1" fill="none" stroke-linecap="round"/>
+              <circle cx="10.4" cy="10.4" r=".55" fill="#3DDC84"/>
+              <circle cx="13.6" cy="10.4" r=".55" fill="#3DDC84"/>
+            </symbol>
+            <symbol id="ico-svc-mobile" viewBox="0 0 24 24"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 19h2"/></symbol>
+            <symbol id="ico-svc-cloud" viewBox="0 0 24 24"><path d="M7.5 18a4 4 0 01-.5-7.97A5 5 0 0116.5 8.5 3.5 3.5 0 0117 15.4"/><path d="M7 18h9.5"/></symbol>
+            <symbol id="ico-svc-cart" viewBox="0 0 24 24"><circle cx="9" cy="20" r="1"/><circle cx="17" cy="20" r="1"/><path d="M3 4h2l2.4 12.4a2 2 0 002 1.6h7.2a2 2 0 002-1.6L20 8H6"/></symbol>
+            <symbol id="ico-svc-web" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.3 2.5 3.4 6 3.4 9s-1.1 6.5-3.4 9c-2.3-2.5-3.4-6-3.4-9s1.1-6.5 3.4-9z"/></symbol>
+            <symbol id="ico-svc-script" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 9l3 3-3 3M12 15h5"/></symbol>
+            <symbol id="ico-svc-dash" viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8" rx="1"/><rect x="13" y="3" width="8" height="5" rx="1"/><rect x="13" y="10" width="8" height="11" rx="1"/><rect x="3" y="13" width="8" height="8" rx="1"/></symbol>
+          </defs>
+        </svg>
+        <div class="ring r1"></div>
+        <div class="ring r2"></div>
+        <div class="avatar">MJ</div>
+        <div class="orbiter" style="--dur:36s;">
+          <div class="node" style="left:50%;top:0%;"><div class="badge"><div class="ico-circle"><svg><use href="#ico-flutter"/></svg></div><span class="label">Flutter</span></div></div>
+          <div class="node" style="left:93.3%;top:25%;"><div class="badge"><div class="ico-circle"><svg><use href="#ico-firebase"/></svg></div><span class="label">Firebase</span></div></div>
+          <div class="node" style="left:93.3%;top:75%;"><div class="badge"><div class="ico-circle"><svg><use href="#ico-github"/></svg></div><span class="label">GitHub</span></div></div>
+          <div class="node" style="left:50%;top:100%;"><div class="badge"><div class="ico-circle"><svg><use href="#ico-python"/></svg></div><span class="label">Python</span></div></div>
+          <div class="node" style="left:6.7%;top:75%;"><div class="badge"><div class="ico-circle"><svg><use href="#ico-cpp"/></svg></div><span class="label">C++</span></div></div>
+          <div class="node" style="left:6.7%;top:25%;"><div class="badge"><div class="ico-circle"><svg><use href="#ico-html"/></svg></div><span class="label">HTML/CSS</span></div></div>
+        </div>
+        <div class="orbiter reverse" style="--dur:52s;">
+          <div class="node" style="left:50%;top:4%;"><div class="badge"><div class="ico-circle"><svg><use href="#ico-vscode"/></svg></div><span class="label">VS Code</span></div></div>
+          <div class="node" style="left:96%;top:50%;"><div class="badge"><div class="ico-circle"><svg><use href="#ico-android"/></svg></div><span class="label">Android Studio</span></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-label" id="about">About Me</div>
+    <div class="about-text">
+      <p>I chose software engineering to build things that solve real problems, not just look impressive on a screen — from an inventory app that helps a business track stock, to an e-commerce site people can actually pay through.</p>
+      <p>Outside of code, I spend time exploring technology and thinking about how digital tools can improve businesses and communities here in Zambia — which is a big part of why I run Morphiq Technologies and LumiMinds.</p>
+    </div>
+
+    <div class="section-label">How I Approach Software</div>
+    <div class="phil-grid">
+      <div class="phil-card">
+        <h3>Solving Real Problems</h3>
+        <p>I'd rather fix a real problem than build something impressive that solves nothing.</p>
+      </div>
+      <div class="phil-card">
+        <h3>Writing Maintainable Code</h3>
+        <p>I favor code I can trust later, like rebuilding StorePilot fully onto Firestore.</p>
+      </div>
+      <div class="phil-card">
+        <h3>Continuous Learning</h3>
+        <p>Technology moves fast, and I try to move with it.</p>
+      </div>
+      <div class="phil-card">
+        <h3>Designing For Users</h3>
+        <p>The person using it matters more than the tech behind it.</p>
+      </div>
+      <div class="phil-card">
+        <h3>Quality Over Quantity</h3>
+        <p>Fewer things done properly beats a long list that half-works.</p>
+      </div>
+    </div>
+
+    <div class="section-label">What I Do</div>
+    <div class="svc-grid">
+      <div class="svc-card">
+        <div class="svc-icon"><svg><use href="#ico-svc-mobile"/></svg></div>
+        <h3>Building Mobile Apps</h3>
+        <p>Cross-platform apps in Flutter, backed by Firebase.</p>
+      </div>
+      <div class="svc-card">
+        <div class="svc-icon"><svg><use href="#ico-svc-cloud"/></svg></div>
+        <h3>Creating Business Software</h3>
+        <p>Turning messy processes — stock, sales, records — into something structured.</p>
+      </div>
+      <div class="svc-card">
+        <div class="svc-icon"><svg><use href="#ico-svc-cart"/></svg></div>
+        <h3>Designing User Experiences</h3>
+        <p>Clean layouts that make sense the first time someone opens them.</p>
+      </div>
+      <div class="svc-card">
+        <div class="svc-icon"><svg><use href="#ico-svc-web"/></svg></div>
+        <h3>Building Responsive Websites</h3>
+        <p>Sites that hold up on phone, tablet, and desktop alike.</p>
+      </div>
+      <div class="svc-card">
+        <div class="svc-icon"><svg><use href="#ico-svc-script"/></svg></div>
+        <h3>Automating Repetitive Work</h3>
+        <p>Python scripts that take a tedious task off someone's plate for good.</p>
+      </div>
+      <div class="svc-card">
+        <div class="svc-icon"><svg><use href="#ico-svc-dash"/></svg></div>
+        <h3>Learning New Technologies</h3>
+        <p>Picking up a new tool is almost as fun as using the ones I know well.</p>
+      </div>
+    </div>
+
+    <div class="section-label" id="projects">Projects</div>
+    <div class="svc-grid">
+      <div class="svc-card">
+        <h3>StorePilot</h3>
+        <p>Flutter/Firebase inventory &amp; sales app, with a companion admin app.</p>
+      </div>
+      <div class="svc-card">
+        <h3>BMB Electronics</h3>
+        <p>Live e-commerce site for electronics, with mobile money and card payments.</p>
+      </div>
+      <div class="svc-card">
+        <h3>Personal Portfolio</h3>
+        <p>This site — built by hand with HTML, CSS, and JavaScript.</p>
+      </div>
+    </div>
+
+    <div class="section-label" id="skills">Skills</div>
+    <div class="skills-explain">
+      <div class="skill-explain-row"><h4>Flutter</h4><p>Cross-platform mobile apps from a single codebase — like StorePilot.</p></div>
+      <div class="skill-explain-row"><h4>Firebase</h4><p>My go-to backend for auth, real-time data, and cloud functions.</p></div>
+      <div class="skill-explain-row"><h4>Python</h4><p>What I reach for when something repetitive needs automating.</p></div>
+      <div class="skill-explain-row"><h4>HTML &amp; CSS</h4><p>The foundation of every site — layouts that hold up on any screen.</p></div>
+      <div class="skill-explain-row"><h4>JavaScript</h4><p>What makes a page feel like a real product, not just a document.</p></div>
+      <div class="skill-explain-row"><h4>Git &amp; GitHub</h4><p>How I track progress and keep every serious build recoverable.</p></div>
+      <div class="skill-explain-row"><h4>Android Studio</h4><p>Where I debug the native side of my Flutter apps.</p></div>
+      <div class="skill-explain-row"><h4>C++</h4><p>Where I built my foundation in logic and performance.</p></div>
+    </div>
+
+    <div class="section-label" id="experience">Experience &amp; Education</div>
+    <div class="exed">
+      <div>
+        <h4>Experience</h4>
+        <div class="exed-item">
+          <div class="exed-row"><h5>Data Entry Clerk</h5><span class="exed-date">Mar 2026 – Present</span></div>
+          <div class="exed-org">Ndola City Council</div>
+          <p>Maintaining accurate digital records and generating reports for administrative operations.</p>
+        </div>
+        <div class="exed-item">
+          <div class="exed-row"><h5>Web Development &amp; Management</h5><span class="exed-date">Jan 2024 – 2026</span></div>
+          <div class="exed-org">LumiMinds Zambia</div>
+          <p>Designing and maintaining business websites, plus technical support and web content.</p>
+        </div>
+        <div class="exed-item">
+          <div class="exed-row"><h5>Sales Representative</h5><span class="exed-date">May – Oct 2024</span></div>
+          <div class="exed-org">Prudential Life Assurance Zambia</div>
+          <p>Built strong communication and customer engagement skills promoting financial products.</p>
+        </div>
+      </div>
+      <div>
+        <h4>Education</h4>
+        <div class="exed-item">
+          <div class="exed-row"><h5>B.Sc. Software Engineering</h5><span class="exed-date">Jan 2022 – Dec 2025</span></div>
+          <div class="exed-org">Zambia University College of Technology</div>
+          <p>Focused on software development, mobile applications, databases, and networking.</p>
+        </div>
+        <div class="exed-item">
+          <div class="exed-row"><h5>Red Cross Certificate</h5><span class="exed-date">Feb – Jun 2024</span></div>
+          <div class="exed-org">Ndola Red Cross</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-label">Beyond Code</div>
+    <div class="values-grid">
+      <div class="value-card"><h4>Curiosity</h4><p>Understanding how things work before I build them.</p></div>
+      <div class="value-card"><h4>Integrity</h4><p>Honest timelines over promises I can't deliver.</p></div>
+      <div class="value-card"><h4>Teamwork</h4><p>My best work has come from collaborating with others.</p></div>
+      <div class="value-card"><h4>Problem Solving</h4><p>Give me a messy problem and I'll enjoy the puzzle.</p></div>
+      <div class="value-card"><h4>Adaptability</h4><p>Tools and requirements change constantly, so I move with them.</p></div>
+      <div class="value-card"><h4>Continuous Growth</h4><p>I don't think I've "arrived" as a developer — and I hope I never do.</p></div>
+    </div>
+
+    <div class="contact-band" id="contact">
+      <h2>Let's Build Something</h2>
+      <p>Have an idea you'd like to bring to life? Whether it's a project, a collaboration, or just a conversation about technology, I'd love to hear from you.</p>
+      <a class="nav-cta" href="mailto:mwasimbajuma4003@gmail.com">Get In Touch</a>
+    </div>
+  </div>
+</section>
+
+<!-- TIMELINE -->
+<section class="view" id="view-timeline">
+  <div class="wrap">
+    <div class="fb-cover">
+      <div class="fb-cover-profile">
+        <div class="fb-cover-avatar">MJ</div>
+        <div class="fb-cover-name">
+          <h2>Mwasimba Juma</h2>
+          <span>Software Engineer · Ndola, Zambia</span>
+        </div>
+      </div>
+    </div>
+    <div class="tl-head">
+      <h2>My Journey</h2>
+      <p>How I got here — and what I'm still working toward.</p>
+    </div>
+    <div class="timeline">
+
+      <div class="tl-item">
+        <div class="tl-card">
+          <span class="tl-tag">Present</span>
+          <h3>What I'm Building Now</h3>
+          <p>Growing StorePilot, building this portfolio, and taking on business software and Flutter work.</p>
+          <div class="chips"><span class="chip">StorePilot</span><span class="chip">Personal Portfolio</span><span class="chip">Business Software</span><span class="chip">Flutter Applications</span></div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-card">
+          <span class="tl-tag">2026</span>
+          <h3>Data Entry Clerk, Ndola City Council</h3>
+          <p>A role built on accuracy and discipline — it shows up in how I write software too.</p>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-card">
+          <span class="tl-tag">2025</span>
+          <h3>Completed My Degree</h3>
+          <p>Finished my B.Sc. in Software Engineering.</p>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-card">
+          <span class="tl-tag">2024</span>
+          <h3>Sales Representative</h3>
+          <p>A stint at Prudential Life Assurance Zambia that taught me a lot about communication.</p>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-card">
+          <span class="tl-tag">2024</span>
+          <h3>Joined LumiMinds Zambia</h3>
+          <p>My first step into real client work — web development and management.</p>
+          <div class="chips"><span class="chip">Web Development</span><span class="chip">Networking</span><span class="chip">Social Media Management</span></div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-card">
+          <span class="tl-tag">During University</span>
+          <h3>First Real Projects</h3>
+          <p>Alongside coursework, I started building things people could actually use — StorePilot began here.</p>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-card">
+          <span class="tl-tag">2022</span>
+          <h3>Discovering Software Engineering</h3>
+          <p>Began my Bachelor's at Zambia University College of Technology, where solving real problems with code became the thing I wanted to do.</p>
+          <div class="chips"><span class="chip">Software Engineering</span><span class="chip">Databases</span><span class="chip">Networking</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap footer-grid">
+    <div>
+      <div class="footer-name">Mwasimba Juma</div>
+      <div class="footer-loc">Ndola, Zambia</div>
+    </div>
+    <div class="footer-contact">
+      <a href="mailto:mwasimbajuma4003@gmail.com">mwasimbajuma4003@gmail.com</a>
+      <a href="tel:+260762706892">+260 76 270 6892</a>
+    </div>
+    <div class="footer-org">Software Engineer • Flutter Developer • Web Developer</div>
+  </div>
+</footer>
+
+<script>
+  const meView = document.getElementById('view-me');
+  const timelineView = document.getElementById('view-timeline');
+  const indicator = document.querySelector('.nav-indicator');
+  const navlinksEl = document.getElementById('navlinks');
+  const menuToggle = document.getElementById('menuToggle');
+  const mobileMenu = document.getElementById('mobileMenu');
+  const menuScrim = document.getElementById('menuScrim');
+  const viewLinks = document.querySelectorAll('[data-view]');
+
+  function closeMobileMenu(){
+    menuToggle.classList.remove('open');
+    mobileMenu.classList.remove('open');
+    menuScrim.classList.remove('open');
+  }
+
+  function moveIndicator(link){
+    if(!link || window.innerWidth <= 760){ indicator.style.opacity = 0; return; }
+    const linkRect = link.getBoundingClientRect();
+    const wrapRect = navlinksEl.getBoundingClientRect();
+    indicator.style.left = (linkRect.left - wrapRect.left) + 'px';
+    indicator.style.width = linkRect.width + 'px';
+    indicator.style.opacity = 1;
+  }
+
+  function showView(view){
+    const showTimeline = view === 'timeline';
+    meView.classList.toggle('active', !showTimeline);
+    timelineView.classList.toggle('active', showTimeline);
+    document.querySelectorAll('.navlinks a[data-view]').forEach(a=>{
+      a.classList.toggle('active', a.dataset.view === view);
+    });
+    moveIndicator(document.querySelector('.navlinks a[data-view].active'));
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+
+  viewLinks.forEach(link=>{
+    link.addEventListener('click', (e)=>{
+      e.preventDefault();
+      closeMobileMenu();
+      showView(link.dataset.view);
+    });
+  });
+
+  menuToggle.addEventListener('click', ()=>{
+    const open = menuToggle.classList.toggle('open');
+    mobileMenu.classList.toggle('open', open);
+    menuScrim.classList.toggle('open', open);
+  });
+  menuScrim.addEventListener('click', closeMobileMenu);
+
+  window.addEventListener('resize', ()=>{
+    moveIndicator(document.querySelector('.navlinks a[data-view].active'));
+  });
+
+  window.addEventListener('load', ()=>{
+    moveIndicator(document.querySelector('.navlinks a[data-view].active'));
+  });
+</script>
+
+</body>
+</html>
