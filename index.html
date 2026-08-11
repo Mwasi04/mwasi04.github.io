@@ -118,8 +118,9 @@
   .hero-band{
     width:100vw;position:relative;left:50%;right:50%;
     margin-left:-50vw;margin-right:-50vw;margin-top:-64px;
-    background:#fff;padding:56px 0 60px;overflow:hidden;
+    background:#fff;padding:150px 0 150px;overflow:hidden;
   }
+  .hero-deco-layer{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:0;}
   .deco{position:absolute;pointer-events:none;z-index:0;}
   .deco-blob-1{
     top:-120px;right:6%;width:420px;height:420px;border-radius:50%;
@@ -627,13 +628,15 @@
 <!-- ME -->
 <section class="view active" id="view-me">
   <div class="hero-band">
-    <div class="deco deco-blob-1"></div>
-    <div class="deco deco-blob-2"></div>
-    <div class="deco deco-ring deco-ring-1"></div>
-    <div class="deco deco-ring deco-ring-2"></div>
-    <div class="deco deco-ring deco-ring-3"></div>
-    <div class="deco deco-dot deco-dot-1"></div>
-    <div class="deco deco-dot deco-dot-2"></div>
+    <div class="hero-deco-layer">
+      <div class="deco deco-blob-1"></div>
+      <div class="deco deco-blob-2"></div>
+      <div class="deco deco-ring deco-ring-1"></div>
+      <div class="deco deco-ring deco-ring-2"></div>
+      <div class="deco deco-ring deco-ring-3"></div>
+      <div class="deco deco-dot deco-dot-1"></div>
+      <div class="deco deco-dot deco-dot-2"></div>
+    </div>
     <div class="wrap" id="top">
       <div class="hero">
         <div class="hero-content">
