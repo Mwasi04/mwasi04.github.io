@@ -1,0 +1,1390 @@
+<meta charset="utf-8" />
+<title>Riverstone Student Manager</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#FFFFFF;
+    --bg-soft:#F7F8FA;
+    --surface:#FFFFFF;
+    --border:#E5E7EE;
+    --border-strong:#D2D6E2;
+    --text:#1B2233;
+    --text-muted:#667085;
+    --text-faint:#98A2B8;
+    --primary:#3E63DD;
+    --primary-dark:#2E4FC0;
+    --primary-soft:#E8EDFC;
+    --primary-soft-2:#DDE6FD;
+    --success:#16A34A;
+    --success-soft:#DCFCE7;
+    --danger:#DC2626;
+    --danger-soft:#FEE2E2;
+    --warning:#B45309;
+    --warning-soft:#FEF3C7;
+    --slate:#5B6478;
+    --slate-soft:#F1F2F6;
+    --radius:14px;
+    --radius-sm:9px;
+    --shadow:0 1px 2px rgba(20,27,52,.05), 0 6px 20px -12px rgba(20,27,52,.14);
+    --shadow-lg:0 20px 50px -20px rgba(20,27,52,.22);
+    color-scheme: light;
+  }
+  *,*::before,*::after{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Public Sans', system-ui, -apple-system, sans-serif;
+    font-size:14.5px;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,h4{
+    font-family:'Manrope', system-ui, sans-serif;
+    font-weight:700;
+    margin:0;
+    letter-spacing:-0.01em;
+    text-wrap:balance;
+  }
+  .mono{font-family:'IBM Plex Mono', ui-monospace, monospace; font-variant-numeric: tabular-nums;}
+  a{color:inherit;}
+  button, input, select, textarea{font-family:inherit; font-size:inherit; color:inherit;}
+  button{cursor:pointer;}
+  ::selection{background:var(--primary-soft-2);}
+  .hidden{display:none !important;}
+
+  /* ---------- Buttons ---------- */
+  .btn{
+    display:inline-flex; align-items:center; justify-content:center; gap:7px;
+    border-radius:10px; border:1px solid transparent; padding:9px 15px;
+    font-weight:600; font-size:13.5px; transition:.15s ease; white-space:nowrap;
+  }
+  .btn svg{width:15px;height:15px;flex:none;}
+  .btn-primary{background:var(--primary); color:#fff;}
+  .btn-primary:hover{background:var(--primary-dark);}
+  .btn-outline{background:var(--surface); border-color:var(--border-strong); color:var(--text);}
+  .btn-outline:hover{border-color:var(--primary); color:var(--primary);}
+  .btn-ghost{background:transparent; color:var(--text-muted);}
+  .btn-ghost:hover{background:var(--slate-soft); color:var(--text);}
+  .btn-danger{background:var(--danger-soft); color:var(--danger);}
+  .btn-danger:hover{filter:brightness(.95);}
+  .btn-success{background:var(--success); color:#fff;}
+  .btn-success:hover{filter:brightness(.94);}
+  .btn-sm{padding:6px 11px; font-size:12.5px; border-radius:8px;}
+  .btn-block{width:100%;}
+  .btn:disabled{opacity:.5; cursor:not-allowed;}
+  .icon-btn{display:inline-flex; align-items:center; justify-content:center; width:32px; height:32px; border-radius:8px; border:1px solid var(--border); background:var(--surface); color:var(--text-muted);}
+  .icon-btn:hover{color:var(--primary); border-color:var(--primary);}
+  .icon-btn svg{width:15px;height:15px;}
+
+  /* ---------- Layout: auth ---------- */
+  .auth-shell{min-height:100vh; display:flex; align-items:center; justify-content:center; padding:28px;}
+  .auth-grid{display:grid; grid-template-columns:1fr 1fr; max-width:920px; width:100%; background:var(--surface); border-radius:22px; overflow:hidden; box-shadow:var(--shadow-lg); border:1px solid var(--border);}
+  .auth-side{background:linear-gradient(160deg, var(--primary) 0%, var(--primary-dark) 100%); color:#fff; padding:44px 38px; display:flex; flex-direction:column; justify-content:space-between; position:relative; overflow:hidden;}
+  .auth-side::after{content:""; position:absolute; width:340px; height:340px; border-radius:50%; background:rgba(255,255,255,.08); right:-120px; bottom:-140px;}
+  .auth-side::before{content:""; position:absolute; width:180px; height:180px; border-radius:50%; background:rgba(255,255,255,.07); left:-60px; top:-60px;}
+  .brand-mark{display:flex; align-items:center; gap:10px; font-family:'Manrope'; font-weight:800; font-size:18px; position:relative; z-index:1;}
+  .brand-mark .logo{width:34px;height:34px; border-radius:9px; background:rgba(255,255,255,.18); display:flex; align-items:center; justify-content:center; font-weight:800;}
+  .auth-side h2{font-size:26px; margin:26px 0 10px; position:relative; z-index:1;}
+  .auth-side p{opacity:.85; font-size:13.5px; max-width:280px; position:relative; z-index:1;}
+  .auth-side .role-pills{display:flex; flex-wrap:wrap; gap:8px; margin-top:22px; position:relative; z-index:1;}
+  .auth-side .role-pills span{background:rgba(255,255,255,.14); border:1px solid rgba(255,255,255,.25); padding:5px 11px; border-radius:100px; font-size:12px; font-weight:600;}
+  .auth-side .demo-hint{position:relative; z-index:1; background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.22); border-radius:12px; padding:12px 14px; font-size:12px; line-height:1.6;}
+  .auth-side .demo-hint b{font-family:'IBM Plex Mono'; font-weight:600;}
+  .auth-form{padding:40px 38px; display:flex; flex-direction:column;}
+  .auth-form h1{font-size:22px; margin-bottom:4px;}
+  .auth-form .sub{color:var(--text-muted); font-size:13px; margin-bottom:22px;}
+  .field{margin-bottom:14px;}
+  .field label{display:block; font-size:12.5px; font-weight:600; color:var(--text-muted); margin-bottom:6px;}
+  .field input, .field select, .field textarea{
+    width:100%; padding:10px 12px; border-radius:9px; border:1px solid var(--border-strong);
+    background:var(--bg-soft); color:var(--text); outline:none; transition:.15s;
+  }
+  .field textarea{resize:vertical; min-height:64px;}
+  .field input:focus, .field select:focus, .field textarea:focus{border-color:var(--primary); background:var(--surface); box-shadow:0 0 0 3px var(--primary-soft);}
+  .field .hint{font-size:11.5px; color:var(--text-faint); margin-top:5px;}
+  .field-row{display:grid; grid-template-columns:1fr 1fr; gap:12px;}
+  .checkrow{display:flex; align-items:center; gap:8px; font-size:13px; color:var(--text-muted); margin-bottom:14px;}
+  .form-error{background:var(--danger-soft); color:var(--danger); padding:9px 12px; border-radius:9px; font-size:12.5px; margin-bottom:14px; display:none;}
+  .form-error.show{display:block;}
+  .auth-switch{text-align:center; margin-top:16px; font-size:13px; color:var(--text-muted);}
+  .auth-switch button{background:none; border:none; color:var(--primary); font-weight:600; padding:0;}
+  .chip-select{display:flex; gap:8px; margin-bottom:18px;}
+  .chip-select .chip{flex:1; text-align:center; padding:10px 6px; border-radius:10px; border:1.5px solid var(--border-strong); font-weight:600; font-size:12.5px; color:var(--text-muted); background:var(--bg-soft);}
+  .chip-select .chip.active{border-color:var(--primary); color:var(--primary); background:var(--primary-soft);}
+  .pending-card{max-width:420px; margin:0 auto; text-align:center; background:var(--surface); border:1px solid var(--border); border-radius:18px; padding:40px 32px; box-shadow:var(--shadow-lg);}
+  .pending-card .ring{width:60px;height:60px;border-radius:50%; background:var(--warning-soft); color:var(--warning); display:flex; align-items:center; justify-content:center; margin:0 auto 16px;}
+  .pending-card .ring svg{width:28px;height:28px;}
+
+  /* ---------- App Shell ---------- */
+  .shell{display:flex; min-height:100vh;}
+  .sidebar{width:236px; flex:none; background:var(--surface); border-right:1px solid var(--border); display:flex; flex-direction:column; padding:20px 14px; position:sticky; top:0; height:100vh;}
+  .sidebar .brand{display:flex; align-items:center; gap:10px; padding:4px 8px 22px;}
+  .sidebar .brand .logo{width:32px;height:32px;border-radius:9px; background:var(--primary); color:#fff; display:flex; align-items:center; justify-content:center; font-family:'Manrope'; font-weight:800; font-size:14px;}
+  .sidebar .brand b{font-family:'Manrope'; font-size:15px;}
+  .nav-group-label{font-size:10.5px; text-transform:uppercase; letter-spacing:.07em; color:var(--text-faint); font-weight:700; margin:14px 10px 6px;}
+  .nav-item{display:flex; align-items:center; gap:11px; padding:9px 11px; border-radius:9px; color:var(--text-muted); font-weight:600; font-size:13.5px; margin-bottom:2px; border:1px solid transparent;}
+  .nav-item svg{width:17px;height:17px; flex:none;}
+  .nav-item .dot{margin-left:auto; min-width:18px; height:18px; border-radius:100px; background:var(--danger); color:#fff; font-size:10px; font-weight:700; display:flex; align-items:center; justify-content:center; padding:0 5px; font-family:'IBM Plex Mono';}
+  .nav-item:hover{background:var(--bg-soft); color:var(--text);}
+  .nav-item.active{background:var(--primary-soft); color:var(--primary-dark); border-color:var(--primary-soft-2);}
+  .sidebar-foot{margin-top:auto; padding-top:14px; border-top:1px solid var(--border);}
+  .user-chip{display:flex; align-items:center; gap:10px; padding:8px; border-radius:10px;}
+  .user-chip:hover{background:var(--bg-soft);}
+  .avatar{width:34px;height:34px;border-radius:50%; background:var(--primary-soft); color:var(--primary-dark); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:12.5px; flex:none; font-family:'Manrope';}
+  .avatar.lg{width:88px;height:88px; font-size:28px; border:3px solid var(--primary-soft);}
+  .user-chip .who{overflow:hidden;}
+  .user-chip .who b{display:block; font-size:13px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .user-chip .who span{font-size:11px; color:var(--text-faint); text-transform:capitalize;}
+
+  .main{flex:1; min-width:0;}
+  .topbar{position:sticky; top:0; z-index:5; background:rgba(255,255,255,.86); backdrop-filter:blur(8px); border-bottom:1px solid var(--border); padding:16px 30px; display:flex; align-items:center; justify-content:space-between; gap:16px;}
+  .topbar h1{font-size:19px;}
+  .topbar .crumb{font-size:12px; color:var(--text-faint); margin-top:2px;}
+  .content{padding:26px 30px 60px;}
+  .content-narrow{max-width:900px;}
+
+  /* ---------- Cards / Grid ---------- */
+  .card{background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); box-shadow:var(--shadow);}
+  .card-pad{padding:20px 22px;}
+  .card-head{display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; gap:10px; flex-wrap:wrap;}
+  .card-head h3{font-size:15.5px;}
+  .card-head .sub{font-size:12px; color:var(--text-faint); margin-top:2px; font-weight:500; font-family:'Public Sans';}
+  .stat-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:16px; margin-bottom:22px;}
+  .stat-card{background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:18px 20px; box-shadow:var(--shadow); display:flex; flex-direction:column; gap:10px;}
+  .stat-card .top{display:flex; align-items:center; justify-content:space-between;}
+  .stat-card .ico{width:36px;height:36px;border-radius:10px; display:flex; align-items:center; justify-content:center;}
+  .stat-card .ico svg{width:18px;height:18px;}
+  .stat-card .val{font-family:'Manrope'; font-size:26px; font-weight:800;}
+  .stat-card .lbl{font-size:12.5px; color:var(--text-muted); font-weight:600;}
+  .two-col{display:grid; grid-template-columns:1.35fr 1fr; gap:20px; align-items:start;}
+  .stack{display:flex; flex-direction:column; gap:20px;}
+  @media (max-width:980px){ .two-col{grid-template-columns:1fr;} .field-row{grid-template-columns:1fr;} .sidebar{position:fixed; z-index:20; transform:translateX(-100%); transition:.2s; box-shadow:var(--shadow-lg);} .sidebar.open{transform:translateX(0);} .menu-toggle{display:inline-flex !important;} }
+
+  /* ---------- Table ---------- */
+  .table-wrap{overflow-x:auto; border-radius:var(--radius);}
+  table{width:100%; border-collapse:collapse; font-size:13.5px;}
+  thead th{text-align:left; font-size:11px; text-transform:uppercase; letter-spacing:.05em; color:var(--text-faint); font-weight:700; padding:0 14px 10px; border-bottom:1px solid var(--border);}
+  tbody td{padding:12px 14px; border-bottom:1px solid var(--border); vertical-align:middle;}
+  tbody tr:last-child td{border-bottom:none;}
+  tbody tr.clickable:hover{background:var(--bg-soft); cursor:pointer;}
+  .cell-main{font-weight:600;}
+  .cell-sub{font-size:12px; color:var(--text-faint); margin-top:2px;}
+  .row-actions{display:flex; gap:6px; justify-content:flex-end;}
+  .empty-state{text-align:center; padding:48px 20px; color:var(--text-faint);}
+  .empty-state .ico{width:48px;height:48px;border-radius:14px; background:var(--slate-soft); display:flex; align-items:center; justify-content:center; margin:0 auto 14px; color:var(--text-faint);}
+  .empty-state .ico svg{width:22px;height:22px;}
+  .empty-state b{color:var(--text-muted); display:block; margin-bottom:4px; font-size:14px;}
+
+  /* ---------- Badges / pills ---------- */
+  .badge{display:inline-flex; align-items:center; gap:5px; padding:3px 10px; border-radius:100px; font-size:11.5px; font-weight:700;}
+  .badge.green{background:var(--success-soft); color:var(--success);}
+  .badge.red{background:var(--danger-soft); color:var(--danger);}
+  .badge.amber{background:var(--warning-soft); color:var(--warning);}
+  .badge.blue{background:var(--primary-soft); color:var(--primary-dark);}
+  .badge.slate{background:var(--slate-soft); color:var(--slate);}
+  .badge .dot{width:6px;height:6px;border-radius:50%; background:currentColor;}
+
+  /* ---------- Info list / profile ---------- */
+  .info-grid{display:grid; grid-template-columns:1fr 1fr; gap:16px 24px;}
+  .info-item{display:flex; align-items:flex-start; gap:10px;}
+  .info-item .ico{width:30px;height:30px;border-radius:8px; background:var(--primary-soft); color:var(--primary-dark); display:flex; align-items:center; justify-content:center; flex:none;}
+  .info-item .ico svg{width:15px;height:15px;}
+  .info-item .lbl{font-size:11px; color:var(--text-faint); font-weight:600; text-transform:uppercase; letter-spacing:.03em;}
+  .info-item .val{font-weight:600; font-size:13.5px; margin-top:1px;}
+  .profile-head{display:flex; gap:20px; align-items:center; flex-wrap:wrap;}
+  .profile-head .names{flex:1; min-width:220px;}
+  .profile-head h2{font-size:22px; display:flex; align-items:center; gap:10px; flex-wrap:wrap;}
+  .profile-head .meta{color:var(--text-muted); font-size:13px; margin-top:4px;}
+  .overview-row{display:flex; flex-direction:column; gap:10px; min-width:220px;}
+  .overview-item{display:flex; align-items:center; justify-content:space-between; gap:14px; font-size:13px; padding:9px 12px; background:var(--bg-soft); border-radius:9px; border:1px solid var(--border);}
+  .overview-item .l{display:flex; align-items:center; gap:8px; color:var(--text-muted); font-weight:600; white-space:nowrap;}
+  .overview-item .v{flex:none; white-space:nowrap;}
+  .overview-row{align-self:stretch;}
+  .overview-item .l svg{width:14px;height:14px;}
+  .overview-item .v{font-weight:700; font-family:'IBM Plex Mono';}
+
+  .donut-wrap{display:flex; align-items:center; gap:20px; flex-wrap:wrap;}
+  .donut{width:150px;height:150px;border-radius:50%; display:flex; align-items:center; justify-content:center; flex:none;}
+  .donut .hole{width:104px;height:104px;border-radius:50%; background:var(--surface); display:flex; flex-direction:column; align-items:center; justify-content:center;}
+  .donut .hole b{font-family:'Manrope'; font-size:22px;}
+  .donut .hole span{font-size:11px; color:var(--text-faint); font-weight:600;}
+  .legend{display:flex; flex-direction:column; gap:10px; flex:1; min-width:140px;}
+  .legend-item{display:flex; align-items:center; justify-content:space-between; font-size:13px;}
+  .legend-item .l{display:flex; align-items:center; gap:8px; font-weight:600; color:var(--text-muted);}
+  .legend-item .sw{width:9px;height:9px;border-radius:3px;}
+  .legend-item .v{font-family:'IBM Plex Mono'; font-weight:600;}
+  .divider{height:1px; background:var(--border); margin:14px 0;}
+  .mini-stat-row{display:flex; gap:22px; margin-top:6px;}
+  .mini-stat-row div b{display:block; font-family:'IBM Plex Mono'; font-size:15px;}
+  .mini-stat-row div span{font-size:11.5px; color:var(--text-faint);}
+
+  .event-item{display:flex; gap:12px; align-items:center; padding:10px 0; border-bottom:1px solid var(--border);}
+  .event-item:last-child{border-bottom:none;}
+  .event-date{width:48px; height:48px; border-radius:10px; background:var(--bg-soft); border:1px solid var(--border); display:flex; flex-direction:column; align-items:center; justify-content:center; flex:none;}
+  .event-date b{font-size:15px; font-family:'Manrope';}
+  .event-date span{font-size:9.5px; text-transform:uppercase; color:var(--text-faint); font-weight:700;}
+  .event-info{flex:1; min-width:0;}
+  .event-info b{font-size:13.5px; display:block;}
+  .event-info .when{font-size:11.5px; color:var(--text-faint);}
+
+  .modal-overlay{position:fixed; inset:0; background:rgba(15,18,28,.5); display:flex; align-items:center; justify-content:center; padding:20px; z-index:100; backdrop-filter:blur(2px);}
+  .modal{background:var(--surface); border-radius:16px; width:100%; max-width:520px; max-height:88vh; overflow-y:auto; box-shadow:var(--shadow-lg); border:1px solid var(--border);}
+  .modal.wide{max-width:680px;}
+  .modal-head{display:flex; align-items:center; justify-content:space-between; padding:18px 22px; border-bottom:1px solid var(--border); position:sticky; top:0; background:var(--surface);}
+  .modal-head h3{font-size:16px;}
+  .modal-body{padding:20px 22px;}
+  .modal-foot{padding:16px 22px; border-top:1px solid var(--border); display:flex; justify-content:flex-end; gap:10px; position:sticky; bottom:0; background:var(--surface);}
+
+  .toast-root{position:fixed; bottom:22px; right:22px; z-index:200; display:flex; flex-direction:column; gap:8px;}
+  .toast{background:var(--text); color:var(--bg); padding:11px 16px; border-radius:10px; font-size:13px; font-weight:600; box-shadow:var(--shadow-lg); display:flex; align-items:center; gap:9px; animation:slidein .18s ease;}
+  .toast.err{background:var(--danger);}
+  .toast.ok{background:var(--success);}
+  @keyframes slidein{from{transform:translateY(8px); opacity:0;} to{transform:translateY(0); opacity:1;}}
+
+  .search-bar{display:flex; align-items:center; gap:8px; background:var(--bg-soft); border:1px solid var(--border-strong); border-radius:9px; padding:8px 12px; min-width:220px;}
+  .search-bar svg{width:15px;height:15px; color:var(--text-faint); flex:none;}
+  .search-bar input{border:none; background:transparent; outline:none; width:100%;}
+  .toolbar{display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:16px;}
+  .toolbar .filters{display:flex; gap:8px; flex-wrap:wrap;}
+  select.slim{padding:8px 10px; border-radius:9px; border:1px solid var(--border-strong); background:var(--surface);}
+  .tab-row{display:flex; gap:6px; margin-bottom:16px; background:var(--bg-soft); padding:4px; border-radius:10px; width:fit-content;}
+  .tab-row button{padding:7px 14px; border-radius:8px; font-weight:600; font-size:13px; color:var(--text-muted); background:transparent; border:none;}
+  .tab-row button.active{background:var(--surface); color:var(--text); box-shadow:var(--shadow);}
+  .menu-toggle{display:none; margin-right:4px;}
+  .radio-line{display:flex; gap:14px; flex-wrap:wrap;}
+  .radio-opt{display:flex; align-items:center; gap:6px; font-size:13px; font-weight:600; padding:7px 12px; border:1.5px solid var(--border-strong); border-radius:9px; color:var(--text-muted);}
+  .radio-opt input{accent-color:var(--primary);}
+  .credential-box{background:var(--primary-soft); border:1px dashed var(--primary); border-radius:12px; padding:14px 16px; font-size:13px; margin-top:6px;}
+  .credential-box .row{display:flex; justify-content:space-between; margin-top:4px; font-family:'IBM Plex Mono'; font-weight:600;}
+</style>
+
+<div id="app"></div>
+<div id="toastRoot" class="toast-root"></div>
+
+<script>
+/* ============================= UTILITIES ============================= */
+function uid(p){ return p+'_'+Date.now().toString(36)+Math.random().toString(36).slice(2,7); }
+function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function todayISO(){ return new Date().toISOString().slice(0,10); }
+function fmtDate(iso){ if(!iso) return '—'; const d=new Date(iso+'T00:00:00'); if(isNaN(d)) return iso; return d.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}); }
+function fmtDateTime(iso){ const d=new Date(iso); if(isNaN(d)) return iso; return d.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'})+' · '+d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'}); }
+function initials(name){ if(!name) return '?'; const p=name.trim().split(/\s+/); return ((p[0]?.[0]||'')+(p[1]?.[0]||'')).toUpperCase(); }
+function money(n){ return 'K'+(Number(n)||0).toLocaleString('en-US',{minimumFractionDigits:2, maximumFractionDigits:2}); }
+const GRADE_POINTS = {'A+':4.0,'A':4.0,'A-':3.7,'B+':3.3,'B':3.0,'B-':2.7,'C+':2.3,'C':2.0,'C-':1.7,'D+':1.3,'D':1.0,'F':0.0};
+function gradeToPoint(g){ return GRADE_POINTS.hasOwnProperty(g) ? GRADE_POINTS[g] : null; }
+
+/* ============================= ICONS ============================= */
+function icon(name, cls){
+  const P = {
+    dashboard:'<rect x="3" y="3" width="7.5" height="7.5" rx="1.8"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="1.8"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="1.8"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="1.8"/>',
+    approvals:'<circle cx="12" cy="12" r="9"/><path d="M8 12.3l2.6 2.6L16.2 9"/>',
+    users:'<circle cx="9" cy="8.2" r="3.2"/><path d="M3 20c0-3.4 2.7-6.2 6-6.2s6 2.8 6 6.2"/><circle cx="17.3" cy="8.6" r="2.4"/><path d="M15.2 14c2.4.5 4.2 2.7 4.2 6"/>',
+    teacher:'<path d="M3 8.5l9-4.5 9 4.5-9 4.5-9-4.5z"/><path d="M7 10.8v4.4c0 1.6 2.2 2.9 5 2.9s5-1.3 5-2.9v-4.4"/><path d="M21 8.5v6"/>',
+    finance:'<rect x="2.5" y="6" width="19" height="12" rx="2.2"/><circle cx="12" cy="12" r="2.6"/><path d="M6.5 9v0M17.5 15v0"/>',
+    classes:'<path d="M5 4.5A1.8 1.8 0 0 1 6.8 2.7H19v18H6.8A1.8 1.8 0 0 1 5 18z"/><path d="M18.6 2.7v18"/>',
+    calendar:'<rect x="3.3" y="5.2" width="17.4" height="15.5" rx="2.2"/><path d="M3.3 9.6h17.4M8 3v4M16 3v4"/>',
+    settings:'<circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="8.2" stroke-dasharray="1.6 3.1"/>',
+    attendance:'<rect x="3.3" y="3.3" width="17.4" height="17.4" rx="3.2"/><path d="M7.8 12.2l2.9 2.9 5.5-5.7"/>',
+    results:'<rect x="5.5" y="2.8" width="13" height="18.4" rx="2"/><path d="M8.5 8h7M8.5 12h7M8.5 16h4.5"/>',
+    payments:'<rect x="2.5" y="6" width="19" height="12" rx="2.2"/><circle cx="12" cy="12" r="2.6"/><path d="M6.5 9v0M17.5 15v0"/>',
+    profile:'<circle cx="12" cy="8.3" r="4"/><path d="M4.2 20c0-4.4 3.5-8 7.8-8s7.8 3.6 7.8 8"/>',
+    logout:'<path d="M9.5 21H5.8A1.8 1.8 0 0 1 4 19.2V4.8A1.8 1.8 0 0 1 5.8 3H9.5"/><path d="M15.5 16.5L20.5 12l-5-4.5"/><path d="M20.2 12H9.8"/>',
+    plus:'<path d="M12 5v14M5 12h14"/>',
+    search:'<circle cx="10.8" cy="10.8" r="6.6"/><path d="M20 20l-4.6-4.6"/>',
+    edit:'<path d="M13.8 4.4l5.8 5.8L7.8 22H2v-5.8z"/>',
+    trash:'<path d="M4 7h16M9.5 7V4.8A1.3 1.3 0 0 1 10.8 3.5h2.4A1.3 1.3 0 0 1 14.5 4.8V7M6.5 7l1 12.5A2 2 0 0 0 9.5 21.3h5a2 2 0 0 0 2-1.8L17.5 7"/>',
+    check:'<path d="M4.5 12.5l5 5 10-11"/>',
+    x:'<path d="M6 6l12 12M18 6L6 18"/>',
+    clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5.5l4 2.3"/>',
+    mail:'<rect x="2.6" y="4.8" width="18.8" height="14.4" rx="2.2"/><path d="M3.2 6l8.8 6.7L20.8 6"/>',
+    phone:'<path d="M6 3.5c-1.8 0-2.7 1-2.4 2.7.5 3 2.6 8 6 11.4 3.4 3.4 8.4 5.5 11.4 6 1.7.3 2.7-.6 2.7-2.4v-2.6l-4.7-2-1.7 1.9a13 13 0 0 1-5.9-5.9l1.9-1.7-2-4.7H6z"/>',
+    idcard:'<rect x="2.5" y="5" width="19" height="14" rx="2.2"/><circle cx="8" cy="12" r="2.1"/><path d="M5.3 16.3c.4-1.6 1.5-2.4 2.7-2.4s2.3.8 2.7 2.4M14 9.5h5M14 13h5M14 16h3.2"/>',
+    location:'<path d="M12 21s7-6.4 7-11.6A7 7 0 0 0 5 9.4C5 14.6 12 21 12 21z"/><circle cx="12" cy="9.4" r="2.4"/>',
+    home:'<path d="M4 10.5L12 4l8 6.5"/><path d="M6 9.5V20h12V9.5"/><path d="M10 20v-6h4v6"/>',
+    droplet:'<path d="M12 3.2s6 6.7 6 11a6 6 0 1 1-12 0c0-4.3 6-11 6-11z"/>',
+    flag:'<path d="M5 3v18"/><path d="M5 4.5h11l-2.5 4L16 12.5H5"/>',
+    book:'<path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M18 3v16"/>',
+    warn:'<path d="M12 3.5L2.5 20h19z"/><path d="M12 9.5v5M12 17.2v0"/>',
+    key:'<circle cx="8" cy="15.5" r="4"/><path d="M11.2 12.3L19.5 4l1.8 1.8-2 2 1.6 1.6-2 2-1.6-1.6-2.3 2.3"/>',
+    grid:'<rect x="3" y="3" width="7.5" height="7.5" rx="1.8"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="1.8"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="1.8"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="1.8"/>',
+    menu:'<path d="M4 6.5h16M4 12h16M4 17.5h16"/>',
+    chart:'<path d="M4 20V10M11 20V4M18 20v-7"/>',
+    filter:'<path d="M4 5h16l-6 7.5V19l-4 2v-8.5z"/>',
+  };
+  return '<svg class="'+(cls||'')+'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'+(P[name]||P.dashboard)+'</svg>';
+}
+
+/* ============================= DATA STORE ============================= */
+const KEYS = ['users','students','teachers','financeStaff','admins','classes','subjects','classSubjectTeachers','terms','attendance','results','payments','events'];
+function migrateTermsShape(raw){
+  if(Array.isArray(raw)) return raw;
+  if(raw && Array.isArray(raw.list)){
+    return raw.list.map(label=>{
+      const m = String(label).match(/^(.*?),?\s*(\d{4})\s*$/);
+      const name = (m ? m[1].trim() : String(label)) || String(label);
+      const year = m ? parseInt(m[2],10) : new Date().getFullYear();
+      return {id:uid('term'), name, year, startDate:'', endDate:'', current:(label===raw.current)};
+    });
+  }
+  return [];
+}
+const DB = {
+  get(k){
+    try{
+      const raw = JSON.parse(localStorage.getItem('sms_'+k));
+      if(k==='terms') return migrateTermsShape(raw==null?[]:raw);
+      return raw || [];
+    }catch(e){ return []; }
+  },
+  set(k,v){ localStorage.setItem('sms_'+k, JSON.stringify(v)); },
+};
+function seed(){
+  if(localStorage.getItem('sms_seeded')) return;
+  const adminUserId = uid('u');
+  DB.set('users', [{id:adminUserId, name:'System Administrator', email:'admin@riverstone.edu', password:'Admin123', phone:'+260 97 000 0000', role:'admin', status:'approved', createdAt:new Date().toISOString()}]);
+  DB.set('admins', [{id:uid('adm'), userId:adminUserId}]);
+  DB.set('students', []); DB.set('teachers', []); DB.set('financeStaff', []);
+  DB.set('classes', []); DB.set('subjects', []); DB.set('classSubjectTeachers', []);
+  DB.set('terms', [{id:uid('term'), name:'Term 1', year:new Date().getFullYear(), startDate:'', endDate:'', current:true}]);
+  DB.set('attendance', []); DB.set('results', []); DB.set('payments', []); DB.set('events', []);
+  localStorage.setItem('sms_seeded','1');
+}
+/* ---- Term helpers ---- */
+function termLabel(t){ if(!t) return ''; return t.name + (t.year ? ', '+t.year : ''); }
+function sortedTerms(){ return DB.get('terms').slice().sort((a,b)=> (b.year-a.year) || String(a.name).localeCompare(String(b.name)) ); }
+function currentTermObj(){ const terms = DB.get('terms'); return terms.find(t=>t.current) || terms[0] || null; }
+function currentTermLabelStr(){ const t = currentTermObj(); return t ? termLabel(t) : ''; }
+function findTerm(id){ return DB.get('terms').find(t=>t.id===id); }
+
+/* ============================= AUTH ============================= */
+const Auth = {
+  currentUser(){ const id = localStorage.getItem('sms_session'); if(!id) return null; return DB.get('users').find(u=>u.id===id) || null; },
+  login(email, password){
+    const users = DB.get('users');
+    const u = users.find(x=>x.email.toLowerCase()===String(email).toLowerCase());
+    if(!u) return {ok:false, error:'No account found with that email.'};
+    if(u.password !== password) return {ok:false, error:'Incorrect password.'};
+    if(u.status==='pending') return {ok:false, error:'Your account is awaiting admin approval.'};
+    if(u.status==='rejected') return {ok:false, error:'Your registration request was declined. Contact administration.'};
+    localStorage.setItem('sms_session', u.id);
+    return {ok:true, user:u};
+  },
+  logout(){ localStorage.removeItem('sms_session'); App.go('login'); },
+};
+
+/* ============================= APP / ROUTER ============================= */
+const App = { sidebarOpen:false };
+App.go = function(hash){
+  const target = '#/'+hash;
+  if(location.hash === target){ render(); } else { location.hash = target; }
+};
+App.rerender = function(){ render(); };
+
+function toast(msg, type){
+  const root = document.getElementById('toastRoot');
+  const el = document.createElement('div');
+  el.className = 'toast'+(type==='err'?' err':type==='ok'?' ok':'');
+  el.innerHTML = icon(type==='err'?'x':'check')+'<span>'+esc(msg)+'</span>';
+  root.appendChild(el);
+  setTimeout(()=>{ el.style.opacity='0'; el.style.transition='.25s'; setTimeout(()=>el.remove(),250); }, 2600);
+}
+
+function openModal(title, bodyHtml, footHtml, opts){
+  closeModal();
+  const wrap = document.createElement('div');
+  wrap.className = 'modal-overlay';
+  wrap.id = 'modalOverlay';
+  wrap.innerHTML = '<div class="modal '+(opts&&opts.wide?'wide':'')+'">'+
+    '<div class="modal-head"><h3>'+esc(title)+'</h3><button class="icon-btn" onclick="closeModal()">'+icon('x')+'</button></div>'+
+    '<div class="modal-body">'+bodyHtml+'</div>'+
+    (footHtml ? '<div class="modal-foot">'+footHtml+'</div>' : '')+
+    '</div>';
+  wrap.addEventListener('mousedown', (e)=>{ if(e.target===wrap) closeModal(); });
+  document.body.appendChild(wrap);
+}
+function closeModal(){ const m = document.getElementById('modalOverlay'); if(m) m.remove(); }
+
+function badge(text, tone){ return '<span class="badge '+(tone||'slate')+'"><span class="dot"></span>'+esc(text)+'</span>'; }
+function statusTone(status){ return status==='Active'||status==='approved'||status==='Paid'||status==='Present' ? 'green' : status==='Pending'||status==='Late' ? 'amber' : status==='Overdue'||status==='rejected'||status==='Absent'||status==='Inactive' ? 'red' : 'slate'; }
+
+/* ============================= SEARCH / HELPERS ============================= */
+function getUserFor(role, refId, key){ /* not used generically */ }
+function findClass(id){ return DB.get('classes').find(c=>c.id===id); }
+function className(id){ const c = findClass(id); return c ? c.name+(c.stream?' · '+c.stream:'') : '—'; }
+function studentUser(s){ return DB.get('users').find(u=>u.id===s.userId); }
+function teacherUser(t){ return DB.get('users').find(u=>u.id===t.userId); }
+/* -- class teacher / subject teacher assignment helpers -- */
+function homeroomClassOf(teacherId){ return DB.get('classes').find(c=>c.classTeacherId===teacherId) || null; }
+function classTeacherOf(classId){ const c=findClass(classId); if(!c||!c.classTeacherId) return null; return DB.get('teachers').find(t=>t.id===c.classTeacherId) || null; }
+function classTeacherName(classId){ const t=classTeacherOf(classId); if(!t) return '—'; const u=teacherUser(t); return u?u.name:'—'; }
+function subjectAssignmentsOf(teacherId){
+  return DB.get('classSubjectTeachers').filter(x=>x.teacherId===teacherId).map(x=>({classId:x.classId, subject:x.subject, cls:findClass(x.classId)})).filter(a=>a.cls);
+}
+function subjectTeacherFor(classId, subject){
+  const row = DB.get('classSubjectTeachers').find(x=>x.classId===classId && x.subject===subject);
+  if(!row) return null;
+  return DB.get('teachers').find(t=>t.id===row.teacherId) || null;
+}
+function teacherStudentIds(teacherId){
+  const t = DB.get('teachers').find(x=>x.id===teacherId);
+  if(!t) return [];
+  const classIds = new Set();
+  const home = homeroomClassOf(teacherId); if(home) classIds.add(home.id);
+  subjectAssignmentsOf(teacherId).forEach(a=>classIds.add(a.classId));
+  return DB.get('students').filter(s=>classIds.has(s.classId)).map(s=>s.id);
+}
+function financeUser(f){ return DB.get('users').find(u=>u.id===f.userId); }
+function upcomingEvents(limit){
+  const evs = DB.get('events').filter(e=>e.date >= todayISO()).sort((a,b)=>a.date.localeCompare(b.date)||String(a.time).localeCompare(String(b.time)));
+  return limit ? evs.slice(0,limit) : evs;
+}
+function eventTypeTone(t){ return t==='Exam'?'blue':t==='Meeting'?'green':t==='Holiday'?'amber':'slate'; }
+
+function studentAttendanceStats(studentId){
+  const rows = DB.get('attendance').filter(a=>a.studentId===studentId);
+  const total = rows.length;
+  const present = rows.filter(r=>r.status==='Present').length;
+  const late = rows.filter(r=>r.status==='Late').length;
+  const absent = rows.filter(r=>r.status==='Absent').length;
+  const pct = n => total ? Math.round((n/total)*100) : 0;
+  return {total, present, late, absent, presentPct:pct(present), latePct:pct(late), absentPct:pct(absent), rows};
+}
+function donutHTML(stats){
+  const p1 = stats.presentPct, p2 = stats.presentPct+stats.latePct;
+  const bg = stats.total===0 ? 'var(--slate-soft)' :
+    `conic-gradient(var(--success) 0 ${p1}%, var(--warning) ${p1}% ${p2}%, var(--danger) ${p2}% 100%)`;
+  return '<div class="donut-wrap">'+
+    '<div class="donut" style="background:'+bg+'"><div class="hole"><b>'+(stats.total?stats.presentPct+'%':'—')+'</b><span>Present</span></div></div>'+
+    '<div class="legend">'+
+      '<div class="legend-item"><span class="l"><span class="sw" style="background:var(--success)"></span>Present</span><span class="v">'+stats.presentPct+'%</span></div>'+
+      '<div class="legend-item"><span class="l"><span class="sw" style="background:var(--warning)"></span>Late</span><span class="v">'+stats.latePct+'%</span></div>'+
+      '<div class="legend-item"><span class="l"><span class="sw" style="background:var(--danger)"></span>Absent</span><span class="v">'+stats.absentPct+'%</span></div>'+
+      '<div class="divider" style="margin:6px 0"></div>'+
+      '<div class="legend-item"><span class="l">Total sessions</span><span class="v">'+stats.total+'</span></div>'+
+    '</div></div>';
+}
+function studentResultsForTerm(studentId, term){ return DB.get('results').filter(r=>r.studentId===studentId && r.term===term); }
+function studentGPA(studentId, term){
+  const rows = studentResultsForTerm(studentId, term).map(r=>gradeToPoint(r.grade)).filter(p=>p!==null);
+  if(!rows.length) return null;
+  return (rows.reduce((a,b)=>a+b,0)/rows.length).toFixed(2);
+}
+function paymentDisplayStatus(p){ return (p.status==='Pending' && p.dueDate && p.dueDate < todayISO()) ? 'Overdue' : p.status; }
+function studentBalance(studentId){
+  return DB.get('payments').filter(p=>p.studentId===studentId && paymentDisplayStatus(p)!=='Paid').reduce((s,p)=>s+Number(p.amount||0),0);
+}
+
+/* ============================= NAV CONFIG ============================= */
+const NAV = {
+  admin: [
+    {sec:'dashboard', label:'Dashboard', ic:'dashboard'},
+    {sec:'students', label:'Students', ic:'users'},
+    {sec:'teachers', label:'Teachers', ic:'teacher'},
+    {sec:'finance', label:'Finance Staff', ic:'finance'},
+    {sec:'classes', label:'Classes', ic:'classes'},
+    {sec:'events', label:'Events', ic:'calendar'},
+    {sec:'settings', label:'Settings', ic:'settings'},
+  ],
+  teacher: [
+    {sec:'dashboard', label:'Dashboard', ic:'dashboard'},
+    {sec:'students', label:'My Students', ic:'users'},
+    {sec:'attendance', label:'Attendance', ic:'attendance'},
+    {sec:'results', label:'Results', ic:'results'},
+    {sec:'profile', label:'My Profile', ic:'profile'},
+  ],
+  finance: [
+    {sec:'dashboard', label:'Dashboard', ic:'dashboard'},
+    {sec:'payments', label:'Payments', ic:'payments'},
+    {sec:'profile', label:'My Profile', ic:'profile'},
+  ],
+  student: [
+    {sec:'dashboard', label:'Dashboard', ic:'dashboard'},
+    {sec:'results', label:'My Results', ic:'results'},
+    {sec:'attendance', label:'My Attendance', ic:'attendance'},
+  ],
+};
+const ROLE_LABEL = {admin:'Administration', teacher:'Teacher', finance:'Finance', student:'Student'};
+
+/* ============================= RENDER ROOT ============================= */
+function render(){
+  const app = document.getElementById('app');
+  const user = Auth.currentUser();
+  const hash = (location.hash || '#/login').replace('#/','');
+  const parts = hash.split('/').filter(Boolean);
+
+  if(!user){
+    app.innerHTML = renderLogin(); bindLogin();
+    return;
+  }
+  if(parts[0]==='login' || !parts[0]){ location.hash = '#/'+user.role+'/dashboard'; return; }
+  if(parts[0] !== user.role){ location.hash = '#/'+user.role+'/dashboard'; return; }
+
+  const section = parts[1] || 'dashboard';
+  const subId = parts[2];
+  app.innerHTML = renderShell(user, section);
+  const content = document.getElementById('content');
+  content.innerHTML = renderSection(user, section, subId);
+}
+window.addEventListener('hashchange', render);
+window.addEventListener('DOMContentLoaded', ()=>{ seed(); render(); });
+
+/* ============================= SHELL ============================= */
+function renderShell(user, section){
+  const nav = NAV[user.role];
+  const navHtml = nav.map(n=>{
+    const active = n.sec===section;
+    const dotVal = n.dot ? n.dot() : 0;
+    return '<a class="nav-item'+(active?' active':'')+'" href="#/'+user.role+'/'+n.sec+'" onclick="App.sidebarOpen=false;">'+icon(n.ic)+'<span>'+n.label+'</span>'+(dotVal?'<span class="dot">'+dotVal+'</span>':'')+'</a>';
+  }).join('');
+  return '<div class="shell">'+
+    '<aside class="sidebar'+(App.sidebarOpen?' open':'')+'">'+
+      '<div class="brand"><div class="logo">R</div><b>Riverstone</b></div>'+
+      '<div class="nav-group-label">'+ROLE_LABEL[user.role]+'</div>'+
+      navHtml+
+      '<div class="sidebar-foot">'+
+        '<div class="user-chip"><div class="avatar">'+initials(user.name)+'</div><div class="who"><b>'+esc(user.name)+'</b><span>'+ROLE_LABEL[user.role]+'</span></div></div>'+
+        '<a class="nav-item" href="#" onclick="Auth.logout();return false;" style="margin-top:6px;color:var(--danger)">'+icon('logout')+'<span>Log out</span></a>'+
+      '</div>'+
+    '</aside>'+
+    '<main class="main">'+
+      '<div class="topbar"><div style="display:flex;align-items:center"><button class="menu-toggle icon-btn" onclick="App.sidebarOpen=!App.sidebarOpen;render();">'+icon('menu')+'</button><div><h1>'+sectionTitle(section)+'</h1><div class="crumb">'+ROLE_LABEL[user.role]+' · '+new Date().toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long'})+'</div></div></div></div>'+
+      '<div class="content" id="content"></div>'+
+    '</main>'+
+  '</div>';
+}
+function sectionTitle(sec){
+  const map = {dashboard:'Dashboard', students:'Students', teachers:'Teachers', finance:'Finance Staff', classes:'Classes', events:'Events', settings:'Settings', attendance:'Attendance', results:'Results', payments:'Payments', profile:'My Profile'};
+  return map[sec] || 'Dashboard';
+}
+function renderSection(user, section, subId){
+  const key = user.role+'/'+section;
+  const routes = {
+    'admin/dashboard': ()=>adminDashboard(),
+    'admin/students': ()=> subId ? adminStudentProfile(subId) : adminStudents(),
+    'admin/teachers': ()=>adminTeachers(),
+    'admin/finance': ()=>adminFinance(),
+    'admin/classes': ()=>adminClasses(),
+    'admin/events': ()=>adminEvents(),
+    'admin/settings': ()=>adminSettings(),
+    'teacher/dashboard': ()=>teacherDashboard(user),
+    'teacher/students': ()=>teacherStudents(user),
+    'teacher/attendance': ()=>teacherAttendance(user),
+    'teacher/results': ()=>teacherResults(user),
+    'teacher/profile': ()=>teacherProfile(user),
+    'finance/dashboard': ()=>financeDashboard(),
+    'finance/payments': ()=> subId ? financePaymentDetail(subId) : financePayments(),
+    'finance/profile': ()=>financeProfile(user),
+    'student/dashboard': ()=>studentDashboard(user),
+    'student/results': ()=>studentResultsPage(user),
+    'student/attendance': ()=>studentAttendancePage(user),
+  };
+  const fn = routes[key];
+  return fn ? fn() : emptyState('dashboard','Nothing here yet');
+}
+function emptyState(ic, title, sub, actionHtml){
+  return '<div class="empty-state">'+ '<div class="ico">'+icon(ic)+'</div>'+'<b>'+esc(title)+'</b>'+(sub?'<div>'+esc(sub)+'</div>':'')+(actionHtml?'<div style="margin-top:14px">'+actionHtml+'</div>':'')+'</div>';
+}
+
+/* ============================= LOGIN / SIGNUP ============================= */
+function renderLogin(){
+  return '<div class="auth-shell"><div class="auth-grid">'+
+    '<div class="auth-side">'+
+      '<div class="brand-mark"><div class="logo">R</div>Riverstone Student Manager</div>'+
+      '<div><h2>One home for admissions, results &amp; fees.</h2><p>A single workspace where administration, teachers, finance and students each see exactly what they need.</p>'+
+      '<div class="role-pills"><span>Administration</span><span>Finance</span><span>Teacher</span><span>Student</span></div></div>'+
+      '<div class="demo-hint">Demo admin login<br><b>admin@riverstone.edu</b> / <b>Admin123</b></div>'+
+    '</div>'+
+    '<div class="auth-form">'+
+      '<h1>Welcome back</h1><div class="sub">Sign in to continue to your dashboard.</div>'+
+      '<div class="form-error" id="loginError"></div>'+
+      '<form id="loginForm">'+
+        '<div class="field"><label>Email address</label><input type="email" name="email" placeholder="you@school.edu" required></div>'+
+        '<div class="field"><label>Password</label><input type="password" name="password" placeholder="••••••••" required></div>'+
+        '<button class="btn btn-primary btn-block" type="submit">Sign in</button>'+
+      '</form>'+
+      '<div class="auth-switch">Accounts are created by Administration — students, teachers and finance staff don\'t sign themselves up.</div>'+
+    '</div>'+
+  '</div></div>';
+}
+function bindLogin(){
+  const f = document.getElementById('loginForm');
+  if(!f) return;
+  f.addEventListener('submit', e=>{
+    e.preventDefault();
+    const fd = new FormData(f);
+    const res = Auth.login(fd.get('email').trim(), fd.get('password'));
+    const errEl = document.getElementById('loginError');
+    if(!res.ok){ errEl.textContent = res.error; errEl.classList.add('show'); return; }
+    location.hash = '#/'+res.user.role+'/dashboard';
+  });
+}
+
+/* ============================= SHARED: helpers for people ============================= */
+function genPassword(){ const c='ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789'; let s=''; for(let i=0;i<8;i++) s+=c[Math.floor(Math.random()*c.length)]; return s; }
+function nextSeq(list, field){ return (list.length ? Math.max(...list.map(x=>Number((x[field]||'').toString().replace(/\D/g,''))||0)) : 0) + 1; }
+function creditCredentials(email, pass){
+  return '<div class="credential-box">Share these sign-in details with them:'+
+    '<div class="row"><span>Email</span><span>'+esc(email)+'</span></div>'+
+    '<div class="row"><span>Temporary password</span><span>'+esc(pass)+'</span></div></div>';
+}
+
+/* ============================= ADMIN: DASHBOARD ============================= */
+function adminDashboard(){
+  const students = DB.get('students'), teachers = DB.get('teachers'), fin = DB.get('financeStaff');
+  const recent = [...students].sort((a,b)=>(b.createdAt||'').localeCompare(a.createdAt||'')).slice(0,5);
+  const cards = [
+    {label:'Total Students', val:students.length, ic:'users', tone:'blue'},
+    {label:'Total Teachers', val:teachers.length, ic:'teacher', tone:'green'},
+    {label:'Finance Staff', val:fin.length, ic:'finance', tone:'amber'},
+  ];
+  return '<div class="stat-grid">'+cards.map(c=>statCard(c)).join('')+'</div>'+
+  '<div class="two-col">'+
+    '<div class="card card-pad">'+
+      '<div class="card-head"><h3>Recent admissions</h3><a class="btn btn-outline btn-sm" href="#/admin/students">View all</a></div>'+
+      (recent.length ? '<div class="table-wrap"><table><thead><tr><th>Student</th><th>Class</th><th>Admission No.</th><th>Status</th></tr></thead><tbody>'+
+        recent.map(s=>{ const u=studentUser(s); return '<tr class="clickable" onclick="App.go(\'admin/students/'+s.id+'\')"><td><div class="cell-main">'+esc(u?.name||'—')+'</div></td><td>'+esc(className(s.classId))+'</td><td class="mono">'+esc(s.admissionNo)+'</td><td>'+badge(s.status, statusTone(s.status))+'</td></tr>'; }).join('')+
+        '</tbody></table></div>' : emptyState('users','No students admitted yet','Use New Admission to add your first student.','<a class="btn btn-primary btn-sm" href="#/admin/students">Go to Students</a>')) +
+    '</div>'+
+    '<div class="card card-pad">'+
+      '<div class="card-head"><h3>Upcoming events</h3><a class="btn btn-outline btn-sm" href="#/admin/events">Manage</a></div>'+
+      eventsListHtml(upcomingEvents(5))+
+    '</div>'+
+  '</div>';
+}
+function statCard(c){
+  return '<div class="stat-card"><div class="top"><span class="lbl">'+c.label+'</span><div class="ico" style="background:'+toneBg(c.tone)+';color:'+toneFg(c.tone)+'">'+icon(c.ic)+'</div></div><div class="val mono">'+c.val+'</div></div>';
+}
+function toneBg(t){ return t==='blue'?'var(--primary-soft)':t==='green'?'var(--success-soft)':t==='amber'?'var(--warning-soft)':'var(--danger-soft)'; }
+function toneFg(t){ return t==='blue'?'var(--primary-dark)':t==='green'?'var(--success)':t==='amber'?'var(--warning)':'var(--danger)'; }
+function eventsListHtml(evs){
+  if(!evs.length) return emptyState('calendar','No upcoming events','Create one from the Events section.');
+  return evs.map(e=>{
+    const d = new Date(e.date+'T00:00:00');
+    return '<div class="event-item"><div class="event-date"><b>'+d.getDate()+'</b><span>'+d.toLocaleDateString('en-GB',{month:'short'})+'</span></div>'+
+      '<div class="event-info"><b>'+esc(e.title)+'</b><div class="when">'+fmtDate(e.date)+(e.time?' · '+esc(e.time):'')+'</div></div>'+
+      badge(e.type, eventTypeTone(e.type))+
+    '</div>';
+  }).join('');
+}
+
+function infoItem(ic,label,val){
+  return '<div class="info-item"><div class="ico">'+icon(ic)+'</div><div><div class="lbl">'+esc(label)+'</div><div class="val">'+esc(val||'—')+'</div></div></div>';
+}
+function jsStr(s){ return String(s==null?'':s).replace(/\\/g,'\\\\').replace(/'/g,"\\'"); }
+
+/* ============================= ADMIN: STUDENTS ============================= */
+function adminStudents(){
+  window._stuFilter = window._stuFilter || {q:'', classId:'', status:''};
+  const classes = DB.get('classes');
+  return '<div class="toolbar">'+
+    '<div class="search-bar">'+icon('search')+'<input id="stuSearch" placeholder="Search by name or admission no." oninput="updateStudentsTable()" value="'+esc(window._stuFilter.q)+'"></div>'+
+    '<div class="filters">'+
+      '<select class="slim" id="stuClassFilter" onchange="updateStudentsTable()"><option value="">All classes</option>'+classes.map(c=>'<option value="'+c.id+'"'+(window._stuFilter.classId===c.id?' selected':'')+'>'+esc(c.name)+'</option>').join('')+'</select>'+
+      '<select class="slim" id="stuStatusFilter" onchange="updateStudentsTable()"><option value="">All statuses</option><option'+(window._stuFilter.status==='Active'?' selected':'')+'>Active</option><option'+(window._stuFilter.status==='Inactive'?' selected':'')+'>Inactive</option></select>'+
+      '<button class="btn btn-primary" onclick="openAdmitStudentModal()">'+icon('plus')+'New Admission</button>'+
+    '</div></div>'+
+  '<div class="card"><div id="studentsTableWrap">'+studentsTableHtml()+'</div></div>';
+}
+function studentsTableHtml(){
+  const f = window._stuFilter||{};
+  let list = DB.get('students');
+  if(f.classId) list = list.filter(s=>s.classId===f.classId);
+  if(f.status) list = list.filter(s=>s.status===f.status);
+  if(f.q) list = list.filter(s=>{ const u=studentUser(s); return (u?.name||'').toLowerCase().includes(f.q.toLowerCase()) || (s.admissionNo||'').toLowerCase().includes(f.q.toLowerCase()); });
+  list = list.sort((a,b)=>(studentUser(a)?.name||'').localeCompare(studentUser(b)?.name||''));
+  if(!list.length) return emptyState('users','No students found','Try adjusting your filters, or add a new admission.');
+  return '<div class="table-wrap"><table><thead><tr><th>Student</th><th>Admission No.</th><th>Class</th><th>Status</th><th></th></tr></thead><tbody>'+
+    list.map(s=>{ const u = studentUser(s);
+      return '<tr class="clickable" onclick="App.go(\'admin/students/'+s.id+'\')"><td><div style="display:flex;align-items:center;gap:10px"><div class="avatar">'+initials(u?.name)+'</div><div><div class="cell-main">'+esc(u?.name||'—')+'</div><div class="cell-sub">'+esc(u?.email||'')+'</div></div></div></td>'+
+      '<td class="mono">'+esc(s.admissionNo)+'</td><td>'+esc(className(s.classId))+'</td><td>'+badge(s.status, statusTone(s.status))+'</td>'+
+      '<td class="row-actions" onclick="event.stopPropagation()"><button class="icon-btn" title="Edit" onclick="openEditStudentModal(\''+s.id+'\')">'+icon('edit')+'</button>'+
+      '<button class="icon-btn" title="Toggle status" onclick="toggleStudentStatus(\''+s.id+'\')">'+icon(s.status==='Active'?'x':'check')+'</button></td></tr>'; }).join('')+
+    '</tbody></table></div>';
+}
+function updateStudentsTable(){
+  window._stuFilter = { q: document.getElementById('stuSearch').value, classId: document.getElementById('stuClassFilter').value, status: document.getElementById('stuStatusFilter').value };
+  document.getElementById('studentsTableWrap').innerHTML = studentsTableHtml();
+}
+function toggleStudentStatus(id){
+  const list = DB.get('students'); const s = list.find(x=>x.id===id); if(!s) return;
+  s.status = s.status==='Active' ? 'Inactive' : 'Active'; DB.set('students', list); toast('Status updated.'); updateStudentsTable();
+}
+function openAdmitStudentModal(){
+  const classes = DB.get('classes');
+  const pass = genPassword();
+  const body = '<div class="field-row"><div class="field"><label>Full name</label><input id="af_name" required></div><div class="field"><label>Phone</label><input id="af_phone" required></div></div>'+
+    '<div class="field-row"><div class="field"><label>Email address</label><input type="email" id="af_email" required></div><div class="field"><label>Temporary password</label><input id="af_pass" value="'+pass+'" required></div></div>'+
+    '<div class="field-row"><div class="field"><label>Date of birth</label><input type="date" id="af_dob" required></div><div class="field"><label>Gender</label><select id="af_gender" required><option value="">Select</option><option>Male</option><option>Female</option></select></div></div>'+
+    '<div class="field-row"><div class="field"><label>Nationality</label><input id="af_nat" required></div><div class="field"><label>Class</label><select id="af_class" required>'+(classes.length?classes.map(c=>'<option value="'+c.id+'">'+esc(c.name)+'</option>').join(''):'<option value="">Create a class first</option>')+'</select></div></div>'+
+    '<div class="field"><label>Home address</label><input id="af_addr" required></div>'+
+    '<div class="field-row"><div class="field"><label>Guardian name</label><input id="af_gname" required></div><div class="field"><label>Guardian phone</label><input id="af_gphone" required></div></div>';
+  const foot = '<button class="btn btn-ghost" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="submitAdmitStudent()">Admit student</button>';
+  openModal('New admission', body, foot, {wide:true});
+}
+function submitAdmitStudent(){
+  const val = id=>document.getElementById(id).value.trim();
+  const name=val('af_name'), phone=val('af_phone'), email=val('af_email'), pass=val('af_pass'), dob=val('af_dob'), gender=document.getElementById('af_gender').value, nat=val('af_nat'), classId=document.getElementById('af_class').value, addr=val('af_addr'), gname=val('af_gname'), gphone=val('af_gphone');
+  if(!name||!email||!pass||!dob||!gender||!nat||!classId||!addr||!gname||!gphone){ toast('Please fill in all fields.','err'); return; }
+  const users = DB.get('users');
+  if(users.some(u=>u.email.toLowerCase()===email.toLowerCase())){ toast('That email is already in use.','err'); return; }
+  const userId = uid('u');
+  users.push({id:userId, name, email, password:pass, phone, role:'student', status:'approved', createdAt:new Date().toISOString()});
+  DB.set('users', users);
+  const students = DB.get('students'); const year=new Date().getFullYear(); const seq = nextSeq(students,'admissionNo');
+  students.push({id:uid('stu'), userId, admissionNo:'ADM'+year+String(seq).padStart(4,'0'), studentCode:'STU'+year+String(seq).padStart(4,'0'), classId, dob, gender, nationality:nat, address:addr, guardianName:gname, guardianPhone:gphone, status:'Active', createdAt:new Date().toISOString()});
+  DB.set('students', students);
+  closeModal();
+  openModal('Student admitted', '<p style="margin-bottom:4px">'+esc(name)+' has been added to '+esc(className(classId))+'.</p>'+creditCredentials(email,pass), '<button class="btn btn-primary" onclick="closeModal();App.rerender();">Done</button>');
+}
+function openEditStudentModal(id){
+  const students = DB.get('students'); const s = students.find(x=>x.id===id); if(!s) return;
+  const u = studentUser(s); const classes = DB.get('classes');
+  const body = '<div class="field-row"><div class="field"><label>Full name</label><input id="ef_name" value="'+esc(u.name)+'" required></div><div class="field"><label>Phone</label><input id="ef_phone" value="'+esc(u.phone||'')+'" required></div></div>'+
+   '<div class="field-row"><div class="field"><label>Date of birth</label><input type="date" id="ef_dob" value="'+esc(s.dob)+'" required></div><div class="field"><label>Gender</label><select id="ef_gender"><option'+(s.gender==='Male'?' selected':'')+'>Male</option><option'+(s.gender==='Female'?' selected':'')+'>Female</option></select></div></div>'+
+   '<div class="field-row"><div class="field"><label>Nationality</label><input id="ef_nat" value="'+esc(s.nationality)+'" required></div><div class="field"><label>Class</label><select id="ef_class">'+classes.map(c=>'<option value="'+c.id+'"'+(c.id===s.classId?' selected':'')+'>'+esc(c.name)+'</option>').join('')+'</select></div></div>'+
+   '<div class="field"><label>Home address</label><input id="ef_addr" value="'+esc(s.address)+'" required></div>'+
+   '<div class="field-row"><div class="field"><label>Guardian name</label><input id="ef_gname" value="'+esc(s.guardianName)+'" required></div><div class="field"><label>Guardian phone</label><input id="ef_gphone" value="'+esc(s.guardianPhone)+'" required></div></div>'+
+   '<div class="field"><label>Status</label><select id="ef_status"><option'+(s.status==='Active'?' selected':'')+'>Active</option><option'+(s.status==='Inactive'?' selected':'')+'>Inactive</option></select></div>';
+  const foot = '<button class="btn btn-ghost" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="submitEditStudent(\''+id+'\')">Save changes</button>';
+  openModal('Edit student', body, foot, {wide:true});
+}
+function submitEditStudent(id){
+  const students = DB.get('students'); const s = students.find(x=>x.id===id); if(!s) return;
+  const users = DB.get('users'); const u = users.find(x=>x.id===s.userId);
+  const val=eid=>document.getElementById(eid).value.trim();
+  u.name = val('ef_name'); u.phone = val('ef_phone');
+  s.dob = val('ef_dob'); s.gender = document.getElementById('ef_gender').value; s.nationality = val('ef_nat');
+  s.classId = document.getElementById('ef_class').value; s.address = val('ef_addr'); s.guardianName = val('ef_gname'); s.guardianPhone = val('ef_gphone'); s.status = document.getElementById('ef_status').value;
+  DB.set('users', users); DB.set('students', students);
+  closeModal(); toast('Student updated.','ok'); App.rerender();
+}
+
+/* ============================= SHARED STUDENT PROFILE PAGE ============================= */
+function studentProfilePageHtml(studentId, opts){
+  opts = opts||{};
+  const s = DB.get('students').find(x=>x.id===studentId);
+  if(!s) return emptyState('users','Student not found');
+  const u = studentUser(s);
+  const termList = sortedTerms().map(termLabel);
+  const selTerm = (window._profTerm && termList.includes(window._profTerm)) ? window._profTerm : (currentTermLabelStr() || termList[0] || '');
+  const results = selTerm ? studentResultsForTerm(s.id, selTerm) : [];
+  const gpa = selTerm ? studentGPA(s.id, selTerm) : null;
+  const attStats = studentAttendanceStats(s.id);
+  const balance = studentBalance(s.id);
+
+  const header = '<div class="card card-pad">'+
+    (opts.showBack ? '<a href="#/admin/students" class="btn btn-ghost btn-sm" style="margin-bottom:14px">← Back to Students</a>' : '')+
+    '<div class="profile-head">'+
+      '<div class="avatar lg">'+initials(u?.name)+'</div>'+
+      '<div class="names"><h2>'+esc(u?.name||'—')+' '+badge(s.status, statusTone(s.status))+'</h2>'+
+      '<div class="meta">'+esc(s.studentCode)+' · '+esc(className(s.classId))+'</div>'+
+      '<div class="info-grid" style="margin-top:16px">'+
+        infoItem('idcard','Admission No.', s.admissionNo)+ infoItem('classes','Class', className(s.classId)) +
+        infoItem('calendar','Date of birth', fmtDate(s.dob)) + infoItem('flag','Gender', s.gender) +
+        infoItem('mail','Email', u?.email) + infoItem('phone','Phone', u?.phone) +
+      '</div></div>'+
+      '<div class="overview-row">'+
+        overviewLine('chart','GPA ('+esc(selTerm||'—')+')', gpa!==null?gpa+' / 4.00':'—')+
+        overviewLine('attendance','Attendance', attStats.total?attStats.presentPct+'%':'—')+
+        overviewLine('finance','Balance due', money(balance))+
+        (opts.editable ? '<button class="btn btn-outline btn-sm" onclick="openEditStudentModal(\''+s.id+'\')">'+icon('edit')+'Edit profile</button>' : '')+
+      '</div>'+
+    '</div></div>';
+
+  const academic = '<div class="card card-pad">'+
+    '<div class="card-head"><h3>Academic summary</h3>'+
+      (termList.length>1 ? '<select class="slim" onchange="window._profTerm=this.value;App.rerender();">'+termList.map(t=>'<option'+(t===selTerm?' selected':'')+'>'+esc(t)+'</option>').join('')+'</select>' : '<span class="sub">'+esc(selTerm||'No term set')+'</span>')+
+    '</div>'+
+    (results.length ? '<div class="table-wrap"><table><thead><tr><th>Subject</th><th>Grade</th><th>Remark</th></tr></thead><tbody>'+
+      results.map(r=>'<tr><td class="cell-main">'+esc(r.subject)+'</td><td>'+badge(r.grade,'blue')+'</td><td>'+esc(r.remark||'—')+'</td></tr>').join('')+
+      '</tbody></table></div>' : emptyState('results','No results recorded', 'Grades will appear here once a teacher uploads them for this term.'))+
+    '</div>';
+
+  const attendance = '<div class="card card-pad"><div class="card-head"><h3>Attendance overview</h3></div>'+donutHTML(attStats)+'</div>';
+  const events = '<div class="card card-pad"><div class="card-head"><h3>Upcoming events</h3></div>'+eventsListHtml(upcomingEvents(4))+'</div>';
+
+  return header+'<div style="height:20px"></div><div class="two-col"><div class="stack">'+academic+'</div><div class="stack">'+attendance+events+'</div></div>';
+}
+function overviewLine(ic,label,val){
+  return '<div class="overview-item"><span class="l">'+icon(ic)+label+'</span><span class="v">'+esc(val)+'</span></div>';
+}
+function adminStudentProfile(id){ return studentProfilePageHtml(id, {editable:true, showBack:true}); }
+
+/* ============================= ADMIN: TEACHERS ============================= */
+function adminTeachers(){
+  return '<div class="toolbar"><div class="search-bar">'+icon('search')+'<input id="tchSearch" placeholder="Search teachers..." oninput="updateTeachersTable()"></div>'+
+    '<div class="filters"><button class="btn btn-primary" onclick="openAddTeacherModal()">'+icon('plus')+'Add Teacher</button></div></div>'+
+    '<div class="card"><div id="teachersTableWrap">'+teachersTableHtml()+'</div></div>';
+}
+function teachersTableHtml(){
+  const q = (document.getElementById('tchSearch')?.value||'').toLowerCase();
+  let list = DB.get('teachers').map(t=>({t, u:teacherUser(t)})).filter(x=>!q || (x.u?.name||'').toLowerCase().includes(q));
+  list.sort((a,b)=>(a.u?.name||'').localeCompare(b.u?.name||''));
+  if(!list.length) return emptyState('teacher','No teachers yet','Click Add Teacher to create your first teacher profile.');
+  return '<div class="table-wrap"><table><thead><tr><th>Teacher</th><th>Subjects</th><th>Assignments</th><th>Status</th><th></th></tr></thead><tbody>'+
+    list.map(({t,u})=>{
+      const subj = (t.subjects||[]).length ? (t.subjects||[]).map(s=>badge(s,'blue')).join(' ') : '—';
+      const home = homeroomClassOf(t.id);
+      const assigns = subjectAssignmentsOf(t.id);
+      const assignHtml = (home?badge('Class teacher · '+home.name,'green'):'') + assigns.map(a=>badge(a.subject+' · '+a.cls.name,'slate')).join('');
+      return '<tr><td><div style="display:flex;align-items:center;gap:10px"><div class="avatar">'+initials(u?.name)+'</div><div><div class="cell-main">'+esc(u?.name||'—')+'</div><div class="cell-sub">'+esc(u?.email||'')+'</div></div></div></td>'+
+      '<td>'+subj+'</td><td>'+(assignHtml||'—')+'</td><td>'+badge(t.status, statusTone(t.status))+'</td>'+
+      '<td class="row-actions"><button class="icon-btn" onclick="openAddTeacherModal(\''+t.id+'\')">'+icon('edit')+'</button><button class="icon-btn" onclick="toggleTeacherStatus(\''+t.id+'\')">'+icon(t.status==='Active'?'x':'check')+'</button></td></tr>';
+    }).join('')+
+    '</tbody></table></div>';
+}
+function updateTeachersTable(){ document.getElementById('teachersTableWrap').innerHTML = teachersTableHtml(); }
+function toggleTeacherStatus(id){ const list=DB.get('teachers'); const t=list.find(x=>x.id===id); t.status=t.status==='Active'?'Inactive':'Active'; DB.set('teachers',list); updateTeachersTable(); toast('Status updated.'); }
+function openAddTeacherModal(id){
+  const editing = !!id;
+  const t = editing ? DB.get('teachers').find(x=>x.id===id) : null;
+  const u = editing ? teacherUser(t) : null;
+  const subjects = DB.get('subjects');
+  const pass = editing? '' : genPassword();
+  const body =
+    '<div class="field-row"><div class="field"><label>Full name</label><input id="tf_name" value="'+esc(u?.name||'')+'" required></div><div class="field"><label>Phone</label><input id="tf_phone" value="'+esc(u?.phone||'')+'" required></div></div>'+
+    (editing ? '' : '<div class="field-row"><div class="field"><label>Email address</label><input type="email" id="tf_email" required></div><div class="field"><label>Temporary password</label><input id="tf_pass" value="'+pass+'" required></div></div>')+
+    '<div class="field"><label>Qualification</label><input id="tf_qual" value="'+esc(t?.qualification||'')+'" required></div>'+
+    '<div class="field"><label>Subjects qualified to teach</label><div class="radio-line">'+ (subjects.length? subjects.map(s=>'<label class="radio-opt"><input type="checkbox" class="tf_subj" value="'+esc(s.name)+'"'+((t?.subjects||[]).includes(s.name)?' checked':'')+'>'+esc(s.name)+'</label>').join('') : '<span class="hint">No subjects published yet — add them in Settings first.</span>')+'</div></div>'+
+    (editing ? '<div class="field"><label>Status</label><select id="tf_status"><option'+(t.status==='Active'?' selected':'')+'>Active</option><option'+(t.status==='Inactive'?' selected':'')+'>Inactive</option></select></div>' : '')+
+    '<div class="hint">Class teacher and per-subject class assignments are set from the Classes section.</div>';
+  const foot = '<button class="btn btn-ghost" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="submitTeacherForm('+(editing?"'"+id+"'":'null')+')">'+(editing?'Save changes':'Add teacher')+'</button>';
+  openModal(editing?'Edit teacher':'Add teacher', body, foot, {wide:true});
+}
+function submitTeacherForm(id){
+  const editing = !!id;
+  const val=eid=>document.getElementById(eid).value.trim();
+  const name = val('tf_name'), phone=val('tf_phone'), qual=val('tf_qual');
+  const allSubj = [...document.querySelectorAll('.tf_subj:checked')].map(x=>x.value);
+  if(!name||!phone||!qual){ toast('Please fill in required fields.','err'); return; }
+
+  if(editing){
+    const teachers = DB.get('teachers'); const t = teachers.find(x=>x.id===id);
+    const users = DB.get('users'); const u = users.find(x=>x.id===t.userId);
+    u.name=name; u.phone=phone; t.qualification=qual; t.subjects=allSubj; t.status=document.getElementById('tf_status').value;
+    DB.set('users',users); DB.set('teachers',teachers);
+    closeModal(); toast('Teacher updated.','ok'); App.rerender();
+  } else {
+    const email = val('tf_email'), pass = val('tf_pass');
+    if(!email||!pass){ toast('Please fill in required fields.','err'); return; }
+    const users = DB.get('users');
+    if(users.some(x=>x.email.toLowerCase()===email.toLowerCase())){ toast('That email is already in use.','err'); return; }
+    const userId = uid('u');
+    users.push({id:userId,name,email,password:pass,phone,role:'teacher',status:'approved',createdAt:new Date().toISOString()});
+    DB.set('users',users);
+    const teachers = DB.get('teachers');
+    teachers.push({id:uid('tch'),userId,subjects:allSubj,qualification:qual,status:'Active',createdAt:new Date().toISOString()});
+    DB.set('teachers',teachers);
+    closeModal();
+    openModal('Teacher added', '<p style="margin-bottom:4px">'+esc(name)+' can now sign in.</p>'+creditCredentials(email,pass), '<button class="btn btn-primary" onclick="closeModal();App.rerender();">Done</button>');
+  }
+}
+
+/* ============================= ADMIN: FINANCE STAFF ============================= */
+function adminFinance(){
+  return '<div class="toolbar"><div class="search-bar">'+icon('search')+'<input id="finSearch" placeholder="Search finance staff..." oninput="updateFinanceStaffTable()"></div>'+
+    '<div class="filters"><button class="btn btn-primary" onclick="openAddFinanceModal()">'+icon('plus')+'Add Finance Staff</button></div></div>'+
+    '<div class="card"><div id="financeStaffTableWrap">'+financeStaffTableHtml()+'</div></div>';
+}
+function financeStaffTableHtml(){
+  const q = (document.getElementById('finSearch')?.value||'').toLowerCase();
+  let list = DB.get('financeStaff').map(f=>({f, u:financeUser(f)})).filter(x=>!q || (x.u?.name||'').toLowerCase().includes(q));
+  list.sort((a,b)=>(a.u?.name||'').localeCompare(b.u?.name||''));
+  if(!list.length) return emptyState('finance','No finance staff yet','Click Add Finance Staff to create your first profile.');
+  return '<div class="table-wrap"><table><thead><tr><th>Staff member</th><th>Note</th><th>Status</th><th></th></tr></thead><tbody>'+
+    list.map(({f,u})=>'<tr><td><div style="display:flex;align-items:center;gap:10px"><div class="avatar">'+initials(u?.name)+'</div><div><div class="cell-main">'+esc(u?.name||'—')+'</div><div class="cell-sub">'+esc(u?.email||'')+'</div></div></div></td>'+
+      '<td>'+esc(f.note||'—')+'</td><td>'+badge(f.status, statusTone(f.status))+'</td>'+
+      '<td class="row-actions"><button class="icon-btn" onclick="openAddFinanceModal(\''+f.id+'\')">'+icon('edit')+'</button><button class="icon-btn" onclick="toggleFinanceStatus(\''+f.id+'\')">'+icon(f.status==='Active'?'x':'check')+'</button></td></tr>').join('')+
+    '</tbody></table></div>';
+}
+function updateFinanceStaffTable(){ document.getElementById('financeStaffTableWrap').innerHTML = financeStaffTableHtml(); }
+function toggleFinanceStatus(id){ const list=DB.get('financeStaff'); const f=list.find(x=>x.id===id); f.status=f.status==='Active'?'Inactive':'Active'; DB.set('financeStaff',list); updateFinanceStaffTable(); toast('Status updated.'); }
+function openAddFinanceModal(id){
+  const editing = !!id;
+  const f = editing ? DB.get('financeStaff').find(x=>x.id===id) : null;
+  const u = editing ? financeUser(f) : null;
+  const pass = editing? '' : genPassword();
+  const body = '<div class="field-row"><div class="field"><label>Full name</label><input id="ff_name" value="'+esc(u?.name||'')+'" required></div><div class="field"><label>Phone</label><input id="ff_phone" value="'+esc(u?.phone||'')+'" required></div></div>'+
+    (editing ? '' : '<div class="field-row"><div class="field"><label>Email address</label><input type="email" id="ff_email" required></div><div class="field"><label>Temporary password</label><input id="ff_pass" value="'+pass+'" required></div></div>')+
+    '<div class="field"><label>Department note (optional)</label><input id="ff_note" value="'+esc(f?.note||'')+'" placeholder="e.g. Accounts, Billing"></div>'+
+    (editing ? '<div class="field"><label>Status</label><select id="ff_status"><option'+(f.status==='Active'?' selected':'')+'>Active</option><option'+(f.status==='Inactive'?' selected':'')+'>Inactive</option></select></div>' : '');
+  const foot = '<button class="btn btn-ghost" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="submitFinanceForm('+(editing?"'"+id+"'":'null')+')">'+(editing?'Save changes':'Add staff member')+'</button>';
+  openModal(editing?'Edit finance staff':'Add finance staff', body, foot);
+}
+function submitFinanceForm(id){
+  const editing = !!id;
+  const val=eid=>document.getElementById(eid).value.trim();
+  const name = val('ff_name'), phone=val('ff_phone'), note=val('ff_note');
+  if(!name||!phone){ toast('Please fill in required fields.','err'); return; }
+  if(editing){
+    const list = DB.get('financeStaff'); const f = list.find(x=>x.id===id);
+    const users = DB.get('users'); const u = users.find(x=>x.id===f.userId);
+    u.name=name; u.phone=phone; f.note=note; f.status=document.getElementById('ff_status').value;
+    DB.set('users',users); DB.set('financeStaff',list);
+    closeModal(); toast('Finance staff updated.','ok'); App.rerender();
+  } else {
+    const email = val('ff_email'), pass = val('ff_pass');
+    if(!email||!pass){ toast('Please fill in required fields.','err'); return; }
+    const users = DB.get('users');
+    if(users.some(x=>x.email.toLowerCase()===email.toLowerCase())){ toast('That email is already in use.','err'); return; }
+    const userId = uid('u');
+    users.push({id:userId,name,email,password:pass,phone,role:'finance',status:'approved',createdAt:new Date().toISOString()});
+    DB.set('users',users);
+    const list = DB.get('financeStaff');
+    list.push({id:uid('fin'),userId,note,status:'Active',createdAt:new Date().toISOString()});
+    DB.set('financeStaff',list);
+    closeModal();
+    openModal('Finance staff added', '<p style="margin-bottom:4px">'+esc(name)+' can now sign in.</p>'+creditCredentials(email,pass), '<button class="btn btn-primary" onclick="closeModal();App.rerender();">Done</button>');
+  }
+}
+
+/* ============================= ADMIN: CLASSES ============================= */
+function adminClasses(){
+  return '<div class="toolbar"><div></div><div class="filters"><button class="btn btn-primary" onclick="openClassModal()">'+icon('plus')+'Add Class</button></div></div>'+
+  '<div class="card"><div id="classesTableWrap">'+classesTableHtml()+'</div></div>';
+}
+function classesTableHtml(){
+  const classes = DB.get('classes'); const students = DB.get('students');
+  if(!classes.length) return emptyState('classes','No classes yet','Add your first class, e.g. "Grade 11 - A".');
+  return '<div class="table-wrap"><table><thead><tr><th>Class</th><th>Subjects</th><th>Class teacher</th><th>Students</th><th></th></tr></thead><tbody>'+
+    classes.map(c=>{ const count = students.filter(s=>s.classId===c.id).length;
+      const subj = (c.subjects||[]).length ? (c.subjects||[]).map(s=>badge(s,'blue')).join(' ') : '<span class="hint">None set</span>';
+      return '<tr><td><div class="cell-main">'+esc(c.name)+'</div><div class="cell-sub">'+esc(c.stream||'')+'</div></td><td>'+subj+'</td><td>'+esc(classTeacherName(c.id))+'</td><td class="mono">'+count+'</td>'+
+      '<td class="row-actions"><button class="icon-btn" title="Assign subject teachers" onclick="openClassTeachersModal(\''+c.id+'\')">'+icon('teacher')+'</button><button class="icon-btn" title="Edit" onclick="openClassModal(\''+c.id+'\')">'+icon('edit')+'</button><button class="icon-btn" title="Delete" onclick="deleteClass(\''+c.id+'\')">'+icon('trash')+'</button></td></tr>'; }).join('')+
+    '</tbody></table></div>';
+}
+function openClassModal(id){
+  const c = id ? DB.get('classes').find(x=>x.id===id) : null;
+  const subjects = DB.get('subjects');
+  const teachers = DB.get('teachers').filter(t=>t.status==='Active');
+  const body = '<div class="field-row"><div class="field"><label>Class name</label><input id="cf_name" value="'+esc(c?.name||'')+'" placeholder="e.g. Grade 11 - A" required></div>'+
+    '<div class="field"><label>Stream (optional)</label><input id="cf_stream" value="'+esc(c?.stream||'')+'" placeholder="e.g. Science"></div></div>'+
+    '<div class="field"><label>Subjects offered</label><div class="radio-line">'+
+    (subjects.length ? subjects.map(s=>'<label class="radio-opt"><input type="checkbox" class="cf_subj" value="'+esc(s.name)+'"'+((c?.subjects||[]).includes(s.name)?' checked':'')+'>'+esc(s.name)+'</label>').join('') : '<span class="hint">No subjects published yet — add them in Settings first.</span>')+
+    '</div></div>'+
+    '<div class="field"><label>Class teacher</label><select id="cf_classTeacher"><option value="">— None —</option>'+
+    teachers.map(t=>{ const u=teacherUser(t); const home=homeroomClassOf(t.id); const already = home && home.id!==id; return '<option value="'+t.id+'"'+(c?.classTeacherId===t.id?' selected':'')+'>'+esc(u?.name||'—')+(already?' (currently: '+esc(home.name)+')':'')+'</option>'; }).join('')+
+    '</select><div class="hint">Each class has exactly one class teacher. Assigning a teacher who already leads another class will move them here.</div></div>';
+  const foot = '<button class="btn btn-ghost" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="submitClass('+(id?"'"+id+"'":'null')+')">Save</button>';
+  openModal(id?'Edit class':'Add class', body, foot, {wide:true});
+}
+function submitClass(id){
+  const name = document.getElementById('cf_name').value.trim(); const stream = document.getElementById('cf_stream').value.trim();
+  const subjects = [...document.querySelectorAll('.cf_subj:checked')].map(x=>x.value);
+  const classTeacherId = document.getElementById('cf_classTeacher').value;
+  if(!name){ toast('Class name is required.','err'); return; }
+  const classes = DB.get('classes');
+  let classId = id;
+  if(id){ const c = classes.find(x=>x.id===id); c.name=name; c.stream=stream; c.subjects=subjects; }
+  else { classId = uid('cls'); classes.push({id:classId, name, stream, subjects, classTeacherId:''}); }
+  // enforce one class teacher per class: clear this teacher from any other class first
+  if(classTeacherId){ classes.forEach(c=>{ if(c.id!==classId && c.classTeacherId===classTeacherId) c.classTeacherId=''; }); }
+  classes.find(c=>c.id===classId).classTeacherId = classTeacherId;
+  DB.set('classes', classes);
+  // drop subject-teacher assignments for subjects no longer offered by this class
+  const cst = DB.get('classSubjectTeachers').filter(x=>!(x.classId===classId && !subjects.includes(x.subject)));
+  DB.set('classSubjectTeachers', cst);
+  closeModal(); toast('Class saved.','ok'); App.rerender();
+}
+function deleteClass(id){
+  const students = DB.get('students');
+  if(students.some(s=>s.classId===id)){ toast('Cannot delete a class with students assigned.','err'); return; }
+  DB.set('classes', DB.get('classes').filter(c=>c.id!==id));
+  DB.set('classSubjectTeachers', DB.get('classSubjectTeachers').filter(x=>x.classId!==id));
+  toast('Class deleted.'); App.rerender();
+}
+function openClassTeachersModal(classId){
+  const c = DB.get('classes').find(x=>x.id===classId); if(!c) return;
+  const subjects = c.subjects||[];
+  if(!subjects.length){ openModal('Assign subject teachers', emptyState('book','No subjects set for this class','Edit the class first and choose which subjects it offers.'), '<button class="btn btn-primary" onclick="closeModal()">Close</button>'); return; }
+  const teachers = DB.get('teachers').filter(t=>t.status==='Active');
+  const body = '<p class="hint" style="margin-bottom:14px">Pick which teacher covers each subject for <b>'+esc(c.name)+'</b>. Different subjects can have different teachers.</p>'+
+    subjects.map(subj=>{
+      const qualified = teachers.filter(t=>(t.subjects||[]).includes(subj));
+      const current = subjectTeacherFor(classId, subj);
+      const options = qualified.length ? qualified.map(t=>{ const u=teacherUser(t); return '<option value="'+t.id+'"'+(current&&current.id===t.id?' selected':'')+'>'+esc(u?.name||'—')+'</option>'; }).join('') : '';
+      return '<div class="field"><label>'+esc(subj)+'</label><select class="ct_subjSel" data-subject="'+esc(subj)+'"><option value="">— Unassigned —</option>'+options+'</select>'+
+        (!qualified.length ? '<div class="hint">No teacher is currently qualified in '+esc(subj)+'.</div>' : '')+'</div>';
+    }).join('');
+  const foot = '<button class="btn btn-ghost" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="submitClassTeachers(\''+classId+'\')">Save assignments</button>';
+  openModal('Assign subject teachers', body, foot, {wide:true});
+}
+function submitClassTeachers(classId){
+  const rows = [...document.querySelectorAll('.ct_subjSel')];
+  let cst = DB.get('classSubjectTeachers').filter(x=>x.classId!==classId);
+  rows.forEach(sel=>{
+    const subject = sel.dataset.subject; const teacherId = sel.value;
+    if(teacherId) cst.push({id:uid('cst'), classId, subject, teacherId});
+  });
+  DB.set('classSubjectTeachers', cst);
+  closeModal(); toast('Subject teachers saved.','ok'); App.rerender();
+}
+
+/* ============================= ADMIN: EVENTS ============================= */
+function adminEvents(){
+  return '<div class="toolbar"><div></div><div class="filters"><button class="btn btn-primary" onclick="openEventModal()">'+icon('plus')+'Add Event</button></div></div>'+
+  '<div class="card card-pad"><div id="eventsTableWrap">'+eventsAdminListHtml()+'</div></div>';
+}
+function eventsAdminListHtml(){
+  const evs = DB.get('events').sort((a,b)=>a.date.localeCompare(b.date));
+  if(!evs.length) return emptyState('calendar','No events scheduled','Create exams, meetings and holidays here — they show up on every dashboard.');
+  return evs.map(e=>{ const d = new Date(e.date+'T00:00:00');
+    return '<div class="event-item"><div class="event-date"><b>'+d.getDate()+'</b><span>'+d.toLocaleDateString('en-GB',{month:'short'})+'</span></div>'+
+    '<div class="event-info"><b>'+esc(e.title)+'</b><div class="when">'+fmtDate(e.date)+(e.time?' · '+esc(e.time):'')+(e.description?' · '+esc(e.description):'')+'</div></div>'+
+    badge(e.type, eventTypeTone(e.type))+
+    '<div class="row-actions" style="margin-left:10px"><button class="icon-btn" onclick="openEventModal(\''+e.id+'\')">'+icon('edit')+'</button><button class="icon-btn" onclick="deleteEvent(\''+e.id+'\')">'+icon('trash')+'</button></div>'+
+    '</div>'; }).join('');
+}
+function openEventModal(id){
+  const e = id ? DB.get('events').find(x=>x.id===id) : null;
+  const body = '<div class="field"><label>Title</label><input id="ev_title" value="'+esc(e?.title||'')+'" required></div>'+
+    '<div class="field-row"><div class="field"><label>Date</label><input type="date" id="ev_date" value="'+esc(e?.date||'')+'" required></div><div class="field"><label>Time</label><input type="time" id="ev_time" value="'+esc(e?.time||'')+'"></div></div>'+
+    '<div class="field"><label>Type</label><select id="ev_type">'+['Exam','Meeting','Holiday','Other'].map(t=>'<option'+(e?.type===t?' selected':'')+'>'+t+'</option>').join('')+'</select></div>'+
+    '<div class="field"><label>Description (optional)</label><textarea id="ev_desc">'+esc(e?.description||'')+'</textarea></div>';
+  const foot = '<button class="btn btn-ghost" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="submitEvent('+(id?"'"+id+"'":'null')+')">Save event</button>';
+  openModal(id?'Edit event':'Add event', body, foot);
+}
+function submitEvent(id){
+  const title = document.getElementById('ev_title').value.trim(); const date = document.getElementById('ev_date').value; const time = document.getElementById('ev_time').value; const type = document.getElementById('ev_type').value; const desc = document.getElementById('ev_desc').value.trim();
+  if(!title||!date){ toast('Title and date are required.','err'); return; }
+  const events = DB.get('events');
+  if(id){ const e = events.find(x=>x.id===id); Object.assign(e,{title,date,time,type,description:desc}); }
+  else events.push({id:uid('evt'), title,date,time,type,description:desc,createdAt:new Date().toISOString()});
+  DB.set('events', events); closeModal(); toast('Event saved.','ok'); App.rerender();
+}
+function deleteEvent(id){ DB.set('events', DB.get('events').filter(e=>e.id!==id)); toast('Event deleted.'); App.rerender(); }
+
+/* ============================= ADMIN: SETTINGS ============================= */
+function adminSettings(){
+  const subjects = DB.get('subjects');
+  return '<div class="two-col">'+
+   '<div class="card card-pad"><div class="card-head"><h3>Academic terms</h3><button class="btn btn-primary btn-sm" onclick="openTermModal()">'+icon('plus')+'Add term</button></div>'+
+   '<div id="termsListWrap" style="margin-top:14px;display:flex;flex-direction:column;gap:8px">'+termsListHtml()+'</div></div>'+
+   '<div class="card card-pad"><div class="card-head"><h3>Subjects</h3></div>'+
+   '<div class="field-row"><input id="newSubjectInput" placeholder="e.g. Geography" style="flex:1"><button class="btn btn-primary" onclick="addSubject()">Add</button></div>'+
+   '<div style="margin-top:14px;display:flex;flex-wrap:wrap;gap:8px">'+
+   (subjects.length? subjects.map(s=>'<span class="badge blue" style="padding:6px 12px">'+esc(s.name)+' <button class="icon-btn" style="width:18px;height:18px;margin-left:4px;border:none;background:transparent" onclick="removeSubject(\''+s.id+'\')">'+icon('x')+'</button></span>').join('') : emptyState('book','No subjects yet'))+
+   '</div></div>'+
+  '</div>';
+}
+function termsListHtml(){
+  const terms = sortedTerms();
+  if(!terms.length) return emptyState('calendar','No terms yet','Add your first academic term to start recording results and attendance against it.');
+  return terms.map(t=>{
+    const range = (t.startDate||t.endDate) ? ('<span class="cell-sub">'+(t.startDate?fmtDate(t.startDate):'—')+' – '+(t.endDate?fmtDate(t.endDate):'—')+'</span>') : '';
+    return '<div class="overview-item"><span class="l">'+esc(termLabel(t))+(t.current?' '+badge('Current','blue'):'')+range+'</span><span class="row-actions">'+(!t.current?'<button class="btn btn-outline btn-sm" onclick="setCurrentTerm(\''+t.id+'\')">Set current</button>':'')+'<button class="icon-btn" onclick="openTermModal(\''+t.id+'\')">'+icon('edit')+'</button><button class="icon-btn" onclick="deleteTerm(\''+t.id+'\')">'+icon('trash')+'</button></span></div>';
+  }).join('');
+}
+function renderTermsList(){ const el=document.getElementById('termsListWrap'); if(el) el.innerHTML = termsListHtml(); }
+function openTermModal(id){
+  const t = id ? findTerm(id) : null;
+  const body = '<div class="field-row"><div class="field"><label>Name</label><input id="tm_name" value="'+esc(t?.name||'')+'" placeholder="e.g. Term 1" required></div><div class="field"><label>Year</label><input type="number" id="tm_year" value="'+esc(t?.year||new Date().getFullYear())+'" required></div></div>'+
+    '<div class="field-row"><div class="field"><label>Start date</label><input type="date" id="tm_start" value="'+esc(t?.startDate||'')+'"></div><div class="field"><label>End date</label><input type="date" id="tm_end" value="'+esc(t?.endDate||'')+'"></div></div>'+
+    '<label class="radio-opt" style="margin-top:4px"><input type="checkbox" id="tm_current"'+(t?.current?' checked':'')+'> Set as current term</label>';
+  const foot = '<button class="btn btn-ghost" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="submitTerm('+(id?"'"+id+"'":'null')+')">Save term</button>';
+  openModal(id?'Edit term':'Add term', body, foot);
+}
+function submitTerm(id){
+  const name = document.getElementById('tm_name').value.trim();
+  const year = parseInt(document.getElementById('tm_year').value, 10);
+  const startDate = document.getElementById('tm_start').value;
+  const endDate = document.getElementById('tm_end').value;
+  const makeCurrent = document.getElementById('tm_current').checked;
+  if(!name || !year){ toast('Name and year are required.','err'); return; }
+  let terms = DB.get('terms');
+  if(terms.some(t=>t.name.toLowerCase()===name.toLowerCase() && t.year===year && t.id!==id)){ toast('That term already exists.','err'); return; }
+  if(makeCurrent) terms.forEach(t=>t.current=false);
+  if(id){ const t = terms.find(x=>x.id===id); Object.assign(t,{name,year,startDate,endDate,current: makeCurrent||t.current}); }
+  else{ if(!terms.length) { terms.push({id:uid('term'),name,year,startDate,endDate,current:true}); } else { terms.push({id:uid('term'),name,year,startDate,endDate,current:makeCurrent}); } }
+  if(!terms.some(t=>t.current) && terms.length) terms[0].current = true;
+  DB.set('terms', terms); closeModal(); toast('Term saved.','ok'); App.rerender();
+}
+function setCurrentTerm(id){ const terms=DB.get('terms'); terms.forEach(t=>t.current=(t.id===id)); DB.set('terms',terms); toast('Current term updated.'); App.rerender(); }
+function deleteTerm(id){
+  const terms = DB.get('terms'); const t = terms.find(x=>x.id===id); if(!t) return;
+  const remaining = terms.filter(x=>x.id!==id);
+  if(t.current && remaining.length) remaining[0].current = true;
+  DB.set('terms', remaining); toast('Term deleted.'); App.rerender();
+}
+function addSubject(){ const v=document.getElementById('newSubjectInput').value.trim(); if(!v) return; const subjects=DB.get('subjects'); if(subjects.some(s=>s.name.toLowerCase()===v.toLowerCase())){toast('That subject already exists.','err');return;} subjects.push({id:uid('sub'),name:v}); DB.set('subjects',subjects); App.rerender(); }
+function removeSubject(id){ DB.set('subjects', DB.get('subjects').filter(s=>s.id!==id)); App.rerender(); }
+
+/* ============================= TEACHER ============================= */
+function currentTeacher(user){ return DB.get('teachers').find(t=>t.userId===user.id); }
+function teacherDashboard(user){
+  const t = currentTeacher(user); if(!t) return emptyState('teacher','Teacher profile not found','Contact administration.');
+  const home = homeroomClassOf(t.id);
+  const assigns = subjectAssignmentsOf(t.id);
+  const studentCount = teacherStudentIds(t.id).length;
+  const cards = [
+    {label:'Homeroom Class', val: home ? home.name : '—', ic:'classes', tone:'blue'},
+    {label:'Subjects Teaching', val:assigns.length, ic:'book', tone:'amber'},
+    {label:'My Students', val:studentCount, ic:'users', tone:'green'},
+  ];
+  const rows = [];
+  if(home) rows.push('<div class="overview-item"><span class="l">'+icon('classes')+'Class teacher · '+esc(home.name)+(home.stream?' · '+esc(home.stream):'')+'</span><span class="v">'+DB.get('students').filter(s=>s.classId===home.id).length+' students</span></div>');
+  assigns.forEach(a=>{ rows.push('<div class="overview-item"><span class="l">'+icon('book')+esc(a.subject)+' · '+esc(a.cls.name)+'</span><span class="v">'+DB.get('students').filter(s=>s.classId===a.classId).length+' students</span></div>'); });
+  return '<div class="stat-grid">'+cards.map(c=>statCard(c)).join('')+'</div>'+
+  '<div class="two-col"><div class="card card-pad"><div class="card-head"><h3>My assignments</h3></div>'+
+    (rows.length? rows.join('') : emptyState('classes','No assignments yet','Ask administration to make you a class teacher or assign you a subject to teach.'))+
+  '</div>'+
+  '<div class="card card-pad"><div class="card-head"><h3>Upcoming events</h3></div>'+eventsListHtml(upcomingEvents(5))+'</div></div>';
+}
+function teacherStudents(user){
+  const t = currentTeacher(user); if(!t) return emptyState('teacher','Teacher profile not found');
+  const ids = new Set(teacherStudentIds(t.id));
+  let list = DB.get('students').filter(s=>ids.has(s.id));
+  if(!list.length) return emptyState('users','No students yet','You have no students in your classes yet.');
+  list.sort((a,b)=>(studentUser(a)?.name||'').localeCompare(studentUser(b)?.name||''));
+  return '<div class="card"><div class="table-wrap"><table><thead><tr><th>Student</th><th>Class</th><th>Admission No.</th><th>Status</th></tr></thead><tbody>'+
+    list.map(s=>{ const u=studentUser(s); return '<tr><td><div style="display:flex;align-items:center;gap:10px"><div class="avatar">'+initials(u?.name)+'</div><div><div class="cell-main">'+esc(u?.name||'—')+'</div><div class="cell-sub">'+esc(u?.email||'')+'</div></div></div></td><td>'+esc(className(s.classId))+'</td><td class="mono">'+esc(s.admissionNo)+'</td><td>'+badge(s.status,statusTone(s.status))+'</td></tr>'; }).join('')+
+    '</tbody></table></div></div>';
+}
+function teacherAttendance(user){
+  const t = currentTeacher(user); if(!t) return emptyState('teacher','Teacher profile not found');
+  const cls = homeroomClassOf(t.id);
+  if(!cls) return emptyState('classes','You are not a class teacher','Attendance registers are kept by each class\'s homeroom teacher. Ask administration to make you the class teacher of a class.');
+  window._attClassId = cls.id;
+  window._attDate = window._attDate || todayISO();
+  return '<div class="card card-pad">'+
+    '<div class="field-row">'+
+      '<div class="field"><label>Class (homeroom)</label><div style="padding:10px 12px;border-radius:9px;background:var(--bg-soft);border:1px solid var(--border-strong);font-weight:600">'+esc(cls.name+(cls.stream?' · '+cls.stream:''))+'</div></div>'+
+      '<div class="field"><label>Date</label><input type="date" id="attDateSel" value="'+window._attDate+'" onchange="window._attDate=this.value;renderAttendanceBody();"></div>'+
+    '</div>'+
+    '<div id="attendanceBody">'+attendanceBodyHtml()+'</div>'+
+  '</div>';
+}
+function attendanceBodyHtml(){
+  const classId = window._attClassId, date = window._attDate;
+  const students = DB.get('students').filter(s=>s.classId===classId && s.status==='Active').sort((a,b)=>(studentUser(a)?.name||'').localeCompare(studentUser(b)?.name||''));
+  if(!students.length) return emptyState('users','No active students in this class');
+  const existing = DB.get('attendance').filter(a=>a.classId===classId && a.date===date);
+  const statusFor = sid => (existing.find(a=>a.studentId===sid)||{}).status || 'Present';
+  return '<div class="table-wrap"><table><thead><tr><th>Student</th><th>Status</th></tr></thead><tbody>'+
+    students.map(s=>{ const u=studentUser(s); const cur=statusFor(s.id);
+      return '<tr><td><div class="cell-main">'+esc(u?.name||'—')+'</div><div class="cell-sub">'+esc(s.admissionNo)+'</div></td>'+
+      '<td><div class="radio-line">'+['Present','Late','Absent'].map(opt=>'<label class="radio-opt"><input type="radio" name="att_'+s.id+'" value="'+opt+'"'+(cur===opt?' checked':'')+'>'+opt+'</label>').join('')+'</div></td></tr>'; }).join('')+
+    '</tbody></table></div>'+
+    '<div style="margin-top:16px;display:flex;justify-content:flex-end"><button class="btn btn-primary" onclick="saveAttendance()">Save attendance</button></div>';
+}
+function renderAttendanceBody(){ const d=document.getElementById('attDateSel'); if(d) d.value = window._attDate; document.getElementById('attendanceBody').innerHTML = attendanceBodyHtml(); }
+function saveAttendance(){
+  const classId = window._attClassId, date = window._attDate;
+  const students = DB.get('students').filter(s=>s.classId===classId && s.status==='Active');
+  let attendance = DB.get('attendance').filter(a=>!(a.classId===classId && a.date===date));
+  const user = Auth.currentUser();
+  students.forEach(s=>{
+    const sel = document.querySelector('input[name="att_'+s.id+'"]:checked');
+    const status = sel ? sel.value : 'Present';
+    attendance.push({id:uid('att'), studentId:s.id, classId, date, status, markedBy:user.id});
+  });
+  DB.set('attendance', attendance); toast('Attendance saved.','ok');
+}
+function teacherResults(user){
+  const t = currentTeacher(user); if(!t) return emptyState('teacher','Teacher profile not found');
+  const assigns = subjectAssignmentsOf(t.id);
+  const terms = sortedTerms();
+  if(!assigns.length) return emptyState('results','No subjects assigned yet','Administration assigns you to teach specific subjects for a class from the Classes section. Once assigned, you can enter results here.');
+  if(!terms.length) return emptyState('calendar','No academic term set','Ask administration to add a term in Settings.');
+  const termLabels = terms.map(termLabel);
+  const keys = assigns.map(a=>a.classId+'::'+a.subject);
+  window._resKey = (window._resKey && keys.includes(window._resKey)) ? window._resKey : keys[0];
+  window._resTerm = (window._resTerm && termLabels.includes(window._resTerm)) ? window._resTerm : (currentTermLabelStr() || termLabels[0]);
+  return '<div class="card card-pad">'+
+    '<div class="field-row">'+
+      '<div class="field"><label>Class · Subject</label><select id="resKeySel" onchange="window._resKey=this.value;renderResultsBody();">'+assigns.map(a=>{ const k=a.classId+'::'+a.subject; return '<option value="'+k+'"'+(k===window._resKey?' selected':'')+'>'+esc(a.cls.name)+' · '+esc(a.subject)+'</option>'; }).join('')+'</select></div>'+
+      '<div class="field"><label>Term</label><select id="resTermSel" onchange="window._resTerm=this.value;renderResultsBody();">'+terms.map(tm=>{ const lbl=termLabel(tm); return '<option'+(lbl===window._resTerm?' selected':'')+'>'+esc(lbl)+'</option>'; }).join('')+'</select></div>'+
+    '</div>'+
+    '<div id="resultsBody" style="margin-top:16px">'+resultsBodyHtml()+'</div>'+
+  '</div>';
+}
+function resultsBodyHtml(){
+  const [classId, subject] = window._resKey.split('::'); const term = window._resTerm;
+  const students = DB.get('students').filter(s=>s.classId===classId && s.status==='Active').sort((a,b)=>(studentUser(a)?.name||'').localeCompare(studentUser(b)?.name||''));
+  if(!students.length) return emptyState('users','No active students in this class');
+  const results = DB.get('results');
+  const existing = sid => results.find(r=>r.studentId===sid && r.subject===subject && r.term===term);
+  return '<div class="table-wrap"><table><thead><tr><th>Student</th><th>Grade</th><th>Remark</th></tr></thead><tbody>'+
+    students.map(s=>{ const u=studentUser(s); const ex = existing(s.id);
+      return '<tr><td><div class="cell-main">'+esc(u?.name||'—')+'</div><div class="cell-sub">'+esc(s.admissionNo)+'</div></td>'+
+      '<td><input list="gradeOptions" id="grade_'+s.id+'" value="'+esc(ex?.grade||'')+'" style="width:90px;padding:7px 9px;border-radius:8px;border:1px solid var(--border-strong);background:var(--bg-soft)" placeholder="A-"></td>'+
+      '<td><input id="remark_'+s.id+'" value="'+esc(ex?.remark||'')+'" placeholder="e.g. Excellent" style="padding:7px 9px;border-radius:8px;border:1px solid var(--border-strong);background:var(--bg-soft);width:100%"></td></tr>'; }).join('')+
+    '</tbody></table></div>'+
+    '<datalist id="gradeOptions">'+Object.keys(GRADE_POINTS).map(g=>'<option value="'+g+'">').join('')+'</datalist>'+
+    '<div style="margin-top:16px;display:flex;justify-content:flex-end"><button class="btn btn-primary" onclick="saveResults()">Save results</button></div>';
+}
+function renderResultsBody(){ document.getElementById('resultsBody').innerHTML = resultsBodyHtml(); }
+function saveResults(){
+  const [classId, subject] = window._resKey.split('::'); const term = window._resTerm;
+  const students = DB.get('students').filter(s=>s.classId===classId && s.status==='Active');
+  let results = DB.get('results').filter(r=>!(r.subject===subject && r.term===term && students.some(s=>s.id===r.studentId)));
+  const user = Auth.currentUser();
+  students.forEach(s=>{
+    const gradeEl = document.getElementById('grade_'+s.id); if(!gradeEl) return;
+    const grade = gradeEl.value.trim();
+    const remark = document.getElementById('remark_'+s.id).value.trim();
+    if(grade){ results.push({id:uid('res'), studentId:s.id, subject, term, grade, remark, teacherId:user.id}); }
+  });
+  DB.set('results', results); toast('Results saved.','ok');
+}
+function teacherProfile(user){
+  const t = currentTeacher(user); if(!t) return emptyState('teacher','Teacher profile not found');
+  const home = homeroomClassOf(t.id);
+  const assigns = subjectAssignmentsOf(t.id);
+  return '<div class="card card-pad"><div class="profile-head">'+
+    '<div class="avatar lg">'+initials(user.name)+'</div>'+
+    '<div class="names"><h2>'+esc(user.name)+' '+badge(t.status,statusTone(t.status))+'</h2><div class="meta">Teacher</div>'+
+    '<div class="info-grid" style="margin-top:16px">'+
+    infoItem('mail','Email',user.email)+infoItem('phone','Phone',user.phone)+infoItem('book','Qualification',t.qualification)+
+    infoItem('classes','Class teacher of', home ? home.name : '—')+
+    '</div></div></div>'+
+    '<div style="margin-top:14px"><div style="font-size:11px;color:var(--text-faint);font-weight:700;text-transform:uppercase;letter-spacing:.03em;margin-bottom:8px">Subjects qualified to teach</div>'+((t.subjects||[]).length?(t.subjects||[]).map(s=>badge(s,'blue')).join(' '):'<span class="hint">None on file</span>')+'</div>'+
+    '<div style="margin-top:14px"><div style="font-size:11px;color:var(--text-faint);font-weight:700;text-transform:uppercase;letter-spacing:.03em;margin-bottom:8px">Teaching assignments</div>'+(assigns.length?assigns.map(a=>badge(a.subject+' · '+a.cls.name,'slate')).join(' '):'<span class="hint">No subject assignments yet</span>')+'</div>'+
+    '</div>';
+}
+
+/* ============================= FINANCE ============================= */
+function currentFinance(user){ return DB.get('financeStaff').find(f=>f.userId===user.id); }
+function financeDashboard(){
+  const payments = DB.get('payments');
+  const totalPaid = payments.filter(p=>paymentDisplayStatus(p)==='Paid').reduce((s,p)=>s+Number(p.amount||0),0);
+  const totalPending = payments.filter(p=>paymentDisplayStatus(p)==='Pending').reduce((s,p)=>s+Number(p.amount||0),0);
+  const totalOverdue = payments.filter(p=>paymentDisplayStatus(p)==='Overdue').reduce((s,p)=>s+Number(p.amount||0),0);
+  const studentsOwing = new Set(payments.filter(p=>paymentDisplayStatus(p)!=='Paid').map(p=>p.studentId)).size;
+  const cards = [
+    {label:'Total Collected', val:money(totalPaid), ic:'finance', tone:'green'},
+    {label:'Pending', val:money(totalPending), ic:'clock', tone:'amber'},
+    {label:'Overdue', val:money(totalOverdue), ic:'warn', tone:'red'},
+    {label:'Students with Balance', val:studentsOwing, ic:'users', tone:'blue'},
+  ];
+  return '<div class="stat-grid">'+cards.map(c=>statCard(c)).join('')+'</div>'+
+  '<div class="card card-pad"><div class="card-head"><h3>Students with outstanding balance</h3><a class="btn btn-outline btn-sm" href="#/finance/payments">View all</a></div>'+
+  financeOutstandingListHtml(5)+'</div>';
+}
+function financeOutstandingListHtml(limit){
+  const students = DB.get('students');
+  let rows = students.map(s=>({s, bal:studentBalance(s.id)})).filter(r=>r.bal>0);
+  rows.sort((a,b)=>b.bal-a.bal);
+  if(limit) rows = rows.slice(0,limit);
+  if(!rows.length) return emptyState('finance','No outstanding balances','Every student is fully paid up.');
+  return '<div class="table-wrap"><table><thead><tr><th>Student</th><th>Class</th><th>Balance</th></tr></thead><tbody>'+
+    rows.map(({s,bal})=>{ const u=studentUser(s); return '<tr class="clickable" onclick="App.go(\'finance/payments/'+s.id+'\')"><td><div style="display:flex;align-items:center;gap:10px"><div class="avatar">'+initials(u?.name)+'</div><div class="cell-main">'+esc(u?.name||'—')+'</div></div></td><td>'+esc(className(s.classId))+'</td><td class="mono">'+money(bal)+'</td></tr>'; }).join('')+
+    '</tbody></table></div>';
+}
+function financePayments(){
+  return '<div class="toolbar"><div class="search-bar">'+icon('search')+'<input id="payStuSearch" placeholder="Search students..." oninput="updatePaymentsTable()"></div><div></div></div>'+
+  '<div class="card"><div id="paymentsTableWrap">'+paymentsTableHtml()+'</div></div>';
+}
+function paymentsTableHtml(){
+  const q = (document.getElementById('payStuSearch')?.value||'').toLowerCase();
+  let students = DB.get('students').filter(s=>{ const u=studentUser(s); return !q || (u?.name||'').toLowerCase().includes(q) || (s.admissionNo||'').toLowerCase().includes(q); });
+  students.sort((a,b)=>(studentUser(a)?.name||'').localeCompare(studentUser(b)?.name||''));
+  if(!students.length) return emptyState('users','No students found');
+  return '<div class="table-wrap"><table><thead><tr><th>Student</th><th>Class</th><th>Balance</th><th>Status</th></tr></thead><tbody>'+
+    students.map(s=>{ const u=studentUser(s); const bal=studentBalance(s.id); const items = DB.get('payments').filter(p=>p.studentId===s.id);
+      const overallStatus = !items.length ? 'No fees' : bal===0 ? 'Paid' : items.some(p=>paymentDisplayStatus(p)==='Overdue') ? 'Overdue' : 'Pending';
+      return '<tr class="clickable" onclick="App.go(\'finance/payments/'+s.id+'\')"><td><div style="display:flex;align-items:center;gap:10px"><div class="avatar">'+initials(u?.name)+'</div><div><div class="cell-main">'+esc(u?.name||'—')+'</div><div class="cell-sub">'+esc(s.admissionNo)+'</div></div></div></td><td>'+esc(className(s.classId))+'</td><td class="mono">'+money(bal)+'</td><td>'+badge(overallStatus, statusTone(overallStatus))+'</td></tr>'; }).join('')+
+    '</tbody></table></div>';
+}
+function updatePaymentsTable(){ document.getElementById('paymentsTableWrap').innerHTML = paymentsTableHtml(); }
+function financePaymentDetail(studentId){
+  const s = DB.get('students').find(x=>x.id===studentId);
+  if(!s) return emptyState('users','Student not found');
+  const u = studentUser(s);
+  const items = DB.get('payments').filter(p=>p.studentId===studentId).sort((a,b)=>(b.dueDate||'').localeCompare(a.dueDate||''));
+  const bal = studentBalance(studentId);
+  return '<a href="#/finance/payments" class="btn btn-ghost btn-sm" style="margin-bottom:14px">← Back to Payments</a>'+
+  '<div class="card card-pad" style="margin-bottom:20px"><div class="profile-head">'+
+    '<div class="avatar lg">'+initials(u?.name)+'</div>'+
+    '<div class="names"><h2>'+esc(u?.name||'—')+'</h2><div class="meta">'+esc(s.admissionNo)+' · '+esc(className(s.classId))+'</div></div>'+
+    '<div class="overview-row">'+overviewLine('finance','Balance due', money(bal))+'<button class="btn btn-primary btn-sm" onclick="openPaymentItemModal(\''+studentId+'\')">'+icon('plus')+'Add fee item</button></div>'+
+  '</div></div>'+
+  '<div class="card card-pad"><div class="card-head"><h3>Fee items</h3></div>'+
+  (items.length ? '<div class="table-wrap"><table><thead><tr><th>Description</th><th>Amount</th><th>Due date</th><th>Status</th><th></th></tr></thead><tbody>'+
+    items.map(p=>{ const st = paymentDisplayStatus(p);
+      return '<tr><td class="cell-main">'+esc(p.description)+'</td><td class="mono">'+money(p.amount)+'</td><td>'+fmtDate(p.dueDate)+'</td>'+
+      '<td><select class="slim" onchange="updatePaymentStatus(\''+p.id+'\',this.value)"><option'+(st==='Pending'?' selected':'')+'>Pending</option><option'+(st==='Paid'?' selected':'')+'>Paid</option><option'+(st==='Overdue'?' selected':'')+'>Overdue</option></select></td>'+
+      '<td class="row-actions"><button class="icon-btn" onclick="openPaymentItemModal(\''+studentId+'\',\''+p.id+'\')">'+icon('edit')+'</button><button class="icon-btn" onclick="deletePaymentItem(\''+studentId+'\',\''+p.id+'\')">'+icon('trash')+'</button></td></tr>'; }).join('')+
+    '</tbody></table></div>' : emptyState('finance','No fee items yet','Add tuition, transport or other fee items for this student.'))+
+  '</div>';
+}
+function openPaymentItemModal(studentId, itemId){
+  const editing = !!itemId;
+  const p = editing ? DB.get('payments').find(x=>x.id===itemId) : null;
+  const body = '<div class="field"><label>Description</label><input id="pf_desc" value="'+esc(p?.description||'')+'" placeholder="e.g. Term 2 Tuition" required></div>'+
+    '<div class="field-row"><div class="field"><label>Amount (K)</label><input type="number" step="0.01" id="pf_amount" value="'+(p?.amount||'')+'" required></div><div class="field"><label>Due date</label><input type="date" id="pf_due" value="'+esc(p?.dueDate||'')+'" required></div></div>'+
+    (editing ? '<div class="field"><label>Status</label><select id="pf_status"><option'+(p.status==='Pending'?' selected':'')+'>Pending</option><option'+(p.status==='Paid'?' selected':'')+'>Paid</option><option'+(p.status==='Overdue'?' selected':'')+'>Overdue</option></select></div>' : '');
+  const foot = '<button class="btn btn-ghost" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="submitPaymentItem(\''+studentId+'\''+(editing?",'"+itemId+"'":'')+')">Save</button>';
+  openModal(editing?'Edit fee item':'Add fee item', body, foot);
+}
+function submitPaymentItem(studentId, itemId){
+  const desc = document.getElementById('pf_desc').value.trim();
+  const amount = parseFloat(document.getElementById('pf_amount').value);
+  const due = document.getElementById('pf_due').value;
+  if(!desc || !amount || !due){ toast('Please fill in all fields.','err'); return; }
+  const user = Auth.currentUser();
+  const payments = DB.get('payments');
+  if(itemId){
+    const p = payments.find(x=>x.id===itemId);
+    const newStatus = document.getElementById('pf_status').value;
+    if(newStatus==='Paid' && p.status!=='Paid') p.paidDate = todayISO();
+    p.description=desc; p.amount=amount; p.dueDate=due; p.status=newStatus; p.updatedBy=user.id;
+  } else {
+    payments.push({id:uid('pay'), studentId, description:desc, amount, dueDate:due, status:'Pending', addedBy:user.id, createdAt:new Date().toISOString()});
+  }
+  DB.set('payments', payments); closeModal(); toast('Saved.','ok'); App.go('finance/payments/'+studentId);
+}
+function updatePaymentStatus(itemId, status){
+  const payments = DB.get('payments'); const p = payments.find(x=>x.id===itemId); if(!p) return;
+  const user = Auth.currentUser();
+  if(status==='Paid' && p.status!=='Paid') p.paidDate = todayISO();
+  p.status = status; p.updatedBy = user.id;
+  DB.set('payments', payments); toast('Payment status updated.','ok'); App.rerender();
+}
+function deletePaymentItem(studentId, itemId){
+  DB.set('payments', DB.get('payments').filter(p=>p.id!==itemId)); toast('Fee item removed.'); App.go('finance/payments/'+studentId);
+}
+function financeProfile(user){
+  const f = currentFinance(user); if(!f) return emptyState('finance','Finance profile not found');
+  return '<div class="card card-pad"><div class="profile-head"><div class="avatar lg">'+initials(user.name)+'</div>'+
+    '<div class="names"><h2>'+esc(user.name)+' '+badge(f.status,statusTone(f.status))+'</h2><div class="meta">Finance Staff</div>'+
+    '<div class="info-grid" style="margin-top:16px">'+infoItem('mail','Email',user.email)+infoItem('phone','Phone',user.phone)+infoItem('finance','Department note',f.note||'—')+'</div></div></div></div>';
+}
+
+/* ============================= STUDENT ============================= */
+function currentStudent(user){ return DB.get('students').find(s=>s.userId===user.id); }
+function studentDashboard(user){
+  const s = currentStudent(user); if(!s) return emptyState('users','Profile not found','Contact administration if this seems wrong.');
+  return studentProfilePageHtml(s.id, {editable:false});
+}
+function studentResultsPage(user){
+  const s = currentStudent(user); if(!s) return emptyState('users','Profile not found');
+  const results = DB.get('results').filter(r=>r.studentId===s.id);
+  if(!results.length) return emptyState('results','No results yet','Your grades will appear here once teachers upload them.');
+  const byTerm = {};
+  results.forEach(r=>{ (byTerm[r.term]=byTerm[r.term]||[]).push(r); });
+  const terms = Object.keys(byTerm).sort().reverse();
+  return terms.map(term=>{
+    const gpa = studentGPA(s.id, term);
+    return '<div class="card card-pad" style="margin-bottom:18px"><div class="card-head"><h3>'+esc(term)+'</h3><span class="sub">GPA: '+(gpa!==null?gpa+' / 4.00':'—')+'</span></div>'+
+    '<div class="table-wrap"><table><thead><tr><th>Subject</th><th>Grade</th><th>Remark</th></tr></thead><tbody>'+
+    byTerm[term].map(r=>'<tr><td class="cell-main">'+esc(r.subject)+'</td><td>'+badge(r.grade,'blue')+'</td><td>'+esc(r.remark||'—')+'</td></tr>').join('')+
+    '</tbody></table></div></div>';
+  }).join('');
+}
+function studentAttendancePage(user){
+  const s = currentStudent(user); if(!s) return emptyState('users','Profile not found');
+  const stats = studentAttendanceStats(s.id);
+  const rows = [...stats.rows].sort((a,b)=>b.date.localeCompare(a.date));
+  return '<div class="card card-pad" style="margin-bottom:20px"><div class="card-head"><h3>Attendance overview</h3></div>'+donutHTML(stats)+'</div>'+
+  '<div class="card card-pad"><div class="card-head"><h3>History</h3></div>'+
+  (rows.length ? '<div class="table-wrap"><table><thead><tr><th>Date</th><th>Class</th><th>Status</th></tr></thead><tbody>'+
+    rows.map(r=>'<tr><td>'+fmtDate(r.date)+'</td><td>'+esc(className(r.classId))+'</td><td>'+badge(r.status, statusTone(r.status))+'</td></tr>').join('')+
+    '</tbody></table></div>' : emptyState('attendance','No attendance recorded yet'))+
+  '</div>';
+}
+</script>
