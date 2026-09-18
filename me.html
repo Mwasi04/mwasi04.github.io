@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Just for you 💌</title>
+<meta name="theme-color" content="#2b1236">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --dusk: #2b1236;
+    --plum: #5a2a6b;
+    --rose: #e8577e;
+    --rose-deep: #c93d67;
+    --blush: #fff0f4;
+    --paper: #fff8fa;
+    --ink: #3a1a3f;
+    --ink-soft: #7b5a80;
+    --gold: #f4c27a;
+    --serif: "Cormorant Garamond", "Iowan Old Style", Georgia, serif;
+    --sans: "Nunito", system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    font-family: var(--sans);
+    color: var(--ink);
+    background:
+      radial-gradient(1100px 600px at 15% -10%, #7a3a86 0%, transparent 60%),
+      radial-gradient(900px 600px at 100% 110%, #b6406f 0%, transparent 55%),
+      var(--dusk);
+    background-attachment: fixed;
+    min-height: 100dvh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: max(20px, env(safe-area-inset-top)) 16px max(20px, env(safe-area-inset-bottom));
+    overflow-x: hidden;
+  }
+
+  /* floating hearts in the background */
+  .hearts { position: fixed; inset: 0; pointer-events: none; overflow: hidden; z-index: 0; }
+  .hearts span {
+    position: absolute; bottom: -40px;
+    color: rgba(255, 190, 210, .5);
+    animation: rise linear infinite;
+    will-change: transform, opacity;
+  }
+  @keyframes rise {
+    0%   { transform: translateY(0) translateX(0) rotate(0deg); opacity: 0; }
+    10%  { opacity: 1; }
+    100% { transform: translateY(-110vh) translateX(var(--drift)) rotate(25deg); opacity: 0; }
+  }
+
+  main {
+    position: relative; z-index: 1;
+    width: 100%; max-width: 560px;
+  }
+
+  .card {
+    background: var(--paper);
+    border-radius: 28px;
+    padding: clamp(28px, 6vw, 48px) clamp(22px, 6vw, 44px);
+    box-shadow:
+      0 1px 0 rgba(255,255,255,.8) inset,
+      0 30px 60px -20px rgba(20, 5, 30, .6),
+      0 0 0 1px rgba(255, 210, 225, .35);
+    position: relative;
+    overflow: hidden;
+  }
+  /* paper-fold corner */
+  .card::before {
+    content: ""; position: absolute; top: 0; right: 0;
+    width: 64px; height: 64px;
+    background: linear-gradient(225deg, var(--plum) 0 50%, #f3d4de 50% 100%);
+    border-bottom-left-radius: 14px;
+    box-shadow: -3px 3px 8px rgba(60, 10, 60, .15);
+  }
+
+  .screen { display: none; }
+  .screen.active { display: block; animation: enter .5s cubic-bezier(.2,.8,.2,1); }
+  .screen.back.active { animation-name: enterBack; }
+  @keyframes enter     { from { opacity: 0; transform: translateX(26px); }  to { opacity: 1; transform: none; } }
+  @keyframes enterBack { from { opacity: 0; transform: translateX(-26px); } to { opacity: 1; transform: none; } }
+
+  .big-heart { font-size: 54px; line-height: 1; margin-bottom: 18px; display: inline-block; animation: beat 1.6s ease-in-out infinite; }
+  @keyframes beat { 0%, 100% { transform: scale(1); } 15% { transform: scale(1.18); } 30% { transform: scale(1); } 45% { transform: scale(1.12); } }
+
+  h1, .question {
+    font-family: var(--serif);
+    font-weight: 600;
+    color: var(--ink);
+    line-height: 1.12;
+    letter-spacing: -.01em;
+  }
+  h1 { font-size: clamp(38px, 9vw, 54px); margin-bottom: 14px; }
+  .lead { font-size: 17px; line-height: 1.6; color: var(--ink-soft); margin-bottom: 30px; max-width: 42ch; }
+
+  .btn {
+    font-family: var(--sans); font-weight: 700; font-size: 16px;
+    border: 0; cursor: pointer;
+    padding: 15px 28px; border-radius: 999px;
+    background: linear-gradient(135deg, var(--rose), var(--rose-deep));
+    color: #fff;
+    box-shadow: 0 10px 22px -8px rgba(201, 61, 103, .7);
+    transition: transform .15s ease, box-shadow .15s ease, opacity .2s ease;
+  }
+  .btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 14px 26px -8px rgba(201, 61, 103, .75); }
+  .btn:active:not(:disabled) { transform: translateY(0); }
+  .btn:disabled { opacity: .4; cursor: not-allowed; box-shadow: none; }
+  .btn.ghost {
+    background: transparent; color: var(--ink-soft); box-shadow: none; padding: 15px 18px;
+  }
+  .btn.ghost:hover:not(:disabled) { color: var(--rose-deep); box-shadow: none; }
+  .btn:focus-visible, .choice:focus-visible, textarea:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
+
+  /* progress: a row of little hearts that fill in */
+  .progress { display: flex; gap: 6px; margin-bottom: 30px; padding-right: 60px; flex-wrap: wrap; }
+  .progress i {
+    font-style: normal; font-size: 15px; line-height: 1;
+    color: #ecd3dc; transition: color .4s ease, transform .4s ease;
+  }
+  .progress i.done { color: var(--rose); transform: scale(1.1); }
+  .progress i.now  { color: var(--rose); animation: beat 1.6s ease-in-out infinite; }
+
+  .question { font-size: clamp(29px, 7vw, 40px); margin-bottom: 24px; }
+  .hint { font-size: 14px; color: var(--ink-soft); margin: -10px 0 20px; }
+
+  textarea {
+    width: 100%; min-height: 150px; resize: vertical;
+    font-family: var(--sans); font-size: 17px; line-height: 1.55; color: var(--ink);
+    background: var(--blush);
+    border: 2px solid transparent;
+    border-radius: 18px; padding: 18px 20px;
+    transition: border-color .2s ease, background .2s ease;
+  }
+  textarea:focus { outline: none; border-color: var(--rose); background: #fff; }
+
+  .choices { display: grid; gap: 14px; grid-template-columns: 1fr 1fr; }
+  .choice {
+    font-family: var(--sans); font-weight: 700; font-size: 16px; color: var(--ink);
+    background: var(--blush);
+    border: 2px solid transparent;
+    border-radius: 20px;
+    padding: 26px 12px 22px;
+    cursor: pointer;
+    display: flex; flex-direction: column; align-items: center; gap: 10px;
+    transition: transform .18s ease, border-color .18s ease, background .18s ease, box-shadow .18s ease;
+  }
+  .choice .emoji { font-size: 40px; line-height: 1; transition: transform .25s ease; }
+  .choice:hover { transform: translateY(-3px); border-color: #f4b7c8; }
+  .choice:hover .emoji { transform: scale(1.12) rotate(-4deg); }
+  .choice.selected {
+    background: #fff; border-color: var(--rose);
+    box-shadow: 0 12px 24px -12px rgba(201, 61, 103, .55);
+  }
+  .choice.selected .emoji { transform: scale(1.2); }
+
+  /* multi-select */
+  .multi { display: grid; gap: 10px; }
+  .opt {
+    font-family: var(--sans); font-weight: 600; font-size: 16px; color: var(--ink); text-align: left;
+    background: var(--blush); border: 2px solid transparent; border-radius: 16px;
+    padding: 15px 18px; cursor: pointer; width: 100%;
+    display: flex; align-items: center; gap: 14px;
+    transition: border-color .18s ease, background .18s ease, transform .18s ease;
+  }
+  .opt:hover { border-color: #f4b7c8; transform: translateX(3px); }
+  .opt:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
+  .opt .box {
+    flex: none; width: 24px; height: 24px; border-radius: 8px;
+    border: 2px solid #d9a9bb; background: #fff;
+    display: grid; place-items: center; font-size: 14px; color: transparent;
+    transition: background .18s ease, border-color .18s ease, color .18s ease;
+  }
+  .opt.selected { background: #fff; border-color: var(--rose); }
+  .opt.selected .box { background: var(--rose); border-color: var(--rose); color: #fff; }
+  .other-input {
+    width: 100%; font: inherit; font-size: 16px; color: var(--ink);
+    background: #fff; border: 2px solid var(--rose); border-radius: 14px;
+    padding: 13px 16px;
+  }
+  .other-input:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
+
+  .nav { display: flex; justify-content: space-between; align-items: center; margin-top: 28px; gap: 10px; }
+  .nav .btn.ghost { margin-left: -18px; }
+
+  .error {
+    display: none; margin-top: 18px;
+    background: #ffe3e8; color: #9b1c3f;
+    border-radius: 14px; padding: 12px 16px; font-size: 14px; line-height: 1.5;
+  }
+  .error.show { display: block; }
+
+  .done-note { font-family: var(--serif); font-size: 24px; line-height: 1.35; color: var(--plum); margin-top: 6px; }
+
+  @media (max-width: 380px) {
+    .choices { grid-template-columns: 1fr; }
+    .choice { flex-direction: row; justify-content: center; padding: 18px 12px; }
+    .choice .emoji { font-size: 30px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+    .hearts { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="hearts" id="hearts" aria-hidden="true"></div>
+
+<main>
+  <div class="card">
+
+    <!-- Welcome -->
+    <section class="screen active" id="screen-welcome">
+      <div class="big-heart">💌</div>
+      <h1>I made something just for you</h1>
+      <p class="lead">A few questions about us. Take your time, be honest, and answer from the heart.</p>
+      <button class="btn" id="startBtn">Begin</button>
+    </section>
+
+    <!-- Question -->
+    <section class="screen" id="screen-question">
+      <div class="progress" id="progress" aria-label="Progress"></div>
+      <h2 class="question" id="questionText"></h2>
+      <div id="answerArea"></div>
+      <div class="error" id="errorBox" role="alert"></div>
+      <div class="nav">
+        <button class="btn ghost" id="backBtn">Back</button>
+        <button class="btn" id="nextBtn" disabled>Next</button>
+      </div>
+    </section>
+
+    <!-- Thank you -->
+    <section class="screen" id="screen-done">
+      <div class="big-heart">💖</div>
+      <h1>Thank you, my love</h1>
+      <p class="done-note">Every answer is a little gift to me. I can't wait to read them all.</p>
+    </section>
+
+  </div>
+</main>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDY094AYc7ouwRSympqCeWywT1SCVPDgws",
+    authDomain: "unihome1-3e107.firebaseapp.com",
+    projectId: "unihome1-3e107",
+    storageBucket: "unihome1-3e107.firebasestorage.app",
+    messagingSenderId: "420673785021",
+    appId: "1:420673785021:web:13185a9f0f3dc998617bd4",
+    measurementId: "G-BLKS8SVZ95"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  const QUESTIONS = [
+    { type: "text", q: "What's your ideal way to spend a perfect day?" },
+    { type: "text", q: "What's your favorite thing about yourself?" },
+    { type: "text", q: "What's one thing you've always wanted to try?" },
+    { type: "text", q: "What's your favorite memory involving me?" },
+    { type: "text", q: "If we had a whole day together, where would you want us to go?" },
+    { type: "text", q: "Is sex once a week good, or maybe you have something else in mind?" },
+    { type: "text", q: "What song would you associate with us?" },
+    { type: "text", q: "Does anything about me give you insecurities?" },
+    { type: "text", q: "What's your first impression of me?" },
+    { type: "choice", q: "Late-night calls or good-morning texts?", options: [
+        { label: "Late-night calls",   emoji: "📞" },
+        { label: "Good-morning texts", emoji: "☀️" } ] },
+    { type: "choice", q: "Which one do you like hearing more?", options: [
+        { label: "I miss you", emoji: "🥹" },
+        { label: "I love you", emoji: "🥹" } ] },
+    { type: "choice", q: "Surprise date or planned date?", options: [
+        { label: "Surprise date", emoji: "🎁" },
+        { label: "Planned date",  emoji: "📅" } ] },
+    { type: "choice", q: "Hug or kiss?", options: [
+        { label: "Hug",  emoji: "🤗" },
+        { label: "Kiss", emoji: "💋" } ] },
+    { type: "multi", q: "What wouldn't make you stay?", options: [
+        "Finding out I'm married",
+        "A long distance situation",
+        "Me being younger",
+        "Me being way, way older",
+        "Other" ] }
+  ];
+
+  const $ = (id) => document.getElementById(id);
+  const screens = { welcome: $("screen-welcome"), question: $("screen-question"), done: $("screen-done") };
+  // text/choice answers are strings; multi answers are { selected: [...], other: "" }
+  const answers = QUESTIONS.map(q => q.type === "multi" ? { selected: [], other: "" } : "");
+  let index = 0;
+  let submitting = false;
+
+  function isAnswered(i) {
+    const a = answers[i];
+    if (QUESTIONS[i].type === "multi") {
+      // Optional to pick anything, but if "Other" is ticked she needs to say what
+      return !(a.selected.includes("Other") && !a.other.trim());
+    }
+    return a.trim().length > 0;
+  }
+
+  function formatAnswer(i) {
+    const a = answers[i];
+    if (QUESTIONS[i].type === "multi") {
+      return a.selected.map(s => s === "Other" ? `Other: ${a.other.trim()}` : s);
+    }
+    return a.trim();
+  }
+
+  function show(name, back = false) {
+    Object.values(screens).forEach(s => s.classList.remove("active", "back"));
+    screens[name].classList.add("active");
+    if (back) screens[name].classList.add("back");
+  }
+
+  function renderProgress() {
+    const wrap = $("progress");
+    wrap.innerHTML = "";
+    QUESTIONS.forEach((_, i) => {
+      const h = document.createElement("i");
+      h.textContent = "♥";
+      if (i < index) h.className = "done";
+      else if (i === index) h.className = "now";
+      wrap.appendChild(h);
+    });
+    wrap.setAttribute("aria-label", `Question ${index + 1} of ${QUESTIONS.length}`);
+  }
+
+  function renderQuestion(back = false) {
+    const item = QUESTIONS[index];
+    const isLast = index === QUESTIONS.length - 1;
+    $("errorBox").classList.remove("show");
+    $("questionText").textContent = item.q;
+    $("backBtn").style.visibility = index === 0 ? "hidden" : "visible";
+    $("nextBtn").textContent = isLast ? "Send with love 💌" : "Next";
+    $("nextBtn").disabled = !isAnswered(index);
+    renderProgress();
+
+    const area = $("answerArea");
+    area.innerHTML = "";
+
+    if (item.type === "text") {
+      const ta = document.createElement("textarea");
+      ta.value = answers[index];
+      ta.maxLength = 2000;
+      ta.setAttribute("aria-label", item.q);
+      ta.addEventListener("input", () => {
+        answers[index] = ta.value;
+        $("nextBtn").disabled = !ta.value.trim();
+      });
+      area.appendChild(ta);
+      setTimeout(() => ta.focus({ preventScroll: true }), 350);
+    } else if (item.type === "choice") {
+      const hint = document.createElement("p");
+      hint.className = "hint";
+      hint.textContent = "Choose one";
+      area.appendChild(hint);
+
+      const grid = document.createElement("div");
+      grid.className = "choices";
+      item.options.forEach(opt => {
+        const b = document.createElement("button");
+        b.type = "button";
+        b.className = "choice" + (answers[index] === opt.label ? " selected" : "");
+        b.innerHTML = `<span class="emoji"></span><span class="lbl"></span>`;
+        b.querySelector(".emoji").textContent = opt.emoji;
+        b.querySelector(".lbl").textContent = opt.label;
+        b.addEventListener("click", () => {
+          answers[index] = opt.label;
+          grid.querySelectorAll(".choice").forEach(c => c.classList.remove("selected"));
+          b.classList.add("selected");
+          $("nextBtn").disabled = false;
+          if (!isLast) setTimeout(() => { if (answers[index] === opt.label) go(1); }, 450);
+        });
+        grid.appendChild(b);
+      });
+      area.appendChild(grid);
+    } else if (item.type === "multi") {
+      const state = answers[index];
+
+      const hint = document.createElement("p");
+      hint.className = "hint";
+      hint.textContent = "Select as many as you like";
+      area.appendChild(hint);
+
+      const list = document.createElement("div");
+      list.className = "multi";
+      list.setAttribute("role", "group");
+      list.setAttribute("aria-label", item.q);
+
+      const otherWrap = document.createElement("div");
+      const otherInput = document.createElement("input");
+      otherInput.type = "text";
+      otherInput.className = "other-input";
+      otherInput.maxLength = 500;
+      otherInput.value = state.other;
+      otherInput.setAttribute("aria-label", "Other reason");
+      otherInput.addEventListener("input", () => {
+        state.other = otherInput.value;
+        $("nextBtn").disabled = !isAnswered(index);
+      });
+      otherWrap.appendChild(otherInput);
+      otherWrap.style.display = state.selected.includes("Other") ? "block" : "none";
+
+      item.options.forEach(label => {
+        const b = document.createElement("button");
+        b.type = "button";
+        b.setAttribute("role", "checkbox");
+        const on = state.selected.includes(label);
+        b.setAttribute("aria-checked", on);
+        b.className = "opt" + (on ? " selected" : "");
+        b.innerHTML = `<span class="box">✓</span><span class="lbl"></span>`;
+        b.querySelector(".lbl").textContent = label;
+        b.addEventListener("click", () => {
+          const i = state.selected.indexOf(label);
+          if (i >= 0) state.selected.splice(i, 1); else state.selected.push(label);
+          const nowOn = i < 0;
+          b.classList.toggle("selected", nowOn);
+          b.setAttribute("aria-checked", nowOn);
+          if (label === "Other") {
+            otherWrap.style.display = nowOn ? "block" : "none";
+            if (nowOn) setTimeout(() => otherInput.focus(), 50);
+          }
+          $("nextBtn").disabled = !isAnswered(index);
+        });
+        list.appendChild(b);
+      });
+
+      area.append(list, otherWrap);
+    }
+
+    show("question", back);
+  }
+
+  function go(step) {
+    if (submitting) return;
+    const next = index + step;
+    if (next < 0) return;
+    if (next >= QUESTIONS.length) return submit();
+    index = next;
+    renderQuestion(step < 0);
+  }
+
+  async function submit() {
+    submitting = true;
+    const btn = $("nextBtn");
+    const original = btn.textContent;
+    btn.disabled = true;
+    btn.textContent = "Sending…";
+    $("errorBox").classList.remove("show");
+
+    try {
+      await addDoc(collection(db, "responses"), {
+        submittedAt: serverTimestamp(),
+        answers: QUESTIONS.map((q, i) => ({
+          order: i + 1,
+          question: q.q,
+          type: q.type,
+          answer: formatAnswer(i)
+        }))
+      });
+      show("done");
+    } catch (err) {
+      console.error(err);
+      const box = $("errorBox");
+      box.textContent = "Your answers didn't send. Check your connection and tap the button to try again.";
+      box.classList.add("show");
+      btn.disabled = false;
+      btn.textContent = original;
+    } finally {
+      submitting = false;
+    }
+  }
+
+  $("startBtn").addEventListener("click", () => { index = 0; renderQuestion(); });
+  $("nextBtn").addEventListener("click", () => go(1));
+  $("backBtn").addEventListener("click", () => go(-1));
+
+  // Enter (without Shift) advances on text questions; Ctrl/Cmd+Enter always
+  document.addEventListener("keydown", (e) => {
+    if (!screens.question.classList.contains("active")) return;
+    if (e.key === "Enter" && (e.ctrlKey || e.metaKey) && !$("nextBtn").disabled) go(1);
+  });
+
+  // Floating hearts
+  (function makeHearts() {
+    const wrap = $("hearts");
+    const glyphs = ["♥", "❤", "♡"];
+    const count = window.innerWidth < 600 ? 14 : 26;
+    for (let i = 0; i < count; i++) {
+      const s = document.createElement("span");
+      s.textContent = glyphs[i % glyphs.length];
+      s.style.left = Math.random() * 100 + "vw";
+      s.style.fontSize = 10 + Math.random() * 26 + "px";
+      s.style.animationDuration = 12 + Math.random() * 14 + "s";
+      s.style.animationDelay = -Math.random() * 20 + "s";
+      s.style.setProperty("--drift", (Math.random() * 120 - 60) + "px");
+      wrap.appendChild(s);
+    }
+  })();
+</script>
+</body>
+</html>
