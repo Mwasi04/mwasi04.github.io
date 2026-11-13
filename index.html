@@ -127,7 +127,7 @@
   .btn.icon{width:44px;height:44px;padding:0;justify-content:center;flex-shrink:0}
   .btn.icon svg{width:19px;height:19px}
   [data-tip]{position:relative}
-  [data-tip]:hover::after{content:attr(data-tip);position:absolute;top:calc(100% + 8px);right:0;background:var(--ink);color:#fff;font-size:12px;font-weight:500;padding:6px 10px;border-radius:7px;white-space:nowrap;z-index:25;pointer-events:none;animation:fadeIn .15s var(--ease)}
+  @media (hover:hover){ [data-tip]:hover::after{content:attr(data-tip);position:absolute;top:calc(100% + 8px);right:0;background:var(--ink);color:#fff;font-size:12px;font-weight:500;padding:6px 10px;border-radius:7px;white-space:nowrap;z-index:25;pointer-events:none;animation:fadeIn .15s var(--ease)} }
   .page-head > [data-tip]:first-child:hover::after{right:auto;left:0}
   .btn:disabled{opacity:.4;cursor:not-allowed;box-shadow:none;transform:none}
 
@@ -199,7 +199,7 @@
   .pos-grid > *{min-width:0}
   .pos-side .card{margin-bottom:24px}
   @media (max-width:1100px){.pos-grid{grid-template-columns:1fr}}
-  .cart-line{display:flex;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid var(--line);animation:fadeIn .2s var(--ease)}
+  .cart-line{display:flex;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid var(--line)}
   .cart-line .name{color:var(--ink);font-weight:500;font-size:13.5px}
   .cart-line input{width:64px;padding:7px 8px;text-align:center}
   .totals{margin:18px 0 20px}
@@ -316,6 +316,133 @@
   .av-empty svg{width:16px;height:16px}
   .muted-name{color:var(--muted)}
 
+
+  /* ---------- Inventory browser ---------- */
+  .inv-nav{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:14px 18px;overflow:visible}
+  .inv-nav > [data-tip]:first-child:hover::after{right:auto;left:0}
+  .inv-path{flex:1;display:flex;align-items:center;gap:8px;font-size:15px;min-width:160px;flex-wrap:wrap}
+  .inv-path a{color:var(--muted);cursor:pointer;text-decoration:none;transition:color .15s}
+  .inv-path a:hover{color:var(--primary)}
+  .inv-path b{color:var(--ink);font-weight:600;font-size:16px}
+  .inv-path .sep{color:#c9cad2}
+  .inv-nav .search{width:340px}
+  .inv-nav.top .search{flex:1;width:auto}
+  .inv-nav.top .search input{height:46px;font-size:14.5px}
+  .bc-av.has-logo{background:#fff;box-shadow:inset 0 0 0 1px var(--line);padding:5px}
+  .bc-av.has-logo img{width:100%;height:100%;object-fit:contain}
+  .brand-logo-prev{width:84px;height:84px;border-radius:14px;border:1px dashed var(--line2);background:#fafafb;display:grid;place-items:center;overflow:hidden;color:var(--muted);font-size:11px;text-align:center;flex-shrink:0;padding:8px}
+  .brand-logo-prev img{width:100%;height:100%;object-fit:contain}
+  .brand-logo-prev svg{width:20px;height:20px}
+  @media (max-width:900px){ .brand-grid{grid-template-columns:repeat(2,minmax(0,1fr))} }
+  .seg{display:inline-flex;background:#ececf0;border-radius:10px;padding:3px;gap:2px}
+  .seg button{border:none;background:none;width:38px;height:34px;border-radius:8px;display:grid;place-items:center;color:var(--muted);cursor:pointer;transition:all .15s}
+  .seg button svg{width:17px;height:17px}
+  .seg button:hover{color:var(--ink)}
+  .seg button.active{background:#fff;color:var(--ink);box-shadow:0 1px 3px rgba(16,24,40,.1)}
+  .brand-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:20px;margin-bottom:24px;animation:fadeIn .25s var(--ease)}
+  .brand-card{position:relative;background:#fff;border-radius:16px;box-shadow:var(--shadow);padding:22px;cursor:pointer;min-height:176px;display:flex;flex-direction:column;align-items:flex-start;gap:3px;transition:transform .2s var(--ease), box-shadow .2s var(--ease), border-color .2s;outline:none}
+  .brand-card:hover, .brand-card:focus-visible{transform:translateY(-3px);box-shadow:0 12px 28px rgba(16,24,40,.09)}
+  .brand-card .dots{position:absolute;top:12px;right:12px;opacity:.6}
+  .brand-card:hover .dots{opacity:1}
+  .bc-av{width:52px;height:52px;border-radius:14px;display:grid;place-items:center;color:#fff;font-weight:600;font-size:17px;margin-bottom:14px;letter-spacing:.5px}
+  .bc-av svg{width:24px;height:24px}
+  .bc-name{font-size:16.5px;font-weight:600;color:var(--ink)}
+  .bc-meta{font-size:13px;color:var(--muted)}
+  .brand-card .status{margin-top:auto}
+  .brand-card.general{background:linear-gradient(140deg,#fff 0%,#fff 45%,#fdeef0 100%);box-shadow:var(--shadow), inset 0 0 0 1px #f6d3d8}
+  .brand-card.general .bc-av{background:var(--primary)}
+  .brand-card.add{background:transparent;box-shadow:inset 0 0 0 2px var(--line2);align-items:center;justify-content:center;color:var(--muted);font-weight:500;gap:8px}
+  .brand-card.add svg{width:26px;height:26px}
+  .brand-card.add:hover{box-shadow:inset 0 0 0 2px var(--primary);color:var(--primary);transform:none}
+  tr.clickable{cursor:pointer}
+  .head-tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  b.ink{color:var(--ink);font-weight:600}
+
+
+  /* ---------- Point of sale (Dashboard) ---------- */
+  .stat-strip{display:flex;background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:20px;overflow:hidden}
+  .ss{flex:1;display:flex;align-items:baseline;gap:10px;padding:16px 22px;border:none;background:none;font:inherit;text-align:left;border-right:1px solid var(--line);min-width:0;flex-wrap:wrap}
+  .ss:last-child{border-right:none}
+  .ss-label{font-size:13px;color:var(--muted);font-weight:500}
+  .ss b{font-size:19px;color:var(--ink);font-weight:600;letter-spacing:-.3px}
+  .ss-link{cursor:pointer;transition:background .15s}
+  .ss-link:hover{background:#fafafb}
+  .ss-link.warn b{color:var(--orange)}
+  .ss-go{margin-left:auto;font-size:12.5px;color:var(--muted)}
+  .pos-layout{display:grid;grid-template-columns:minmax(0,1.75fr) minmax(340px,1fr);gap:24px;align-items:start}
+  .pos-side{position:sticky;top:94px}
+  .pos-side .card{margin-bottom:0}
+  .pos-find{padding:20px 22px 24px;overflow:visible}
+  .pos-search{position:relative}
+  .pos-search svg{position:absolute;left:16px;top:50%;transform:translateY(-50%);width:20px;height:20px;color:var(--muted)}
+  .pos-search input{height:54px;padding-left:48px;font-size:15px;border-radius:12px;background:#f6f6f8;border-color:transparent}
+  .pos-search input:focus{background:#fff}
+  .pos-search input{padding-right:190px}
+  .enter-hint{position:absolute;right:16px;top:50%;transform:translateY(-50%);font-size:12px;color:var(--muted);background:#fff;border:1px solid var(--line2);border-radius:6px;padding:3px 8px;pointer-events:none}
+  .pos-filters{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:12px}
+  .pos-filters select{width:auto;min-width:170px}
+  .pos-filters select:disabled{background:#f6f6f8;color:var(--muted)}
+  .switch{display:inline-flex;align-items:center;gap:8px;margin:0 0 0 auto;color:var(--text);font-size:13px;font-weight:400;cursor:pointer;user-select:none}
+  .switch input{position:absolute;opacity:0;width:0;height:0}
+  .switch span{width:34px;height:20px;border-radius:999px;background:#dcdde3;position:relative;transition:background .18s}
+  .switch span::after{content:"";position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.2);transition:transform .18s var(--ease)}
+  .switch input:checked + span{background:var(--ink)}
+  .switch input:checked + span::after{transform:translateX(14px)}
+  .switch input:focus-visible + span{box-shadow:0 0 0 3px var(--primary-soft)}
+  .pos-quick{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:16px}
+  .pq-label{font-size:12px;color:var(--muted);font-weight:500;text-transform:uppercase;letter-spacing:.6px;margin-right:4px}
+  .pq-chip{font:inherit;font-size:13px;display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line2);background:#fff;color:var(--ink);padding:6px 12px 6px 9px;border-radius:999px;cursor:pointer;transition:all .15s}
+  .pq-chip svg{width:14px;height:14px;color:var(--primary)}
+  .pq-chip:hover{border-color:var(--primary);background:var(--primary-soft)}
+  .pq-chip:disabled{opacity:.4;cursor:not-allowed}
+  .pos-count{font-size:12.5px;color:var(--muted);margin:18px 0 10px}
+  .tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px}
+  .tile{position:relative;font:inherit;text-align:left;display:flex;flex-direction:column;gap:2px;min-height:118px;padding:14px 14px 12px;border-radius:12px;border:1px solid var(--line2);background:#fff;cursor:pointer;transition:border-color .15s, box-shadow .15s, transform .1s}
+  .tile:hover:not(:disabled){border-color:var(--primary);box-shadow:0 4px 14px rgba(192,28,44,.1)}
+  .tile:active:not(:disabled){transform:scale(.98)}
+  .tile:disabled{cursor:not-allowed;opacity:.5;background:#fafafb}
+  .tile.in-cart{border-color:var(--primary);background:#fffafb}
+  .tile.flash{animation:flash 1.6s var(--ease)}
+  .t-name{color:var(--ink);font-weight:500;font-size:13.5px;line-height:1.35;padding-right:22px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .t-sku{font-size:11.5px;color:var(--muted)}
+  .t-foot{margin-top:auto;padding-top:10px;display:flex;justify-content:space-between;align-items:baseline;gap:6px}
+  .t-foot b{color:var(--ink);font-size:15px;font-weight:600}
+  .t-stock{font-size:11.5px;color:var(--green)}
+  .t-stock.low{color:var(--orange)} .t-stock.out{color:var(--red)}
+  .t-badge{position:absolute;top:10px;right:10px;min-width:22px;height:22px;padding:0 6px;border-radius:999px;background:var(--primary);color:#fff;font-size:12px;font-weight:600;display:grid;place-items:center;animation:pop .18s var(--ease)}
+  .cart-lines{max-height:min(42vh,380px);overflow:auto;margin:0 -4px;padding:0 4px}
+  .cart-line{gap:10px}
+  .cl-info{flex:1;min-width:0}
+  .cl-info .name{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .stepper{display:inline-flex;align-items:center;border:1px solid var(--line2);border-radius:9px;overflow:hidden;flex-shrink:0}
+  .stepper button{width:30px;height:30px;border:none;background:#fff;color:var(--ink);font-size:16px;cursor:pointer;transition:background .12s}
+  .stepper button:hover:not(:disabled){background:#f3f3f6}
+  .stepper button:disabled{color:#c9cad2;cursor:not-allowed}
+  .stepper span{min-width:28px;text-align:center;font-weight:600;font-size:13.5px;color:var(--ink)}
+  .cl-total{width:88px;text-align:right;font-weight:600;color:var(--ink);font-size:13.5px;flex-shrink:0}
+  .cl-remove{border:none;background:none;color:#b5b7c0;cursor:pointer;width:26px;height:26px;border-radius:7px;flex-shrink:0}
+  .cl-remove:hover{background:#fdecee;color:var(--red)}
+  .pay-label{font-size:12.5px;color:var(--muted);font-weight:500;margin-bottom:8px}
+  .pay-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
+  .pay-btn{font:inherit;font-size:13px;font-weight:500;display:flex;align-items:center;gap:8px;padding:11px 12px;border-radius:10px;border:1px solid var(--line2);background:#fff;color:var(--ink);cursor:pointer;transition:all .15s}
+  .pay-btn svg{width:17px;height:17px;color:var(--muted)}
+  .pay-btn:hover{border-color:#cfd0d7}
+  .pay-btn.active{border-color:var(--ink);background:var(--ink);color:#fff}
+  .pay-btn.active svg{color:#fff}
+  .cash-row{display:flex;gap:10px;align-items:flex-end;margin-bottom:12px}
+  .change{min-width:130px;padding:9px 12px;border-radius:9px;background:#f6f6f8;display:flex;flex-direction:column;gap:1px}
+  .change span{font-size:11.5px;color:var(--muted)}
+  .change b{font-size:15px;color:var(--ink)}
+  .change.ok{background:#e9f6ee} .change.ok b{color:var(--green)}
+  .change.short{background:#fdecee} .change.short b{color:var(--red)}
+  .cust{margin-bottom:12px}
+  .cust .btn svg{width:15px;height:15px}
+  .btn.complete{width:100%;justify-content:center;height:52px;font-size:15px;font-weight:600;gap:10px}
+  .kbd{font-size:11px;font-weight:500;opacity:.7;border:1px solid rgba(255,255,255,.4);border-radius:5px;padding:1px 6px}
+  .sale-bar{display:none}
+  .chart-wrap svg{max-height:260px}
+  @media (max-width:1100px){ .pos-layout{grid-template-columns:1fr} .pos-side{position:static} .stat-strip{flex-wrap:wrap} .ss{flex:1 1 45%;border-bottom:1px solid var(--line)} }
+
   /* ---------- Mobile: bottom navigation + card-style tables ---------- */
   @media (max-width:760px){
     aside{position:fixed;top:auto;bottom:0;left:0;right:0;width:100%;height:66px;flex-direction:row;box-shadow:0 -1px 0 var(--line), 0 -6px 20px rgba(16,24,40,.05)}
@@ -340,7 +467,30 @@
     .chart-wrap{padding:8px 16px 16px} .chart-total{padding:4px 16px 0}
     .grid2{grid-template-columns:1fr}
     .toast{bottom:84px}
+    .ss{padding:12px 16px}
+    .ss b{font-size:16px}
+    .pos-find{padding:14px}
+    .pos-search input{height:48px;font-size:14px}
+    .pos-filters select{flex:1 1 40%;min-width:0}
+    .switch{flex-basis:100%}
+    .enter-hint{display:none}
+    .pos-search input{padding-right:14px}
+    .switch{margin-left:0}
+    .tiles{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+    .tile{min-height:108px;padding:12px}
+    .kbd{display:none}
+    .cart-lines{max-height:none}
+    .sale-bar.show{display:flex;position:fixed;left:10px;right:10px;bottom:76px;z-index:28;background:var(--ink);color:#fff;border-radius:14px;padding:10px 10px 10px 16px;align-items:center;justify-content:space-between;box-shadow:var(--shadow-lg);font-size:13.5px;animation:fadeIn .2s var(--ease)}
+    .sale-bar b{font-weight:600}
+    .content{padding-bottom:90px}
+
     .appbar-title h1{font-size:17px}
+    .inv-nav .search{width:100%;order:3}
+    .inv-nav.top .search{order:0;flex:1;width:auto}
+    .bc-av.has-logo{width:52px;height:52px}
+    .brand-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+    .brand-card{padding:16px;min-height:150px}
+    .bc-av{width:44px;height:44px;margin-bottom:10px}
     .page-actions{margin-right:0;gap:6px}
     .page-actions .btn.icon{width:36px;height:36px}
     .tb-right{gap:6px}
@@ -435,32 +585,11 @@ const DEFAULT_ADMIN = {id:'u1', name:'Administrator', email:'admin@gmail.com', r
 const DEFAULT_SETTINGS = {currency:'K', vat:0, receiptFooter:'Thank you for your business!', defaultReorder:5, logo:''};
 let memoryFallback = null;
 
+// A fresh start: no brands, parts or sales — only the default administrator
 function seedData(){
   const now = new Date().toISOString();
-  const brands = [
-    {id:'b1', name:'Toyota'}, {id:'b2', name:'Nissan'}, {id:'b3', name:'Honda'}, {id:'b4', name:'Mitsubishi'}
-  ];
-  const models = [
-    {id:'m1', brandId:'b1', name:'Corolla', years:'2008–2018'},
-    {id:'m2', brandId:'b1', name:'Hilux', years:'2005–2020'},
-    {id:'m3', brandId:'b1', name:'Vitz', years:'2005–2019'},
-    {id:'m4', brandId:'b2', name:'X-Trail', years:'2007–2021'},
-    {id:'m5', brandId:'b2', name:'March', years:'2010–2020'},
-    {id:'m6', brandId:'b3', name:'Fit', years:'2008–2019'},
-    {id:'m7', brandId:'b4', name:'Pajero', years:'2006–2021'}
-  ];
-  const parts = [
-    {id:'p1', sku:'OF-1001', name:'Oil Filter', category:'Engine', cost:55, price:85, stock:40, reorder:10, modelIds:['m1','m3','m6']},
-    {id:'p2', sku:'BP-2001', name:'Front Brake Pads', category:'Brakes', cost:300, price:450, stock:12, reorder:5, modelIds:['m1']},
-    {id:'p3', sku:'BP-2002', name:'Front Brake Pads (Heavy Duty)', category:'Brakes', cost:420, price:620, stock:4, reorder:5, modelIds:['m2','m7']},
-    {id:'p4', sku:'AF-3001', name:'Air Filter', category:'Engine', cost:110, price:180, stock:25, reorder:8, modelIds:['m4','m5']},
-    {id:'p5', sku:'SP-4001', name:'Spark Plug (set of 4)', category:'Ignition', cost:220, price:320, stock:18, reorder:6, modelIds:['m1','m3','m5','m6']},
-    {id:'p6', sku:'SH-5001', name:'Rear Shock Absorber', category:'Suspension', cost:900, price:1250, stock:0, reorder:2, modelIds:['m2']},
-    {id:'p7', sku:'FB-6001', name:'Fan Belt', category:'Engine', cost:140, price:210, stock:9, reorder:4, modelIds:['m2','m4','m7']},
-    {id:'p8', sku:'HL-7001', name:'Headlight Bulb H4', category:'Electrical', cost:60, price:95, stock:60, reorder:15, modelIds:['m1','m2','m3','m4','m5','m6','m7']}
-  ];
-  const movements = parts.filter(p => p.stock > 0).map(p => ({id:'mv'+p.id, date:now, partId:p.id, name:p.name, sku:p.sku, type:'Opening stock', qty:p.stock, cost:p.cost, ref:''}));
-  return {users:[{...DEFAULT_ADMIN, created:now}], shopName:DEFAULT_NAME, settings:{...DEFAULT_SETTINGS}, brands, models, parts, sales:[], movements, expenses:[], seq:100};
+  return {users:[{...DEFAULT_ADMIN, created:now}], shopName:DEFAULT_NAME, settings:{...DEFAULT_SETTINGS},
+    brands:[], models:[], parts:[], sales:[], movements:[], expenses:[], seq:100, demoCleared:true};
 }
 
 // Makes sure older saved data has every field the app now uses
@@ -471,6 +600,11 @@ function migrate(d){
   d.brands = d.brands || []; d.models = d.models || []; d.parts = d.parts || [];
   d.sales = d.sales || []; d.movements = d.movements || []; d.expenses = d.expenses || [];
   d.parts.forEach(p => { if(p.cost === undefined) p.cost = 0; });
+  // one-time removal of the old sample data (users and settings are kept)
+  if(!d.demoCleared){
+    Object.assign(d, {brands:[], models:[], parts:[], sales:[], movements:[], expenses:[], demoCleared:true});
+    try{ localStorage.removeItem('hardware_pm_cart'); }catch(e){}
+  }
   return d;
 }
 function load(){
@@ -549,6 +683,10 @@ const ICON = {
   up:'<svg viewBox="0 0 24 24" class="i"><path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/></svg>',
   wallet:'<svg viewBox="0 0 24 24" class="i"><path d="M20 7V5a2 2 0 0 0-2-2H5a2 2 0 0 0 0 4h15v4"/><path d="M3 5v14a2 2 0 0 0 2 2h15v-4"/><path d="M18 12a2 2 0 0 0 0 4h4v-4z"/></svg>',
   chart:'<svg viewBox="0 0 24 24" class="i"><path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/></svg>',
+  phone:'<svg viewBox="0 0 24 24" class="i"><rect x="6" y="2" width="12" height="20" rx="2.5"/><path d="M11 18h2"/></svg>',
+  card:'<svg viewBox="0 0 24 24" class="i"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20M6 15h4"/></svg>',
+  bank:'<svg viewBox="0 0 24 24" class="i"><path d="M3 10l9-6 9 6"/><path d="M5 10v8M9.5 10v8M14.5 10v8M19 10v8M3 21h18"/></svg>',
+  list:'<svg viewBox="0 0 24 24" class="i"><path d="M8 6h13M8 12h13M8 18h13"/><circle cx="3.5" cy="6" r="1"/><circle cx="3.5" cy="12" r="1"/><circle cx="3.5" cy="18" r="1"/></svg>',
   user:'<svg viewBox="0 0 24 24" class="i"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>',
   logout:'<svg viewBox="0 0 24 24" class="i"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5M21 12H9"/></svg>',
   grid:'<svg viewBox="0 0 24 24" class="i"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>',
@@ -640,20 +778,21 @@ function tabsHTML(list, active, fn){
   return `<div class="tabs">${list.map(([k,l]) => `<button class="${k===active?'active':''}" onclick="${fn}('${k}')">${l}</button>`).join('')}</div>`;
 }
 // Card with title, search box and the Filter / Date / Export buttons
-function tableCard({title, key, placeholder, filter, date, exportFn, extra=''}){
+function tableCard({title, sub, key, placeholder, filter, date, exportFn, extra='', noSearch}){
   const st = STATE[key];
-  return `<div class="card">
-    <div class="card-head"><h3>${esc(title)}</h3></div>
-    <div class="toolbar">
-      <div class="search">${ICON.search}<input id="q_${key}" placeholder="${esc(placeholder||'Search')}" value="${esc(st.q||'')}"></div>
-      <div class="right">
+  const tools = `
         <span id="bulk_${key}"></span>
         ${extra}
         ${filter ? `<button class="btn outline ${st.open?'on':''}" onclick="toggleFilter('${key}')">${ICON.filter}Filter</button>` : ''}
         ${date ? `<button class="btn outline ${st.range!=='all'?'on':''}" onclick="dateMenu(event,'${key}')">${ICON.date}${esc(DATE_LABELS[st.range])}</button>` : ''}
-        ${exportFn ? `<button class="btn outline" onclick="${exportFn}()">${ICON.export}Export</button>` : ''}
-      </div>
-    </div>
+        ${exportFn ? `<button class="btn outline" onclick="${exportFn}()">${ICON.export}Export</button>` : ''}`;
+  return `<div class="card">
+    <div class="card-head"><div><h3>${esc(title)}</h3>${sub ? `<div class="sub" style="margin-top:4px">${esc(sub)}</div>` : ''}</div>
+      ${noSearch ? `<div class="head-tools">${tools}</div>` : ''}</div>
+    ${noSearch ? '<div style="height:16px"></div>' : `<div class="toolbar">
+      <div class="search">${ICON.search}<input id="q_${key}" placeholder="${esc(placeholder||'Search')}" value="${esc(st.q||'')}"></div>
+      <div class="right">${tools}</div>
+    </div>`}
     ${filter ? `<div class="filter-panel ${st.open?'open':''}">${filter}</div>` : ''}
     <div class="table-wrap" id="tb_${key}"></div>
     <div id="tf_${key}"></div>
@@ -713,7 +852,6 @@ function customDates(key){
    ============================================================ */
 const mk = extra => Object.assign({q:'', open:false, page:1, size:10, sort:null, sel:new Set()}, extra);
 const STATE = {
-  pos:       mk({model:'', size:8}),
   parts:     mk({model:'', stock:''}),
   models:    mk({brand:''}),
   sales:     mk({range:'all', from:'', to:'', pay:''}),
@@ -751,7 +889,7 @@ function drawTable(key){
 
   const allSel = VISIBLE[key].length && VISIBLE[key].every(id => st.sel.has(id));
   const head = `<tr class="head">
-    ${cfg.checkbox ? `<th class="cb"><input type="checkbox" ${allSel?'checked':''} onclick="toggleAll('${key}', this.checked)" title="Select this page"></th>` : ''}
+    ${cfg.checkbox ? `<th class="cb"><input type="checkbox" ${allSel?'checked':''} onclick="event.stopPropagation();toggleAll('${key}', this.checked)" title="Select this page"></th>` : ''}
     ${cfg.columns.map(c => {
       const sorted = st.sort && st.sort.col === c.key;
       const arrow = sorted ? (st.sort.dir > 0 ? '▲' : '▼') : '▲';
@@ -760,8 +898,8 @@ function drawTable(key){
     ${cfg.actions ? '<th class="num">Action</th>' : ''}</tr>`;
   const body = pageRows.map(r => {
     const id = cfg.id(r);
-    return `<tr class="${st.sel.has(id)?'sel':''} ${flashIds.has(id)?'flash':''}">
-      ${cfg.checkbox ? `<td class="cb"><input type="checkbox" ${st.sel.has(id)?'checked':''} onclick="toggleSel('${key}','${esc(id)}',this.checked)"></td>` : ''}
+    return `<tr class="${st.sel.has(id)?'sel':''} ${flashIds.has(id)?'flash':''} ${cfg.rowClick?'clickable':''}" ${cfg.rowClick ? `onclick="${cfg.rowClick(r)}"` : ''}>
+      ${cfg.checkbox ? `<td class="cb" onclick="event.stopPropagation()"><input type="checkbox" ${st.sel.has(id)?'checked':''} onclick="event.stopPropagation();toggleSel('${key}','${esc(id)}',this.checked)"></td>` : ''}
       ${cfg.columns.map((c,i) => `<td data-label="${esc(c.label)}" class="${c.num?'num':''} ${c.cls||''} ${i===0?'first':''}">${c.html(r)}</td>`).join('')}
       ${cfg.actions ? `<td class="num act">${cfg.actions(r)}</td>` : ''}
     </tr>`;
@@ -887,9 +1025,19 @@ function bellMenu(e){
 }
 
 /* ============================================================
-   DASHBOARD  (where sales are made)
+   DASHBOARD  — point of sale: find parts on the left, current sale on the right
    ============================================================ */
-let cart = [];   // [{partId, qty}]
+const CART_KEY = 'hardware_pm_cart';
+let cart = [];                       // [{partId, qty}]
+let sale = {pay:'Cash', received:'', customer:'', phone:'', showCustomer:false};
+let posFind = {q:'', brand:'', model:'', showOut:false, limit:24};
+
+// keep an unfinished sale if the page is refreshed
+function saveCart(){ try{ localStorage.setItem(CART_KEY, JSON.stringify({cart, sale})); }catch(e){} }
+function loadCart(){
+  try{ const d = JSON.parse(localStorage.getItem(CART_KEY) || 'null'); if(d){ cart = d.cart || []; sale = Object.assign(sale, d.sale || {}); } }catch(e){}
+}
+loadCart();
 
 function renderDashboard(){
   const today = new Date(), yest = new Date(); yest.setDate(today.getDate()-1);
@@ -897,33 +1045,222 @@ function renderDashboard(){
   const todaySales = daySales(today), ySales = daySales(yest);
   const sum = list => list.reduce((a,s)=>a+s.total,0);
   const units = list => list.reduce((a,s)=>a+s.items.reduce((b,i)=>b+i.qty,0),0);
-  const lowCount = db.parts.filter(p => p.stock <= p.reorder).length;
-  const st = STATE.pos;
+  const low = db.parts.filter(p => p.stock <= p.reorder).length;
+  const brandOpts = db.brands.slice().sort((a,b)=>a.name.localeCompare(b.name));
+  const modelOpts = posFind.brand ? brandModels(posFind.brand) : [];
 
   $('#app').innerHTML = `
-    ${summaryCards([
-      {title:'Sales Today', color:'blue', value:money(sum(todaySales)), period:'Today', trend:{cur:sum(todaySales), prev:sum(ySales), label:'yesterday'}},
-      {title:'Items Sold', color:'orange', value:String(units(todaySales)), period:todaySales.length + ' receipt(s)', trend:{cur:units(todaySales), prev:units(ySales), label:'yesterday'}},
-      {title:'Low Stock', color:'red', value:String(lowCount), period: lowCount ? 'Parts need restocking →' : 'All parts well stocked', onclick:'showLowStock()'}
-    ])}
-    <div class="pos-grid">
-      <div class="card">
-        <div class="card-head"><h3>Parts</h3></div>
-        <div class="toolbar">
-          <div class="search">${ICON.search}<input id="q_pos" placeholder="Search part name or SKU" value="${esc(st.q)}"></div>
-          <div class="right"><select id="f_posm" style="width:auto">${modelOptions(st.model,'Any vehicle')}</select></div>
+    <div class="stat-strip">
+      <div class="ss"><span class="ss-label">Sales today</span><b>${money(sum(todaySales))}</b>${trendHTML({cur:sum(todaySales), prev:sum(ySales), label:'yesterday'})}</div>
+      <div class="ss"><span class="ss-label">Receipts</span><b>${todaySales.length}</b></div>
+      <div class="ss"><span class="ss-label">Items sold</span><b>${units(todaySales)}</b></div>
+      <button class="ss ss-link ${low?'warn':''}" onclick="showLowStock()"><span class="ss-label">Low stock</span><b>${low}</b><span class="ss-go">View →</span></button>
+    </div>
+    <div class="pos-layout">
+      <div class="card pos-find">
+        <div class="pos-search">
+          ${ICON.search}
+          <input id="posQ" placeholder="Search parts by name or SKU" value="${esc(posFind.q)}" autocomplete="off">
+          <span class="enter-hint">Enter ↵ adds first match</span>
         </div>
-        <div class="table-wrap" id="tb_pos"></div>
-        <div id="tf_pos"></div>
+        <div class="pos-filters">
+          <select id="posBrand" aria-label="Brand"><option value="">All brands</option>
+            <option value="${GENERAL}" ${posFind.brand===GENERAL?'selected':''}>General (any vehicle)</option>
+            ${brandOpts.map(b=>`<option value="${b.id}" ${b.id===posFind.brand?'selected':''}>${esc(b.name)}</option>`).join('')}</select>
+          <select id="posModel" aria-label="Model" ${posFind.brand && posFind.brand !== GENERAL ? '' : 'disabled'}>
+            <option value="">${posFind.brand && posFind.brand !== GENERAL ? 'All models' : 'Model'}</option>
+            ${modelOpts.map(m=>`<option value="${m.id}" ${m.id===posFind.model?'selected':''}>${esc(m.name)}${m.years?' ('+esc(m.years)+')':''}</option>`).join('')}</select>
+          <label class="switch"><input type="checkbox" id="posOut" ${posFind.showOut?'checked':''}><span></span>Show out of stock</label>
+        </div>
+        <div id="posQuick"></div>
+        <div id="posTiles"></div>
       </div>
-      <div class="pos-side">
-        <div class="card" id="cartBox"></div>
-        <div class="card" id="chartBox"></div>
+      <div class="pos-side"><div class="card" id="cartBox"></div></div>
+    </div>
+    <div class="sale-bar" id="saleBar"></div>`;
+
+  const q = $('#posQ');
+  q.oninput = e => { posFind.q = e.target.value; posFind.limit = 24; drawTiles(); };
+  q.onkeydown = e => {
+    if(e.key === 'Enter' && !e.ctrlKey && !e.metaKey){
+      e.preventDefault();
+      const first = posResults().find(p => available(p) > 0);
+      if(first){ addToCart(first.id); q.select(); } else toast('No matching part in stock');
+    }
+  };
+  $('#posBrand').onchange = e => { posFind.brand = e.target.value; posFind.model = ''; posFind.limit = 24; renderDashboard(); };
+  $('#posModel').onchange = e => { posFind.model = e.target.value; posFind.limit = 24; drawTiles(); };
+  $('#posOut').onchange = e => { posFind.showOut = e.target.checked; drawTiles(); };
+  drawTiles(); drawCart();
+  if(!('ontouchstart' in window)) setTimeout(() => q.focus(), 30);
+}
+
+const available = p => p.stock - ((cart.find(c => c.partId === p.id) || {}).qty || 0);
+function posResults(){
+  let list = db.parts;
+  if(posFind.model) list = modelParts(posFind.model);
+  else if(posFind.brand === GENERAL) list = generalParts();
+  else if(posFind.brand) list = brandParts(posFind.brand);
+  list = filterParts({q:posFind.q}, list);
+  if(!posFind.showOut) list = list.filter(p => p.stock > 0);
+  return list;
+}
+// most-sold parts, for one-tap adding
+function popularParts(){
+  const n = {};
+  db.sales.forEach(s => s.items.forEach(i => n[i.partId] = (n[i.partId]||0) + i.qty));
+  return Object.entries(n).sort((a,b)=>b[1]-a[1]).map(([id]) => partById(id)).filter(p => p && p.stock > 0).slice(0,6);
+}
+
+function drawTiles(){
+  const list = posResults(), filtering = posFind.q.trim() || posFind.brand;
+  const pop = filtering ? [] : popularParts();
+  $('#posQuick').innerHTML = pop.length ? `<div class="pos-quick"><span class="pq-label">Popular</span>
+    ${pop.map(p => `<button class="pq-chip" onclick="addToCart('${p.id}')" ${available(p)<=0?'disabled':''}>${ICON.plus}${esc(p.name)}</button>`).join('')}</div>` : '';
+
+  if(!list.length){
+    $('#posTiles').innerHTML = db.parts.length
+      ? emptyState('search', 'No parts found', posFind.showOut ? 'Try a different search or vehicle.' : 'Try a different search or vehicle, or turn on “Show out of stock”.')
+      : emptyState('box', 'No parts yet', 'Add spare parts in Inventory to start selling.', `<button class="btn" onclick="go('inventory')">${ICON.box}Go to Inventory</button>`);
+    return;
+  }
+  const shown = list.slice(0, posFind.limit);
+  $('#posTiles').innerHTML = `
+    <div class="pos-count">${list.length} part${list.length===1?'':'s'}${posFind.model ? ' fit ' + esc(modelLabel(modelById(posFind.model))) : ''}</div>
+    <div class="tiles">${shown.map(p => {
+      const inCart = (cart.find(c => c.partId === p.id) || {}).qty || 0, left = p.stock - inCart;
+      return `<button class="tile ${inCart?'in-cart':''} ${flashIds.has(p.id)?'flash':''}" onclick="addToCart('${p.id}')" ${left<=0?'disabled':''} title="${left<=0 ? (p.stock<=0?'Out of stock':'All available stock is in the sale') : 'Add to sale'}">
+        ${inCart ? `<span class="t-badge">${inCart}</span>` : ''}
+        <span class="t-name">${esc(p.name)}</span>
+        <span class="t-sku">${esc(p.sku)}</span>
+        <span class="t-foot"><b>${money(p.price)}</b>${p.stock<=0 ? '<span class="t-stock out">Out</span>' : `<span class="t-stock ${p.stock<=p.reorder?'low':''}">${p.stock} left</span>`}</span>
+      </button>`;
+    }).join('')}</div>
+    ${list.length > shown.length ? `<div style="text-align:center;margin-top:16px"><button class="btn outline" onclick="posFind.limit+=24;drawTiles()">Show more (${list.length - shown.length})</button></div>` : ''}`;
+}
+
+function showLowStock(){ Object.assign(STATE.parts, {q:'', model:'', stock:'low', open:true, page:1}); invView = 'list'; invNav = {brand:null, model:null}; go('inventory'); }
+
+function addToCart(id){
+  const p = partById(id), line = cart.find(c=>c.partId===id);
+  const qty = (line ? line.qty : 0) + 1;
+  if(qty > p.stock) return toast(p.stock <= 0 ? 'Out of stock' : `Only ${p.stock} in stock`);
+  if(line) line.qty = qty; else cart.push({partId:id, qty:1});
+  saveCart(); drawCart(); drawTiles();
+}
+function changeQty(id, d){
+  const p = partById(id), line = cart.find(c=>c.partId===id); if(!line) return;
+  const q = line.qty + d;
+  if(q > p.stock) return toast(`Only ${p.stock} in stock`);
+  if(q <= 0) cart = cart.filter(c => c.partId !== id); else line.qty = q;
+  saveCart(); drawCart(); drawTiles();
+}
+function removeLine(id){ cart = cart.filter(c => c.partId !== id); saveCart(); drawCart(); drawTiles(); }
+function clearSale(){ cart = []; sale = {pay:sale.pay, received:'', customer:'', phone:'', showCustomer:false}; saveCart(); drawCart(); drawTiles(); }
+function setPay(p){ sale.pay = p; if(p !== 'Cash') sale.received = ''; saveCart(); drawCart(); }
+function cartTotals(){
+  const subtotal = round2(cart.reduce((a,c)=>a + partById(c.partId).price*c.qty, 0));
+  const vat = round2(subtotal * (Number(db.settings.vat)||0) / 100);
+  return {subtotal, vat, total: round2(subtotal + vat)};
+}
+const PAY_ICONS = {'Cash':'coins', 'Mobile Money':'phone', 'Card':'card', 'Bank Transfer':'bank'};
+
+function drawCart(){
+  cart = cart.filter(c => partById(c.partId));
+  const t = cartTotals(), units = cart.reduce((a,c)=>a+c.qty,0), vatRate = Number(db.settings.vat)||0;
+  const rec = parseFloat(sale.received), hasRec = sale.pay === 'Cash' && sale.received !== '' && !isNaN(rec);
+  const change = hasRec ? round2(rec - t.total) : 0;
+  $('#cartBox').innerHTML = `
+    <div class="card-head"><h3>Current Sale</h3>${cart.length ? `<button class="btn ghost sm" onclick="clearSale()">Clear</button>` : ''}</div>
+    <div class="card-body">
+      <div class="cart-lines">
+      ${cart.length ? cart.map(c => { const p = partById(c.partId); return `
+        <div class="cart-line">
+          <div class="cl-info"><div class="name">${esc(p.name)}</div><div class="sub">${money(p.price)} each</div></div>
+          <div class="stepper">
+            <button onclick="changeQty('${p.id}',-1)" aria-label="One less">−</button>
+            <span>${c.qty}</span>
+            <button onclick="changeQty('${p.id}',1)" aria-label="One more" ${c.qty>=p.stock?'disabled':''}>+</button>
+          </div>
+          <div class="cl-total">${money(p.price*c.qty)}</div>
+          <button class="cl-remove" onclick="removeLine('${p.id}')" aria-label="Remove">✕</button>
+        </div>`; }).join('') : `<div class="empty-state" style="padding:26px 0 8px"><div class="e-icon">${ICON.cart}</div><div class="e-title">No items yet</div><div class="e-text">Tap a part, or search and press Enter.</div></div>`}
       </div>
+      <div class="totals">
+        ${vatRate ? `<div class="r"><span>Subtotal</span><span>${money(t.subtotal)}</span></div>
+                     <div class="r"><span>VAT (${vatRate}%)</span><span>${money(t.vat)}</span></div>` : ''}
+        <div class="grand"><span>Total${units ? ` · ${units} item${units===1?'':'s'}` : ''}</span><b>${money(t.total)}</b></div>
+      </div>
+      <div class="pay-label">Payment</div>
+      <div class="pay-grid">${PAYMENTS.map(p => `<button class="pay-btn ${sale.pay===p?'active':''}" onclick="setPay('${p}')">${ICON[PAY_ICONS[p]]}<span>${p}</span></button>`).join('')}</div>
+      ${sale.pay === 'Cash' ? `
+        <div class="cash-row">
+          <div class="field" style="margin:0;flex:1"><label for="cashIn">Amount received</label>
+            <input id="cashIn" type="number" min="0" step="0.01" inputmode="decimal" placeholder="${t.total ? t.total.toFixed(2) : '0.00'}" value="${esc(sale.received)}"></div>
+          <div class="change ${hasRec ? (change >= 0 ? 'ok' : 'short') : ''}" id="changeBox">
+            <span>${hasRec && change < 0 ? 'Still owed' : 'Change'}</span><b>${hasRec ? money(Math.abs(change)) : '—'}</b></div>
+        </div>` : ''}
+      <div class="cust">
+        ${sale.showCustomer || sale.customer || sale.phone ? `
+          <div class="grid2" style="margin-top:4px">
+            <div class="field"><label for="custName">Customer name</label><input id="custName" value="${esc(sale.customer)}" placeholder="Optional"></div>
+            <div class="field"><label for="custPhone">Phone</label><input id="custPhone" value="${esc(sale.phone)}" inputmode="tel" placeholder="Optional"></div>
+          </div>` : `<button class="btn ghost sm" style="padding-left:0" onclick="sale.showCustomer=true;drawCart();$('#custName').focus()">${ICON.user}Add customer details</button>`}
+      </div>
+      <button class="btn lg complete" ${cart.length && !(hasRec && change < 0) ? '' : 'disabled'} onclick="checkout()">
+        Complete Sale${t.total ? ' · ' + money(t.total) : ''}<span class="kbd">Ctrl + Enter</span></button>
     </div>`;
-  bindSearch('pos');
-  bindFilter('#f_posm', 'pos', 'model');
-  drawTable('pos'); drawCart(); drawSalesChart();
+  if($('#cashIn')) $('#cashIn').oninput = e => {
+    sale.received = e.target.value; saveCart();
+    const r = parseFloat(sale.received), has = sale.received !== '' && !isNaN(r), ch = has ? round2(r - cartTotals().total) : 0;
+    const box = $('#changeBox'); box.className = 'change ' + (has ? (ch >= 0 ? 'ok' : 'short') : '');
+    box.innerHTML = `<span>${has && ch < 0 ? 'Still owed' : 'Change'}</span><b>${has ? money(Math.abs(ch)) : '—'}</b>`;
+    $('#cartBox .complete').disabled = !cart.length || (has && ch < 0);
+  };
+  if($('#custName')){ $('#custName').oninput = e => { sale.customer = e.target.value; saveCart(); }; $('#custPhone').oninput = e => { sale.phone = e.target.value; saveCart(); }; }
+  drawSaleBar(t, units);
+}
+// phones: a sticky bar that jumps to the current sale
+function drawSaleBar(t, units){
+  const bar = $('#saleBar'); if(!bar) return;
+  bar.className = 'sale-bar' + (units ? ' show' : '');
+  bar.innerHTML = units ? `<span>${units} item${units===1?'':'s'} · <b>${money(t.total)}</b></span>
+    <button class="btn sm" onclick="$('#cartBox').scrollIntoView({behavior:'smooth'})">View sale ›</button>` : '';
+}
+
+// Ctrl/Cmd + Enter completes the sale from anywhere on the Dashboard
+document.addEventListener('keydown', e => {
+  if((e.ctrlKey || e.metaKey) && e.key === 'Enter' && currentView === 'dashboard' && !$('#modalBg').classList.contains('open') && cart.length){
+    const btn = $('#cartBox .complete'); if(btn && !btn.disabled){ e.preventDefault(); checkout(); }
+  }
+});
+
+function checkout(){
+  if(!cart.length) return;
+  for(const c of cart){
+    const p = partById(c.partId);
+    if(!p || c.qty > p.stock) return toast(`Not enough stock for ${p ? p.name : 'a part'}`);
+  }
+  const id = String(db.sales.length + 1).padStart(5,'0');
+  const t = cartTotals();
+  const rec = parseFloat(sale.received), hasRec = sale.pay === 'Cash' && sale.received !== '' && !isNaN(rec);
+  if(hasRec && rec < t.total) return toast('Amount received is less than the total');
+  const items = cart.map(c => { const p = partById(c.partId); return {partId:p.id, sku:p.sku, name:p.name, price:p.price, cost:p.cost, qty:c.qty}; });
+  items.forEach(i => { const p = partById(i.partId); p.stock -= i.qty; logMovement(p, 'Sale', -i.qty, 'Receipt #' + id); });
+  const record = {
+    id, date: new Date().toISOString(), items,
+    subtotal:t.subtotal, vat:t.vat, vatRate:Number(db.settings.vat)||0, total:t.total,
+    payment: sale.pay, customer: sale.customer.trim(), phone: sale.phone.trim(), by: currentUser.name,
+    ...(hasRec ? {received:round2(rec), change:round2(rec - t.total)} : {})
+  };
+  db.sales.push(record); save();
+  cart = []; sale = {pay:'Cash', received:'', customer:'', phone:'', showCustomer:false}; saveCart();
+  flash(items.map(i => i.partId));
+  posFind.q = '';
+  route();
+  openModal(`<h3>Sale complete ✓</h3>${receiptHTML(record)}
+    <div class="modal-actions"><button class="btn" id="newSaleBtn" onclick="closeModal();$('#posQ')&&$('#posQ').focus()">New Sale</button></div>`);
+  setTimeout(() => $('#newSaleBtn') && $('#newSaleBtn').focus(), 50);
 }
 
 /* ---------- Sales chart: last 7 days (single series bar chart) ---------- */
@@ -980,150 +1317,187 @@ function chartTip(e, i){
   tip.style.top = (e.clientY - wrap.top - 6) + 'px';
   tip.style.opacity = 1;
 }
-TABLES.pos = () => ({
-  rows: filterParts({q:STATE.pos.q, model:STATE.pos.model}),
-  id: p => p.id,
-  empty: db.parts.length ? 'No parts found' : 'No parts yet', emptyIcon:'box',
-  emptyText: db.parts.length ? (STATE.pos.model ? 'Nothing in stock fits this vehicle.' : 'Try a different search.') : 'Add spare parts in Inventory to start selling.',
-  emptyAction: db.parts.length ? '' : `<button class="btn" onclick="invTab='parts';go('inventory')">${ICON.plus}Go to Inventory</button>`,
-  columns: [
-    {key:'name', label:'Part', cls:'strong', html:p=>`${partLink(p.id, p.name)}<div class="sub" style="font-weight:400">${esc(p.sku)}</div>`, sort:p=>p.name},
-    {key:'price', label:'Price', num:true, html:p=>money(p.price), sort:p=>p.price},
-    {key:'stock', label:'Qty', num:true, html:p=>p.stock, sort:p=>p.stock},
-    {key:'status', label:'Status', html:stockStatus, sort:p=>p.stock<=0?0:p.stock<=p.reorder?1:2}
-  ],
-  actions: p => {
-    const inCart = (cart.find(c=>c.partId===p.id)||{}).qty || 0, avail = p.stock - inCart;
-    return `<button class="btn soft sm" ${avail<=0?'disabled':''} onclick="addToCart('${p.id}')">${avail<=0 ? (p.stock<=0?'Out':'Max') : '+ Add'}</button>`;
-  }
-});
-
-function showLowStock(){ Object.assign(STATE.parts, {q:'', model:'', stock:'low', open:true, page:1}); invTab = 'parts'; go('inventory'); }
-
-function addToCart(id){
-  const p = partById(id), line = cart.find(c=>c.partId===id);
-  const qty = (line ? line.qty : 0) + 1;
-  if(qty > p.stock) return toast('Not enough stock');
-  if(line) line.qty = qty; else cart.push({partId:id, qty:1});
-  drawCart(); drawTable('pos');
-}
-function setQty(id, val){
-  const p = partById(id), line = cart.find(c=>c.partId===id);
-  let q = parseInt(val)||0;
-  if(q > p.stock){ q = p.stock; toast(`Only ${p.stock} in stock`); }
-  if(q <= 0) cart = cart.filter(c=>c.partId!==id); else line.qty = q;
-  drawCart(); drawTable('pos');
-}
-function cartTotals(){
-  const subtotal = round2(cart.reduce((a,c)=>a + partById(c.partId).price*c.qty, 0));
-  const vat = round2(subtotal * (Number(db.settings.vat)||0) / 100);
-  return {subtotal, vat, total: round2(subtotal + vat)};
-}
-
-function drawCart(){
-  cart = cart.filter(c => partById(c.partId));
-  const t = cartTotals(), units = cart.reduce((a,c)=>a+c.qty,0), vatRate = Number(db.settings.vat)||0;
-  $('#cartBox').innerHTML = `
-    <div class="card-head"><h3>Current Sale</h3>${units ? `<span class="sub">${units} item(s)</span>` : ''}</div>
-    <div class="card-body">
-      ${cart.length ? cart.map(c => { const p = partById(c.partId); return `
-        <div class="cart-line">
-          <div style="flex:1;min-width:0"><div class="name">${esc(p.name)}</div><div class="sub">${money(p.price)} each</div></div>
-          <input type="number" min="0" max="${p.stock}" value="${c.qty}" onchange="setQty('${p.id}', this.value)">
-          <div style="width:92px;text-align:right;font-weight:500;color:var(--ink)">${money(p.price*c.qty)}</div>
-          <button class="dots" style="font-size:14px" onclick="setQty('${p.id}',0)" title="Remove">✕</button>
-        </div>`; }).join('') : '<div class="empty-state" style="padding:28px 0 10px"><div class="e-icon">' + ICON.cart + '</div><div class="e-title">No items yet</div><div class="e-text">Click Add next to a part to start a sale.</div></div>'}
-      <div class="totals">
-        ${vatRate ? `<div class="r"><span>Subtotal</span><span>${money(t.subtotal)}</span></div>
-                     <div class="r"><span>VAT (${vatRate}%)</span><span>${money(t.vat)}</span></div>` : ''}
-        <div class="grand"><span>Total</span><b>${money(t.total)}</b></div>
-      </div>
-      <div class="grid2">
-        <div class="field"><label>Payment method</label><select id="pay">${PAYMENTS.map(p=>`<option>${p}</option>`).join('')}</select></div>
-        <div class="field"><label>Customer (optional)</label><input id="cust" placeholder="Name or phone"></div>
-      </div>
-      <div style="display:flex;gap:8px">
-        <button class="btn outline" ${cart.length?'':'disabled'} onclick="cart=[];drawCart();drawTable('pos')">Clear</button>
-        <button class="btn lg" style="flex:1;justify-content:center" ${cart.length?'':'disabled'} onclick="checkout()">Complete Sale</button>
-      </div>
-    </div>`;
-}
-
-function checkout(){
-  if(!cart.length) return;
-  for(const c of cart){
-    const p = partById(c.partId);
-    if(!p || c.qty > p.stock) return toast(`Not enough stock for ${p ? p.name : 'a part'}`);
-  }
-  const id = String(db.sales.length + 1).padStart(5,'0');
-  const t = cartTotals();
-  const items = cart.map(c => { const p = partById(c.partId); return {partId:p.id, sku:p.sku, name:p.name, price:p.price, cost:p.cost, qty:c.qty}; });
-  items.forEach(i => { const p = partById(i.partId); p.stock -= i.qty; logMovement(p, 'Sale', -i.qty, 'Receipt #' + id); });
-  const sale = {
-    id, date: new Date().toISOString(), items,
-    subtotal:t.subtotal, vat:t.vat, vatRate:Number(db.settings.vat)||0, total:t.total,
-    payment: $('#pay').value, customer: $('#cust').value.trim(), by: currentUser.name
-  };
-  db.sales.push(sale); cart = []; save();
-  flash(items.map(i => i.partId));
-  route();
-  openModal(`<h3>Sale complete ✓</h3>${receiptHTML(sale)}
-    <div class="modal-actions"><button class="btn" onclick="closeModal()">New Sale</button></div>`);
-}
 
 /* ============================================================
-   INVENTORY  (Spare parts + Vehicles)
+   INVENTORY  — browse Brands → Models → Parts, or see all parts in a list
    ============================================================ */
-let invTab = 'parts';
-function setInvTab(t){ invTab = t; route(); }
+const GENERAL = 'general';
+let invNav = {brand:null, model:null};   // brand: null | 'general' | brand id
+let invView = 'browse';                  // 'browse' (grid → list → list) | 'list' (all parts)
+const invLevel = () => invNav.model ? 'model' : invNav.brand === GENERAL ? 'general' : invNav.brand ? 'brand' : 'brands';
+function resetInvTables(){ STATE.parts.page = 1; STATE.parts.sel.clear(); STATE.models.page = 1; }
+function openBrand(id){ invView = 'browse'; invNav = {brand:id, model:null}; STATE.parts.q = ''; resetInvTables(); route(); }
+function openModel(id){ const m = modelById(id); invView = 'browse'; invNav = {brand:m.brandId, model:id}; STATE.parts.q = ''; resetInvTables(); route(); }
+function invBack(){ if(invNav.model) invNav.model = null; else invNav.brand = null; resetInvTables(); route(); }
+function invHome(){ invNav = {brand:null, model:null}; STATE.parts.q = ''; resetInvTables(); route(); }
+function setInvView(v){ invView = v; invNav = {brand:null, model:null}; resetInvTables(); route(); }
+
+const generalParts = () => db.parts.filter(p => !p.modelIds.some(id => modelById(id)));
+const brandModels  = bid => db.models.filter(m => m.brandId === bid).sort((a,b)=>a.name.localeCompare(b.name));
+const brandParts   = bid => { const ids = brandModels(bid).map(m => m.id); return db.parts.filter(p => p.modelIds.some(id => ids.includes(id))); };
+const modelParts   = mid => db.parts.filter(p => p.modelIds.includes(mid));
+const lowIn        = list => list.filter(p => p.stock <= p.reorder).length;
+const iconBtn = (cls, onclick, icon, tip) => `<button class="btn ${cls} icon" onclick="${onclick}" data-tip="${tip}" aria-label="${tip}">${ICON[icon]}</button>`;
 
 function renderInventory(){
+  // forget a brand or model that no longer exists
+  if(invNav.brand && invNav.brand !== GENERAL && !brandById(invNav.brand)) invNav = {brand:null, model:null};
+  if(invNav.model && !modelById(invNav.model)) invNav.model = null;
+  const lvl = invLevel(), list = invView === 'list';
+
+  // app bar buttons follow the level you are on
+  let add;
+  if(list || lvl === 'model' || lvl === 'general') add = iconBtn('', `partForm(null, ${invNav.model ? `'${invNav.model}'` : 'null'})`, 'plus', 'Add Part');
+  else if(lvl === 'brand') add = iconBtn('', `modelForm(null,'${invNav.brand}')`, 'plus', 'Add Model');
+  else add = iconBtn('', 'brandForm()', 'plus', 'Add Brand');
+
   const units = db.parts.reduce((a,p)=>a+Math.max(p.stock,0),0);
   const value = db.parts.reduce((a,p)=>a+p.cost*Math.max(p.stock,0),0);
-  const low = db.parts.filter(p => p.stock <= p.reorder).length;
-  const head = invTab === 'parts'
-    ? `<button class="btn outline icon" onclick="restockForm()" data-tip="New Stock Entry" aria-label="New Stock Entry">${ICON.inbox}</button><button class="btn  icon" onclick="partForm()" data-tip="Add Part" aria-label="Add Part">${ICON.plus}</button>`
-    : `<button class="btn outline icon" onclick="brandsModal()" data-tip="Manage Brands" aria-label="Manage Brands">${ICON.tag}</button><button class="btn  icon" onclick="modelForm()" data-tip="Add Model" aria-label="Add Model">${ICON.plus}</button>`;
+  const low = lowIn(db.parts);
+  const atTop = list || lvl === 'brands';
+
+  // path: Brands / Toyota / Corolla
+  const b = invNav.brand && invNav.brand !== GENERAL ? brandById(invNav.brand) : null;
+  const m = invNav.model ? modelById(invNav.model) : null;
+  let path;
+  if(list) path = '<b>All parts</b>';
+  else if(lvl === 'brands') path = '<b>Brands</b>';
+  else {
+    path = `<a onclick="invHome()">Brands</a><span class="sep">/</span>`;
+    if(lvl === 'general') path += '<b>General</b>';
+    else if(lvl === 'brand') path += `<b>${esc(b.name)}</b>`;
+    else path += `<a onclick="openBrand('${b.id}')">${esc(b.name)}</a><span class="sep">/</span><b>${esc(m.name)}</b>`;
+  }
+
   $('#app').innerHTML = `
-    <div class="page-head">${head}</div>
-    ${summaryCards(invTab === 'parts' ? [
-      {title:'Spare Parts', color:'blue', value:'Total ' + db.parts.length, period:units + ' units'},
-      {title:'Stock Value', color:'orange', value:'Total ' + money(value), period:'At cost'},
-      {title:'Low Stock', color:'red', value:'Total ' + low, period:'Needs restock', onclick:'showLowStock()'}
-    ] : [
-      {title:'Brands', color:'blue', value:'Total ' + db.brands.length, period:'Vehicle makes'},
-      {title:'Models', color:'orange', value:'Total ' + db.models.length, period:'Vehicle models'},
-      {title:'Unlinked Parts', color:'red', value:'Total ' + db.parts.filter(p=>!p.modelIds.length).length, period:'No vehicle linked'}
-    ])}
-    ${tabsHTML([['parts','Spare Parts'],['vehicles','Vehicles']], invTab, 'setInvTab')}
+    <div class="page-head">${iconBtn('outline','restockForm()','inbox','New Stock Entry')}${add}</div>
+    <div class="card inv-nav ${atTop && !list ? 'top' : ''}">
+      ${!list && lvl !== 'brands' ? `<button class="btn outline icon" onclick="invBack()" data-tip="Back" aria-label="Back">${ICON.back}</button>` : ''}
+      ${atTop && !list ? '' : `<div class="inv-path">${path}</div>`}
+      <div class="search">${ICON.search}<input id="q_inv" placeholder="Search all parts by name, SKU or category" value="${esc(STATE.parts.q)}"></div>
+      <div class="seg" role="group" aria-label="View">
+        <button class="${!list?'active':''}" onclick="setInvView('browse')" data-tip="Browse by brand" aria-label="Browse by brand">${ICON.grid}</button>
+        <button class="${list?'active':''}" onclick="setInvView('list')" data-tip="All parts" aria-label="All parts">${ICON.list}</button>
+      </div>
+    </div>
     <div id="invBody"></div>`;
-  invTab === 'parts' ? renderParts() : renderVehicles();
+  $('#q_inv').oninput = e => { STATE.parts.q = e.target.value; resetInvTables(); renderInvBody(); };
+  renderInvBody();
 }
 
-/* ---------- Spare parts ---------- */
-function renderParts(){
-  const st = STATE.parts;
-  $('#invBody').innerHTML = tableCard({
-    title:'Spare Parts', key:'parts', placeholder:'Search name, SKU or category', exportFn:'exportParts',
-    filter:`
-      <div><label>Vehicle</label><select id="f_pm">${modelOptions(st.model,'All vehicles')}</select></div>
-      <div><label>Stock level</label><select id="f_ps">
-        <option value="">All</option>
-        <option value="in" ${st.stock==='in'?'selected':''}>In stock</option>
-        <option value="low" ${st.stock==='low'?'selected':''}>Low / out of stock</option></select></div>
-      ${st.model||st.stock ? `<button class="btn outline" onclick="Object.assign(STATE.parts,{model:'',stock:'',page:1});route()">Clear filters</button>` : ''}`
-  });
-  bindSearch('parts');
-  bindFilter('#f_pm', 'parts', 'model');
-  bindFilter('#f_ps', 'parts', 'stock');
-  drawTable('parts');
+function renderInvBody(){
+  const lvl = invLevel(), st = STATE.parts, searching = !!st.q.trim();
+  if(searching || invView === 'list' || lvl === 'model' || lvl === 'general'){
+    let title, sub = '';
+    if(searching) title = 'Search results';
+    else if(invView === 'list') title = 'All Parts';
+    else if(lvl === 'general'){ title = 'General Parts'; sub = 'Parts that fit any vehicle, or aren’t linked to a specific model.'; }
+    else { const m = modelById(invNav.model); title = modelLabel(m) + ' Parts'; sub = m.years ? 'Fits ' + m.years : ''; }
+    $('#invBody').innerHTML = tableCard({
+      title, sub, key:'parts', noSearch:true, exportFn:'exportParts',
+      filter:`
+        ${invView === 'list' && !searching ? `<div><label>Vehicle</label><select id="f_pm">${modelOptions(st.model,'All vehicles')}</select></div>` : ''}
+        <div><label>Stock level</label><select id="f_ps">
+          <option value="">All</option>
+          <option value="in" ${st.stock==='in'?'selected':''}>In stock</option>
+          <option value="low" ${st.stock==='low'?'selected':''}>Low / out of stock</option></select></div>
+        ${st.model||st.stock ? `<button class="btn outline" onclick="Object.assign(STATE.parts,{model:'',stock:'',page:1});route()">Clear filters</button>` : ''}`
+    });
+    bindFilter('#f_pm', 'parts', 'model');
+    bindFilter('#f_ps', 'parts', 'stock');
+    drawTable('parts');
+  } else if(lvl === 'brand'){
+    const b = brandById(invNav.brand);
+    $('#invBody').innerHTML = `<div class="card">
+      <div class="card-head"><div><h3>${esc(b.name)} Models</h3><div class="sub" style="margin-top:4px">Select a model to see the parts that fit it.</div></div></div>
+      <div style="height:16px"></div>
+      <div class="table-wrap" id="tb_models"></div><div id="tf_models"></div></div>`;
+    drawTable('models');
+  } else {
+    $('#invBody').innerHTML = brandGrid();
+  }
+}
+
+/* ---------- Level 1: brands grid ---------- */
+function brandGrid(){
+  const gp = generalParts();
+  const cards = db.brands.slice().sort((a,b)=>a.name.localeCompare(b.name)).map(b => {
+    const ms = brandModels(b.id), ps = brandParts(b.id), low = lowIn(ps);
+    return `<div class="brand-card" onclick="openBrand('${b.id}')" tabindex="0" onkeydown="if(event.key==='Enter')openBrand('${b.id}')">
+      <button class="dots" onclick="brandMenu(event,'${b.id}')" aria-label="Brand options">•••</button>
+      ${brandBadge(b)}
+      <div class="bc-name">${esc(b.name)}</div>
+      <div class="bc-meta">${ms.length} model${ms.length===1?'':'s'} · ${ps.length} part${ps.length===1?'':'s'}</div>
+      ${low ? `<span class="status c-orange">${low} low stock</span>` : ''}
+    </div>`;
+  }).join('');
+  const gLow = lowIn(gp);
+  return `<div class="brand-grid">
+    <div class="brand-card general" onclick="openBrand('${GENERAL}')" tabindex="0" onkeydown="if(event.key==='Enter')openBrand('${GENERAL}')">
+      <div class="bc-av">${ICON.box}</div>
+      <div class="bc-name">General</div>
+      <div class="bc-meta">Fits any vehicle · ${gp.length} part${gp.length===1?'':'s'}</div>
+      ${gLow ? `<span class="status c-orange">${gLow} low stock</span>` : ''}
+    </div>
+    ${cards}
+    <div class="brand-card add" onclick="brandForm()" tabindex="0" onkeydown="if(event.key==='Enter')brandForm()">
+      ${ICON.plus}<span>Add brand</span>
+    </div>
+  </div>`;
+}
+function brandBadge(b){
+  return b.logo ? `<div class="bc-av has-logo"><img src="${b.logo}" alt="${esc(b.name)} logo"></div>`
+                : `<div class="bc-av" style="background:${avColor(b.name)}">${esc(initials(b.name))}</div>`;
+}
+function brandMenu(e, id){
+  openMenu(e, [
+    {label:'Open', fn:()=>openBrand(id)},
+    {label:'Add model', fn:()=>modelForm(null, id)},
+    {label:'Edit brand', fn:()=>brandForm(id)},
+    {label:'Delete', danger:true, fn:()=>deleteBrand(id)}
+  ]);
+}
+
+/* ---------- Level 2: models list ---------- */
+TABLES.models = () => ({
+  rows: invNav.brand ? brandModels(invNav.brand) : [], id: m => m.id, tableClass:'plain', emptyIcon:'car',
+  empty:'No models yet', emptyText:'Add the models of this brand that you stock parts for.',
+  emptyAction:`<button class="btn" onclick="modelForm(null,'${invNav.brand}')">${ICON.plus}Add a model</button>`,
+  rowClick: m => `openModel('${m.id}')`,
+  columns: [
+    {key:'model', label:'Model', html:m=>who(m.name, {square:true, html:`<b class="ink">${esc(m.name)}</b>`}), sort:m=>m.name},
+    {key:'years', label:'Years', html:m=>esc(m.years||'—'), sort:m=>m.years||''},
+    {key:'parts', label:'Parts', num:true, html:m=>modelParts(m.id).length, sort:m=>modelParts(m.id).length},
+    {key:'status', label:'Stock Status', html:m=>{ const ps = modelParts(m.id), l = lowIn(ps);
+      return !ps.length ? status('No parts yet','ink') : l ? status(l + ' low stock','orange') : status('All in stock','green'); }, sort:m=>lowIn(modelParts(m.id))},
+  ],
+  actions: m => `<button class="dots" onclick="modelMenu(event,'${m.id}')">•••</button>`
+});
+function modelMenu(e, id){
+  openMenu(e, [
+    {label:'View parts', fn:()=>openModel(id)},
+    {label:'Add part for this model', fn:()=>partForm(null, id)},
+    {label:'Edit model', fn:()=>modelForm(id)},
+    {label:'Delete', danger:true, fn:()=>deleteModel(id)}
+  ]);
+}
+
+/* ---------- Level 3 (and all-parts list): parts ---------- */
+function invPartsRows(){
+  const st = STATE.parts, searching = !!st.q.trim(), lvl = invLevel();
+  let base = db.parts;
+  if(!searching && invView === 'browse'){
+    if(lvl === 'model') base = modelParts(invNav.model);
+    else if(lvl === 'general') base = generalParts();
+  }
+  return filterParts({q:st.q, stock:st.stock, model: invView === 'list' && !searching ? st.model : ''}, base);
 }
 TABLES.parts = () => ({
-  rows: filterParts(STATE.parts),
-  id: p => p.id, checkbox: true, emptyIcon:'box',
-  empty: db.parts.length ? 'No parts match' : 'No spare parts yet',
-  emptyText: db.parts.length ? 'Try a different search or clear the filters.' : 'Add your first part to start tracking stock.',
-  emptyAction: db.parts.length ? '' : `<button class="btn" onclick="partForm()">${ICON.plus}Add your first part</button>`,
+  rows: invPartsRows(),
+  id: p => p.id, checkbox: true, tableClass:'plain', emptyIcon:'box', rowClick: p => `go('part-${p.id}')`,
+  empty: STATE.parts.q.trim() ? 'No parts match your search' : db.parts.length ? 'No parts here yet' : 'No spare parts yet',
+  emptyText: STATE.parts.q.trim() ? 'Try a different name, SKU or category.' : 'Add a part and it will show up here.',
+  emptyAction: STATE.parts.q.trim() ? '' : `<button class="btn" onclick="partForm(null, ${invNav.model ? `'${invNav.model}'` : 'null'})">${ICON.plus}Add a part</button>`,
   columns: [
     {key:'name', label:'Part', cls:'strong', html:p=>partLink(p.id, p.name), sort:p=>p.name},
     {key:'sku', label:'SKU', html:p=>esc(p.sku), sort:p=>p.sku},
@@ -1136,7 +1510,7 @@ TABLES.parts = () => ({
   actions: p => `<button class="dots" onclick="partMenu(event,'${p.id}')">•••</button>`,
   bulk: () => {
     const n = [...STATE.parts.sel].filter(id => partById(id)).length;
-    $('#bulk_parts').innerHTML = n ? `<button class="btn danger" onclick="deleteSelectedParts()">${ICON.trash}Delete ${n}</button>` : '';
+    const el = $('#bulk_parts'); if(el) el.innerHTML = n ? `<button class="btn danger" onclick="deleteSelectedParts()">${ICON.trash}Delete ${n}</button>` : '';
   }
 });
 
@@ -1147,9 +1521,9 @@ function modelOptions(selected, allLabel){
     return `<optgroup label="${esc(b.name)}">${ms.map(m=>`<option value="${m.id}" ${m.id===selected?'selected':''}>${esc(b.name)} ${esc(m.name)}</option>`).join('')}</optgroup>`;
   }).join('');
 }
-function filterParts(f){
+function filterParts(f, list = db.parts){
   const q = (f.q||'').toLowerCase().trim();
-  return db.parts.filter(p => {
+  return list.filter(p => {
     if(q && ![p.name,p.sku,p.category].join(' ').toLowerCase().includes(q)) return false;
     if(f.model && !p.modelIds.includes(f.model)) return false;
     if(f.stock === 'low' && p.stock > p.reorder) return false;
@@ -1172,13 +1546,13 @@ function partMenu(e, id){
   ]);
 }
 function exportParts(){
-  const rows = pickRows('parts', filterParts(STATE.parts), p=>p.id);
+  const rows = pickRows('parts', invPartsRows(), p=>p.id);
   exportCSV('parts', ['Part','SKU','Category','Fits','Cost','Price','Qty','Reorder level'],
     rows.map(p => [p.name, p.sku, p.category, p.modelIds.map(id=>modelById(id)).filter(Boolean).map(modelLabel).join('; '), p.cost, p.price, p.stock, p.reorder]));
 }
 
-function partForm(id){
-  const p = id ? partById(id) : {sku:'', name:'', category:'', cost:'', price:'', stock:0, reorder:db.settings.defaultReorder, modelIds:[]};
+function partForm(id, presetModel){
+  const p = id ? partById(id) : {sku:'', name:'', category:'', cost:'', price:'', stock:0, reorder:db.settings.defaultReorder, modelIds: presetModel ? [presetModel] : []};
   const checks = db.brands.map(b => {
     const ms = db.models.filter(m => m.brandId === b.id);
     if(!ms.length) return '';
@@ -1344,51 +1718,7 @@ TABLES.partStock = () => ({
   ]
 });
 
-/* ---------- Vehicles ---------- */
-function renderVehicles(){
-  const st = STATE.models;
-  $('#invBody').innerHTML = tableCard({
-    title:'Vehicle Models', key:'models', placeholder:'Search brand or model', exportFn:'exportModels',
-    filter:`<div><label>Brand</label><select id="f_mb"><option value="">All brands</option>
-      ${db.brands.map(b=>`<option value="${b.id}" ${b.id===st.brand?'selected':''}>${esc(b.name)}</option>`).join('')}</select></div>`,
-  });
-  bindSearch('models');
-  bindFilter('#f_mb', 'models', 'brand');
-  drawTable('models');
-}
-function filteredModels(){
-  const st = STATE.models, q = st.q.toLowerCase().trim();
-  return db.models.filter(m => (!st.brand || m.brandId === st.brand) && (!q || modelLabel(m).toLowerCase().includes(q)))
-    .sort((a,b)=>modelLabel(a).localeCompare(modelLabel(b)));
-}
-const linkedCount = m => db.parts.filter(p => p.modelIds.includes(m.id)).length;
-TABLES.models = () => ({
-  rows: filteredModels(), id: m => m.id, checkbox: true, emptyIcon:'car',
-  empty: db.models.length ? 'No vehicle models match' : 'No vehicle models yet',
-  emptyText: db.models.length ? 'Try a different search.' : 'Add brands and models so parts can be linked to vehicles.',
-  emptyAction: db.models.length ? '' : `<button class="btn" onclick="${db.brands.length ? 'modelForm()' : 'brandForm()'}">${ICON.plus}${db.brands.length ? 'Add a model' : 'Add a brand'}</button>`,
-  columns: [
-    {key:'model', label:'Model', cls:'strong', html:m=>esc(m.name), sort:m=>m.name},
-    {key:'brand', label:'Brand', html:m=>esc((brandById(m.brandId)||{}).name), sort:m=>(brandById(m.brandId)||{}).name||''},
-    {key:'years', label:'Years', html:m=>esc(m.years||'—'), sort:m=>m.years||''},
-    {key:'parts', label:'Compatible parts', num:true, html:m=>`<a href="#" onclick="showModelParts('${m.id}');return false">${linkedCount(m)}</a>`, sort:linkedCount},
-    {key:'status', label:'Status', html:m=>linkedCount(m) ? status('Parts linked','green') : status('No parts','orange'), sort:linkedCount}
-  ],
-  actions: m => `<button class="dots" onclick="modelMenu(event,'${m.id}')">•••</button>`
-});
-function modelMenu(e, id){
-  openMenu(e, [
-    {label:'View parts', fn:()=>showModelParts(id)},
-    {label:'Sell parts for this model', fn:()=>{ STATE.pos.model = id; STATE.pos.page = 1; go('dashboard'); }},
-    {label:'Edit model', fn:()=>modelForm(id)},
-    {label:'Delete', danger:true, fn:()=>deleteModel(id)}
-  ]);
-}
-function exportModels(){
-  const rows = pickRows('models', filteredModels(), m=>m.id);
-  exportCSV('vehicles', ['Brand','Model','Years','Compatible parts'],
-    rows.map(m => [(brandById(m.brandId)||{}).name, m.name, m.years, linkedCount(m)]));
-}
+/* ---------- Brand & model forms ---------- */
 function brandsModal(){
   openModal(`<h3>Brands</h3>
     ${db.brands.length ? `<table>${db.brands.slice().sort((a,b)=>a.name.localeCompare(b.name)).map(b => `<tr>
@@ -1398,17 +1728,36 @@ function brandsModal(){
     <div class="modal-actions"><button class="btn outline" onclick="closeModal()">Close</button><button class="btn" onclick="brandForm()">${ICON.plus}Add Brand</button></div>`);
 }
 function brandForm(id){
-  const b = id ? brandById(id) : {name:''};
+  const b = id ? brandById(id) : {name:'', logo:''};
+  let logo = b.logo || '';
+  const preview = () => logo ? `<img src="${logo}" alt="">` : `<span>${ICON.tag}<br>No logo</span>`;
   openModal(`<h3>${id ? 'Edit' : 'Add'} brand</h3>
-    <form id="f"><div class="field"><label>Brand name</label><input name="name" required value="${esc(b.name)}" placeholder="e.g. Toyota"></div>
-    <div class="modal-actions"><button type="button" class="btn outline" onclick="closeModal()">Cancel</button><button class="btn">Save</button></div></form>`);
+    <form id="f">
+      <div class="field"><label>Brand name</label><input name="name" required value="${esc(b.name)}" placeholder="e.g. Toyota"></div>
+      <div class="field"><label>Logo (optional)</label>
+        <div class="logo-upload">
+          <div class="brand-logo-prev" id="blPrev">${preview()}</div>
+          <div>
+            <input type="file" id="blFile" accept="image/*" style="display:none">
+            <button type="button" class="btn outline sm" onclick="$('#blFile').click()">Upload logo</button>
+            <button type="button" class="btn ghost sm" id="blRemove" ${logo?'':'style="display:none"'}>Remove</button>
+            <div class="hint">PNG with a clear background works best. Without a logo, the brand’s initials are shown.</div>
+          </div>
+        </div></div>
+      <div class="modal-actions"><button type="button" class="btn outline" onclick="closeModal()">Cancel</button><button class="btn">Save</button></div></form>`);
+  $('#blFile').onchange = e => {
+    const file = e.target.files[0]; if(!file) return;
+    shrinkImage(file, 160).then(url => { logo = url; $('#blPrev').innerHTML = preview(); $('#blRemove').style.display = ''; })
+      .catch(() => toast('Could not read that image'));
+  };
+  $('#blRemove').onclick = () => { logo = ''; $('#blPrev').innerHTML = preview(); $('#blRemove').style.display = 'none'; };
   $('#f').onsubmit = e => {
     e.preventDefault();
     const name = e.target.name.value.trim();
     if(!name) return;
     if(db.brands.some(x => x.name.toLowerCase() === name.toLowerCase() && x.id !== id)) return toast('That brand already exists');
-    if(id) b.name = name; else db.brands.push({id:newId('b'), name});
-    invTab = 'vehicles'; save(); closeModal(); toast('Brand saved'); route();
+    if(id) Object.assign(b, {name, logo}); else db.brands.push({id:newId('b'), name, logo});
+    save(); closeModal(); toast('Brand saved'); route();
   };
 }
 function deleteBrand(id){
@@ -1436,7 +1785,7 @@ function modelForm(id, presetBrand){
     const f = e.target, data = {brandId:f.brandId.value, name:f.name.value.trim(), years:f.years.value.trim()};
     if(!data.name) return;
     if(id) Object.assign(m, data); else db.models.push({id:newId('m'), ...data});
-    invTab = 'vehicles'; save(); closeModal(); toast('Model saved'); route();
+    save(); closeModal(); toast('Model saved'); route();
   };
 }
 function deleteModel(id){
@@ -1453,7 +1802,7 @@ function showModelParts(id){
       ${ps.map(p=>`<tr><td class="strong"><a href="#part-${p.id}" onclick="closeModal()">${esc(p.name)}</a><div class="sub">${esc(p.sku)}</div></td><td class="num">${money(p.price)}</td><td class="num">${p.stock}</td><td>${stockStatus(p)}</td></tr>`).join('')}</table>`
       : '<div class="empty">No parts linked to this model yet.</div>'}
     <div class="modal-actions"><button class="btn outline" onclick="closeModal()">Close</button>
-    <button class="btn" onclick="closeModal(); STATE.pos.model='${id}'; STATE.pos.page=1; go('dashboard')">Sell Parts for This Model</button></div>`);
+    <button class="btn" onclick="closeModal(); posFind.brand=modelById('${id}').brandId; posFind.model='${id}'; go('dashboard')">Sell Parts for This Model</button></div>`);
 }
 
 /* ============================================================
@@ -1559,7 +1908,7 @@ function exportSales(){
 TABLES.stock = () => ({
   rows: stockRows(), id: m => m.id, tableClass:'plain', emptyIcon:'inbox', empty: 'No stock entries here',
   emptyText: 'Try another date or type. New stock is entered from the Inventory page.',
-  emptyAction: `<button class="btn outline" onclick="invTab='parts';go('inventory')">${ICON.box}Go to Inventory</button>`,
+  emptyAction: `<button class="btn outline" onclick="invView='browse';go('inventory')">${ICON.box}Go to Inventory</button>`,
   columns: [
     {key:'part', label:'Part', html:m=>who(m.name, {square:true, html:partLink(m.partId, m.name)}), sort:m=>m.name},
     {key:'sku', label:'SKU', html:m=>esc(m.sku), sort:m=>m.sku},
@@ -1589,7 +1938,9 @@ function receiptHTML(s){
     ${s.vat ? `<div class="r"><span>Subtotal</span><span>${money(s.subtotal)}</span></div><div class="r"><span>VAT (${s.vatRate}%)</span><span>${money(s.vat)}</span></div>` : ''}
     <div class="r" style="font-weight:700"><span>TOTAL</span><span>${money(s.total)}</span></div>
     <div class="r"><span>Paid by</span><span>${esc(s.payment)}</span></div>
+    ${s.received !== undefined ? `<div class="r"><span>Cash received</span><span>${money(s.received)}</span></div><div class="r"><span>Change</span><span>${money(s.change)}</span></div>` : ''}
     ${s.customer ? `<div class="r"><span>Customer</span><span>${esc(s.customer)}</span></div>` : ''}
+    ${s.phone ? `<div class="r"><span>Phone</span><span>${esc(s.phone)}</span></div>` : ''}
     ${s.by ? `<div class="r"><span>Served by</span><span>${esc(s.by)}</span></div>` : ''}
     ${st.receiptFooter ? `<hr><div style="text-align:center">${esc(st.receiptFooter)}</div>` : ''}
   </div>`;
@@ -1746,9 +2097,10 @@ function renderAnalytics(){
       <div class="card"><div class="card-head"><h3>Expenses by Category</h3></div><div class="card-body">
         ${Object.keys(byCat).length ? bars(byCat, expTotal, catColor) : emptyState('wallet','No expenses in this period')}</div></div>
     </div>
+    <div class="card" id="chartBox"></div>
     <div class="card"><div class="card-head"><h3>Top Selling Parts</h3><span class="sub">${esc(periodLabel)}</span></div><div style="height:16px"></div>
       <div class="table-wrap" id="tb_top"></div><div id="tf_top"></div></div>`;
-  drawTable('top');
+  drawTable('top'); drawSalesChart();
 }
 function topParts(){
   const r = rangeOf(STATE.ana), map = {};
@@ -1865,7 +2217,7 @@ function shrinkImage(file, max){
 
 /* ============================================================
    SIGN-IN, USERS & ROLES
-   Note: browser-only demo — real security needs a server.
+   Note: sign-in runs in the browser only — real security needs a server.
    ============================================================ */
 const SESSION_KEY = 'hardware_pm_session';
 let currentUser = null;
@@ -1909,7 +2261,7 @@ $('#loginForm').onsubmit = async e => {
   toast('Welcome, ' + user.name.split(' ')[0]);
 };
 function logout(){
-  setSession(null); cart = [];
+  setSession(null); cart = []; sale = {pay:'Cash', received:'', customer:'', phone:'', showCustomer:false}; saveCart();
   Object.values(STATE).forEach(s => s.sel.clear());
   closeModal(); showLogin();
 }
