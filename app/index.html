@@ -1082,6 +1082,55 @@
   .boot-loader{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;color:var(--muted);font-size:13px;background:var(--bg,#f5f6f8);z-index:80}
   .boot-loader .spin{width:30px;height:30px;border-radius:50%;border:3px solid var(--line2);border-top-color:var(--primary);animation:spin .8s linear infinite}
   @keyframes spin{to{transform:rotate(360deg)}}
+
+  /* ---------- Projects ---------- */
+  .pj-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+  .pj-card{background:var(--card,#fff);border:1px solid var(--line);border-radius:14px;overflow:hidden;cursor:pointer;transition:box-shadow .15s,border-color .15s;outline:none}
+  .pj-card:hover,.pj-card:focus-visible{border-color:var(--line2);box-shadow:0 8px 22px rgba(16,24,40,.08)}
+  .pj-cover{position:relative;aspect-ratio:4/3;background:var(--soft);display:grid;place-items:center;color:var(--muted);overflow:hidden}
+  .pj-cover img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+  .pj-cover > span:first-child svg{width:30px;height:30px}
+  .pj-count{position:absolute;right:10px;bottom:10px;display:inline-flex;gap:5px;align-items:center;font-size:11.5px;font-weight:600;color:#fff;background:rgba(20,18,19,.7);padding:3px 8px;border-radius:999px}
+  .pj-count svg{width:12px;height:12px}
+  .pj-live{position:absolute;left:10px;top:10px;font-size:11px;font-weight:600;padding:3px 9px;border-radius:999px;background:#e6f6ec;color:#1f8a4c}
+  .pj-live.off{background:rgba(20,18,19,.7);color:#fff}
+  .pj-body{padding:14px 16px 16px;display:flex;flex-direction:column;gap:4px}
+  .pj-body b{color:var(--ink);font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .pj-meta{font-size:12px;color:var(--muted);min-height:16px}
+  .pj-foot{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:8px}
+  .pj-cat{font-size:11.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .pj-note{display:flex;gap:12px;align-items:flex-start;background:#fff8e6;border:1px solid #f3dfa5;color:#6b5210;border-radius:12px;padding:12px 14px;margin-bottom:16px;font-size:12.5px}
+  .pj-note svg{width:18px;height:18px;flex-shrink:0;margin-top:1px}
+  .pj-empty{padding:30px 20px}
+  .pj-form .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .pj-thumbs{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:10px;margin-bottom:10px}
+  .pj-thumbs.view img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:10px}
+  .pj-th{position:relative;border-radius:10px;overflow:hidden;aspect-ratio:4/3;cursor:pointer;border:2px solid transparent;background:var(--soft)}
+  .pj-th.cover{border-color:var(--primary)}
+  .pj-th img{width:100%;height:100%;object-fit:cover;display:block}
+  .pj-cv,.pj-new{position:absolute;top:5px;font-size:10px;font-weight:600;padding:2px 7px;border-radius:999px}
+  .pj-cv{left:5px;background:var(--primary);color:#fff} .pj-new{right:5px;background:#fff;color:var(--ink)}
+  .pj-ctl{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:space-between;padding:4px;background:linear-gradient(transparent,rgba(0,0,0,.55));opacity:0;transition:opacity .15s}
+  .pj-th:hover .pj-ctl,.pj-th:focus-within .pj-ctl{opacity:1}
+  @media (hover:none){.pj-ctl{opacity:1}}
+  .pj-ctl button{width:26px;height:26px;border-radius:7px;border:none;background:rgba(255,255,255,.92);color:#16181f;cursor:pointer;display:grid;place-items:center;font-size:15px;line-height:1}
+  .pj-ctl button:disabled{opacity:.35;cursor:default}
+  .pj-ctl button svg{width:13px;height:13px}
+  .pj-add{display:flex;align-items:center;justify-content:center;gap:8px;border:1.5px dashed var(--line2);border-radius:10px;padding:12px;cursor:pointer;color:var(--muted);font-size:13px;font-weight:500}
+  .pj-add:hover{border-color:var(--primary);color:var(--primary)}
+  .pj-add.disabled{opacity:.6;cursor:not-allowed}
+  .pj-add svg{width:16px;height:16px} .pj-add input{display:none}
+  .pj-pub{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:12px 14px;border:1px solid var(--line);border-radius:12px;margin-top:4px;cursor:pointer}
+  .pj-pub b{display:block;font-size:13px;color:var(--ink)} .pj-pub small{font-size:11.5px;color:var(--muted)}
+  .danger-text{color:var(--red) !important}
+  @media (max-width:1280px){.pj-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+  @media (max-width:980px){.pj-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+  @media (max-width:560px){.pj-grid{grid-template-columns:1fr}.pj-form .grid2{grid-template-columns:1fr}}
+  html.dark .pj-card{background:var(--card) !important;border-color:var(--line) !important}
+  html.dark .pj-note{background:rgba(227,160,8,.12);border-color:rgba(227,160,8,.3);color:#f0c45a}
+  .btn.locked, .btn.locked:hover{opacity:.45;cursor:not-allowed !important;box-shadow:none !important;filter:grayscale(1)}
+  .pj-note.lockinfo{background:var(--soft);border-color:var(--line);color:var(--muted)}
+  html.dark .pj-note.lockinfo{background:var(--soft);border-color:var(--line);color:var(--muted)}
 </style>
 </head>
 <body>
@@ -1122,6 +1171,7 @@
       <a href="#vehicles" data-view="vehicles" title="Vehicles"><svg viewBox="0 0 24 24" class="i"><path d="M5 17h14M5 17a2 2 0 1 0 4 0M15 17a2 2 0 1 0 4 0"/><path d="M3 17v-5l2-5h14l2 5v5"/><path d="M3 12h18"/></svg>Vehicles</a>
       <a href="#records" data-view="records" title="Records"><svg viewBox="0 0 24 24" class="i"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Records</a>
       <a href="#expenses" data-view="expenses" title="Expenses"><svg viewBox="0 0 24 24" class="i"><path d="M20 7V5a2 2 0 0 0-2-2H5a2 2 0 0 0 0 4h15v4"/><path d="M3 5v14a2 2 0 0 0 2 2h15v-4"/><path d="M18 12a2 2 0 0 0 0 4h4v-4z"/></svg>Expenses</a>
+      <a href="#projects" data-view="projects" title="Projects"><svg viewBox="0 0 24 24" class="i"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>Projects</a>
       <div class="nav-label">Insights</div>
       <a href="#analytics" data-view="analytics" title="Analytics"><svg viewBox="0 0 24 24" class="i"><path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/></svg>Analytics</a>
       <div class="nav-label">Settings</div>
@@ -1197,13 +1247,18 @@ const firebaseConfig = {
   appId: "1:830045110816:web:7d0554853f1e9bd9763245",
   measurementId: "G-SZDX8KYEG5"
 };
+// Supabase holds the project photos only (everything else stays in Firebase).
+// Fill these in from Supabase → Project Settings → API. See SUPABASE-SETUP.md.
+const SUPABASE_URL = 'https://kfiuxcttiotmbtorfwcq.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_24sugHc19v_FyfZpkbi-1w_SlswpaSD';
+const PHOTO_BUCKET = 'project-photos';
 firebase.initializeApp(firebaseConfig);
 const fbAuth = firebase.auth();
 const fs = firebase.firestore();
 fs.enablePersistence({synchronizeTabs:true}).catch(() => {});   // works offline, syncs when back online
-const DATA_COLS = ['vehicles','sales','expenses','users'];
-let db = {users:[], shopName:DEFAULT_NAME, settings:{...DEFAULT_SETTINGS}, vehicles:[], sales:[], expenses:[]};
-const synced = {vehicles:new Map(), sales:new Map(), expenses:new Map(), users:new Map(), meta:''};
+const DATA_COLS = ['vehicles','sales','expenses','users','projects'];
+let db = {users:[], shopName:DEFAULT_NAME, settings:{...DEFAULT_SETTINGS}, vehicles:[], sales:[], expenses:[], projects:[]};
+const synced = {vehicles:new Map(), sales:new Map(), expenses:new Map(), users:new Map(), projects:new Map(), meta:''};
 let orderSeq = 0;
 const plain = o => JSON.parse(JSON.stringify(o));   // Firestore can't store undefined
 const metaJSON = () => JSON.stringify({shopName:db.shopName, settings:db.settings});
@@ -1297,6 +1352,8 @@ const ICON = {
   filter:'<svg viewBox="0 0 24 24" class="i"><path d="M3 5h18l-7 8.5V19l-4 2v-7.5z"/></svg>',
   date:'<svg viewBox="0 0 24 24" class="i"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/></svg>',
   export:'<svg viewBox="0 0 24 24" class="i"><path d="M12 3v12M7 10l5 5 5-5"/><path d="M5 21h14"/></svg>',
+  lock:'<svg viewBox="0 0 24 24" class="i"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>',
+  image:'<svg viewBox="0 0 24 24" class="i"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>',
   plus:'<svg viewBox="0 0 24 24" class="i"><path d="M12 5v14M5 12h14"/></svg>',
   trash:'<svg viewBox="0 0 24 24" class="i"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg>',
   back:'<svg viewBox="0 0 24 24" class="i"><path d="M15 18l-6-6 6-6"/></svg>',
@@ -1489,6 +1546,7 @@ const STATE = {
   sales:     mk({range:'all', from:'', to:'', pay:''}),
   vbuy:      mk({range:'all', from:'', to:'', status:''}),
   vperf:     mk({size:5}),
+  projects:  mk({}),
   exp:       mk({range:'month', from:'', to:'', cat:'', link:''}),
   ana:       mk({range:'month', from:'', to:'', chart:'year'}),
   top:       mk({size:5}),
@@ -1606,6 +1664,7 @@ const PAGES = {
   vehicles:{title:'Vehicles', sub:'Cars bought to break, and what each one has earned.', icon:'car', render:renderVehicles},
   records:{title:'Records', sub:'Every sale and vehicle purchase in one place.', icon:'doc', render:renderRecords},
   expenses:{title:'Expenses', sub:'Manage and track your business costs.', icon:'wallet', render:renderExpenses},
+  projects:{title:'Projects', sub:'Work shown on the company website. Only published projects are visible to the public.', icon:'image', render:renderProjects},
   analytics:{title:'Analytics', sub:'Income, spending and profit at a glance.', icon:'chart', render:renderAnalytics},
   settings:{title:'Settings', sub:'Manage who can sign in to the system.', icon:'gear', render:renderSettings}
 };
@@ -2584,6 +2643,202 @@ TABLES.top = () => ({
   ]
 });
 
+
+/* ============================================================
+   PROJECTS — shown on the company website. Details in Firestore,
+   photos in Supabase Storage (uploaded with the user's Firebase sign-in)
+   ============================================================ */
+const PROJECT_CATS = ['Building & construction','Food & grocery supply','ICT services','Broadcasting','Transport & logistics'];
+const supabaseReady = () => !/YOUR-/.test(SUPABASE_URL + SUPABASE_KEY);
+// Photos that ship with the website are stored as "site:img/..." so they work from both the site and /app
+const photoURL = u => u.startsWith('site:') ? '../' + u.slice(5) : u;
+const STARTER_PROJECTS = [
+  {name:'Institutional Block Construction', category:'Building & construction', status:'completed', location:'', year:'', description:'Construction of a single-storey block with veranda.', photos:['site:img/hero.jpg','site:img/build1.jpg','site:img/build2.jpg']},
+  {name:'Storm Water Drainage Works', category:'Building & construction', status:'completed', location:'', year:'', description:'Excavation, concrete pouring and drain lining.', photos:['site:img/pour.jpg','site:img/trench.jpg']},
+  {name:'New Building Construction', category:'Building & construction', status:'in-progress', location:'', year:'', description:'Setting out, foundations, block making on site and walling.', photos:['site:img/found.jpg','site:img/blocks.jpg','site:img/site.jpg']},
+  {name:'Completed Building Works', category:'Building & construction', status:'completed', location:'', year:'', description:'A completed single-storey building.', photos:['site:img/build3.jpg']}
+];
+const sortedProjects = () => db.projects.slice().sort((a,b) => (a.order ?? 0) - (b.order ?? 0) || (b._t||0) - (a._t||0));
+const projStatus = p => p.status === 'in-progress' ? '<span class="tpill amber">In progress</span>' : '<span class="tpill green">Completed</span>';
+
+function renderProjects(){
+  const list = sortedProjects(), q = (STATE.projects && STATE.projects.q || '').toLowerCase();
+  const shown = list.filter(p => !q || [p.name, p.location, p.category, p.description].join(' ').toLowerCase().includes(q));
+  const pub = list.filter(p => p.published).length;
+  $('#app').innerHTML = `
+    <div class="page-head">${isAdmin() ? iconBtn('', 'projectForm()', 'plus', 'Add Project')
+      : `<button class="btn icon locked" disabled data-tip="Add Project" aria-label="Add Project — administrators only" title="Only administrators can add projects">${ICON.plus}</button>`}</div>
+    ${!isAdmin() ? `<div class="pj-note lockinfo">${ICON.lock}<div>Only administrators can add, edit or publish projects. You can view them.</div></div>` : ''}
+    ${isAdmin() && !supabaseReady() ? `<div class="pj-note">${ICON.image}<div><b>Photo storage isn’t connected yet.</b> Add your Supabase details to the system file to upload new photos (see SUPABASE-SETUP.md). You can still create projects and use the starter photos.</div></div>` : ''}
+    <div class="x-tools"><span class="x-sum">${list.length} project${list.length===1?'':'s'} · <b>${pub} on the website</b></span></div>
+    ${!list.length ? `<div class="t-card pj-empty">${emptyState('image', 'No projects yet', isAdmin() ? 'Add your first project, or start with the photos already on the website.' : 'An administrator can add projects here.')}
+        ${isAdmin() ? `<div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:6px"><button class="btn" onclick="projectForm()">${ICON.plus}Add project</button><button class="btn outline" onclick="addStarterProjects()">Use the website’s current photos</button></div>` : ''}</div>`
+      : !shown.length ? `<div class="t-card">${emptyState('image','No projects match your search')}</div>`
+      : `<div class="pj-grid">${shown.map(projectCard).join('')}</div>`}`;
+  setCount('Projects:', list.length);
+}
+function projectCard(p){
+  const cover = p.photos && p.photos.length ? photoURL(p.photos[Math.min(p.cover||0, p.photos.length-1)]) : '';
+  return `<div class="pj-card" onclick="${isAdmin() ? `projectForm('${p.id}')` : `viewProject('${p.id}')`}" tabindex="0">
+    <div class="pj-cover">${cover ? `<img src="${esc(cover)}" alt="" loading="lazy">` : `<span>${ICON.image}</span>`}
+      <span class="pj-count">${ICON.image}${(p.photos||[]).length}</span>
+      ${p.published ? '<span class="pj-live">On website</span>' : '<span class="pj-live off">Hidden</span>'}</div>
+    <div class="pj-body"><b>${esc(p.name)}</b>
+      <span class="pj-meta">${esc([p.location, p.year].filter(Boolean).join(' · ')) || (isAdmin() ? '<i>Add a location and year</i>' : '')}</span>
+      <div class="pj-foot">${projStatus(p)}<span class="pj-cat">${esc(p.category || '')}</span></div></div>
+  </div>`;
+}
+function viewProject(id){
+  const p = db.projects.find(x => x.id === id); if(!p) return;
+  openModal(`<h3>${esc(p.name)}</h3><p class="t-note" style="margin:-6px 0 14px">${esc([p.location, p.year, p.category].filter(Boolean).join(' · '))}</p>
+    ${p.description ? `<p style="margin:0 0 14px">${esc(p.description)}</p>` : ''}
+    <div class="pj-thumbs view">${(p.photos||[]).map(u => `<img src="${esc(photoURL(u))}" alt="">`).join('')}</div>
+    <div class="modal-actions">
+      <button class="btn outline locked" disabled title="Only administrators can edit projects">${ICON.edit}Edit</button>
+      <button class="btn outline locked" disabled title="Only administrators can delete projects">${ICON.trash}Delete</button>
+      <span style="flex:1"></span><button class="btn" onclick="closeModal()">Close</button></div>
+    <p class="t-note" style="margin:10px 0 0;text-align:right">Editing is for administrators only.</p>`, true);
+}
+
+let pjDraft = null;   // the project being edited, with photos still to upload
+function projectForm(id){
+  const p = id ? db.projects.find(x => x.id === id) : null;
+  pjDraft = {id: p ? p.id : newId('p'), isNew: !p, photos: p ? (p.photos||[]).map(u => ({url:u})) : [], cover: p ? (p.cover||0) : 0, removed: []};
+  openModal(`<h3>${p ? 'Edit project' : 'Add project'}</h3>
+    <form id="f" class="pj-form">
+      <div class="field"><label>Project name</label><input name="name" required value="${esc(p ? p.name : '')}" placeholder="What was built or delivered"></div>
+      <div class="grid2">
+        <div class="field"><label>Location</label><input name="location" value="${esc(p ? p.location||'' : '')}" placeholder="Town or area"></div>
+        <div class="field"><label>Year</label><input name="year" inputmode="numeric" maxlength="4" value="${esc(p ? p.year||'' : '')}" placeholder="${new Date().getFullYear()}"></div>
+      </div>
+      <div class="grid2">
+        <div class="field"><label>Service area</label><select name="category">${PROJECT_CATS.map(c => `<option ${p && p.category===c ? 'selected' : ''}>${esc(c)}</option>`).join('')}</select></div>
+        <div class="field"><label>Status</label><select name="status"><option value="completed" ${!p || p.status!=='in-progress' ? 'selected' : ''}>Completed</option><option value="in-progress" ${p && p.status==='in-progress' ? 'selected' : ''}>In progress</option></select></div>
+      </div>
+      <div class="field"><label>Description</label><textarea name="description" rows="3" placeholder="One or two lines about the work">${esc(p ? p.description||'' : '')}</textarea></div>
+      <div class="field"><label>Photos <span class="t-note">— tap a photo to make it the cover</span></label>
+        <div class="pj-thumbs" id="pjThumbs"></div>
+        <label class="pj-add ${supabaseReady() ? '' : 'disabled'}">${ICON.plus}<span>${supabaseReady() ? 'Add photos' : 'Connect Supabase to add photos'}</span>
+          <input type="file" accept="image/*" multiple ${supabaseReady() ? '' : 'disabled'} onchange="pjAddFiles(this.files); this.value=''"></label></div>
+      <label class="pj-pub"><span><b>Show on website</b><small>Visitors can see this project on the Projects page</small></span>
+        <span class="switch big"><input type="checkbox" name="published" ${!p || p.published ? 'checked' : ''}><span></span></span></label>
+      <div class="login-error" id="pjErr"></div>
+      <div class="modal-actions">
+        ${p ? `<button type="button" class="btn outline danger-text" onclick="deleteProject('${p.id}')">${ICON.trash}Delete</button><span style="flex:1"></span>` : ''}
+        <button type="button" class="btn outline" onclick="closeModal()">Cancel</button>
+        <button class="btn" id="pjSave">${p ? 'Save Changes' : 'Add Project'}</button></div>
+    </form>`, true);
+  drawPjThumbs();
+  $('#f').onsubmit = saveProject;
+}
+function drawPjThumbs(){
+  const box = $('#pjThumbs'); if(!box) return;
+  box.innerHTML = pjDraft.photos.length ? pjDraft.photos.map((ph, i) => `
+    <div class="pj-th ${i===pjDraft.cover ? 'cover' : ''}" onclick="pjDraft.cover=${i}; drawPjThumbs()" title="Make cover">
+      <img src="${esc(ph.preview || photoURL(ph.url))}" alt="">
+      ${i===pjDraft.cover ? '<span class="pj-cv">Cover</span>' : ''}
+      ${ph.file ? '<span class="pj-new">New</span>' : ''}
+      <div class="pj-ctl">
+        <button type="button" onclick="event.stopPropagation(); pjMove(${i},-1)" ${i===0?'disabled':''} aria-label="Move left">‹</button>
+        <button type="button" onclick="event.stopPropagation(); pjMove(${i},1)" ${i===pjDraft.photos.length-1?'disabled':''} aria-label="Move right">›</button>
+        <button type="button" onclick="event.stopPropagation(); pjRemove(${i})" aria-label="Remove photo">${ICON.trash}</button></div>
+    </div>`).join('') : '<p class="t-note" style="margin:0">No photos yet.</p>';
+}
+function pjMove(i, d){
+  const a = pjDraft.photos, j = i + d; if(j < 0 || j >= a.length) return;
+  [a[i], a[j]] = [a[j], a[i]];
+  if(pjDraft.cover === i) pjDraft.cover = j; else if(pjDraft.cover === j) pjDraft.cover = i;
+  drawPjThumbs();
+}
+function pjRemove(i){
+  const [ph] = pjDraft.photos.splice(i, 1);
+  if(ph.url && !ph.url.startsWith('site:')) pjDraft.removed.push(ph.url);
+  if(ph.preview) URL.revokeObjectURL(ph.preview);
+  if(pjDraft.cover >= pjDraft.photos.length) pjDraft.cover = Math.max(0, pjDraft.photos.length - 1);
+  else if(i < pjDraft.cover) pjDraft.cover--;
+  drawPjThumbs();
+}
+async function pjAddFiles(files){
+  for(const f of [...files]){
+    if(!f.type.startsWith('image/')) continue;
+    try{ const blob = await shrinkPhoto(f); pjDraft.photos.push({file:blob, preview:URL.createObjectURL(blob)}); }
+    catch(e){ console.error(e); toast('Could not read ' + f.name); }
+  }
+  drawPjThumbs();
+}
+// Resize to at most 1600px and save as JPEG so photos load fast and storage lasts
+function shrinkPhoto(file, max = 1600, quality = 0.8){
+  return new Promise((res, rej) => {
+    const img = new Image(), url = URL.createObjectURL(file);
+    img.onload = () => {
+      const k = Math.min(1, max / Math.max(img.width, img.height));
+      const c = document.createElement('canvas'); c.width = Math.round(img.width * k); c.height = Math.round(img.height * k);
+      c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+      URL.revokeObjectURL(url);
+      c.toBlob(b => b ? res(b) : rej(new Error('encode')), 'image/jpeg', quality);
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); rej(new Error('load')); };
+    img.src = url;
+  });
+}
+// Supabase Storage over plain HTTPS, signed with the user's Firebase token
+async function sbUpload(path, blob){
+  const token = await fbAuth.currentUser.getIdToken();
+  const r = await fetch(`${SUPABASE_URL}/storage/v1/object/${PHOTO_BUCKET}/${path}`, {
+    method:'POST', headers:{Authorization:'Bearer ' + token, apikey:SUPABASE_KEY, 'Content-Type':'image/jpeg', 'x-upsert':'false', 'cache-control':'31536000'}, body:blob});
+  if(!r.ok){ let m = ''; try{ m = (await r.json()).message || ''; }catch(e){} throw new Error(m || ('Upload failed (' + r.status + ')')); }
+  return `${SUPABASE_URL}/storage/v1/object/public/${PHOTO_BUCKET}/${path}`;
+}
+async function sbDelete(urls){
+  const prefix = `${SUPABASE_URL}/storage/v1/object/public/${PHOTO_BUCKET}/`;
+  const paths = urls.filter(u => u.startsWith(prefix)).map(u => u.slice(prefix.length));
+  if(!paths.length || !supabaseReady()) return;
+  try{
+    const token = await fbAuth.currentUser.getIdToken();
+    await fetch(`${SUPABASE_URL}/storage/v1/object/${PHOTO_BUCKET}`, {method:'DELETE', headers:{Authorization:'Bearer ' + token, apikey:SUPABASE_KEY, 'Content-Type':'application/json'}, body:JSON.stringify({prefixes:paths})});
+  }catch(e){ console.warn('Photo clean-up failed', e); }
+}
+async function saveProject(e){
+  e.preventDefault();
+  const f = e.target, btn = $('#pjSave'), name = f.name.value.trim();
+  if(!name){ $('#pjErr').textContent = 'Give the project a name.'; return; }
+  if(f.year.value && !/^\d{4}$/.test(f.year.value.trim())){ $('#pjErr').textContent = 'Year should be four digits.'; return; }
+  btn.disabled = true; $('#pjErr').textContent = '';
+  const pending = pjDraft.photos.filter(ph => ph.file);
+  try{
+    let n = 0;
+    for(const ph of pending){
+      btn.textContent = `Uploading photo ${++n} of ${pending.length}…`;
+      ph.url = await sbUpload(`projects/${pjDraft.id}/${Date.now().toString(36)}${Math.random().toString(36).slice(2,6)}.jpg`, ph.file);
+      delete ph.file; if(ph.preview){ URL.revokeObjectURL(ph.preview); delete ph.preview; }
+    }
+  }catch(err){
+    console.error(err); btn.disabled = false; btn.textContent = pjDraft.isNew ? 'Add Project' : 'Save Changes';
+    $('#pjErr').innerHTML = `Photo upload failed: ${esc(err.message)}. Check the Supabase setup (see SUPABASE-SETUP.md).`;
+    drawPjThumbs(); return;
+  }
+  const data = {name, location:f.location.value.trim(), year:f.year.value.trim(), category:f.category.value, status:f.status.value,
+    description:f.description.value.trim(), photos:pjDraft.photos.map(ph => ph.url), cover:pjDraft.cover, published:f.published.checked,
+    updated:new Date().toISOString()};
+  const existing = db.projects.find(x => x.id === pjDraft.id);
+  if(existing) Object.assign(existing, data);
+  else db.projects.push({id:pjDraft.id, ...data, order:-Date.now(), created:new Date().toISOString(), by:currentUser.name});
+  save();
+  sbDelete(pjDraft.removed);
+  closeModal(); toast(existing ? 'Project updated' : 'Project added'); route();
+}
+function deleteProject(id){
+  const p = db.projects.find(x => x.id === id); if(!p) return;
+  confirmBox(`Delete “${p.name}”? It will be removed from the website, and its uploaded photos deleted.`, () => {
+    db.projects = db.projects.filter(x => x.id !== id); save(); sbDelete(p.photos || []);
+    closeModal(); toast('Project deleted'); route();
+  });
+}
+function addStarterProjects(){
+  STARTER_PROJECTS.forEach((sp, i) => db.projects.push({id:newId('p'), ...sp, cover:0, published:true, order:i, created:new Date().toISOString(), by:currentUser.name}));
+  save(); toast('Starter projects added — edit them to add names, places and years'); route();
+}
+
 /* ============================================================
    SETTINGS
    ============================================================ */
@@ -2836,6 +3091,7 @@ function pageSearch(){
   if(v === 'records'){ const k = recTab === 'sales' ? 'sales' : 'vbuy';
     return {st:STATE[k], ph: k === 'sales' ? 'Search sales by receipt, customer, part or vehicle…' : 'Search vehicle purchases…', run:()=>{ STATE[k].page = 1; drawTable(k); }}; }
   if(v === 'expenses') return {st:STATE.exp, ph:'Search expenses…', run:()=>{ STATE.exp.page = 1; drawTable('exp'); }};
+  if(v === 'projects') return {st:STATE.projects, ph:'Search projects…', run:()=>renderProjects()};
   return null;
 }
 function syncSearch(){

@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Projects — Leiden Investments Limited</title>
-<meta name="description" content="Photos from Leiden Investments Limited construction sites.">
+<meta name="description" content="Projects completed and in progress by Leiden Investments Limited.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/site.css">
@@ -23,22 +23,22 @@
 <main>
 <section class="page-hero"><div class="wrap">
   <div class="crumb"><a href="index.html">Home</a> / Projects</div>
-  <h1>Projects on the ground</h1><p>Photos from our own construction sites — from setting out and foundations to finished buildings.</p>
+  <h1>Projects on the ground</h1><p>Work we have delivered and are delivering — open a project to see all its photos.</p>
 </div></section>
 
 <section class="band"><div class="wrap">
-  <div class="gal reveal">
-    <figure class="big"><img src="img/build1.jpg" alt="Completed building with a covered veranda" loading="lazy"><figcaption>Completed building</figcaption></figure>
-    <figure class="tall"><img src="img/pour.jpg" alt="Workers pouring concrete from a mixer truck into a foundation" loading="lazy"><figcaption>Concrete pour</figcaption></figure>
-    <figure><img src="img/blocks.jpg" alt="Rows of concrete blocks made on site" loading="lazy"><figcaption>Blocks made on site</figcaption></figure>
-    <figure><img src="img/build2.jpg" alt="Building under construction with blocks stacked outside" loading="lazy"><figcaption>Block work</figcaption></figure>
-    <figure class="tall"><img src="img/found.jpg" alt="Foundation trenches dug and set out" loading="lazy"><figcaption>Foundation trenches</figcaption></figure>
-    <figure class="tall"><img src="img/trench.jpg" alt="Workers in safety gear building a concrete drain" loading="lazy"><figcaption>Drain works</figcaption></figure>
-    <figure class="big"><img src="img/site.jpg" alt="Walls rising on a new building site" loading="lazy"><figcaption>Walls going up</figcaption></figure>
-    <figure class="big"><img src="img/hero.jpg" alt="Completed building with the Zambian flag" loading="lazy"><figcaption>Finished and handed over</figcaption></figure>
-    <figure class="big"><img src="img/build3.jpg" alt="Long single-storey building completed by Leiden" loading="lazy"><figcaption>Completed block</figcaption></figure>
-  </div>
+  <div class="pf" id="pjFilters" hidden></div>
+  <div class="pgrid" id="pjList" aria-live="polite"><p class="note">Loading projects…</p></div>
 </div></section>
+<div class="lb" id="lb" hidden role="dialog" aria-modal="true" aria-labelledby="lbTitle">
+  <div class="lb-top"><div><h2 id="lbTitle"></h2><p id="lbMeta"></p></div><button class="lb-x" id="lbClose" aria-label="Close">✕</button></div>
+  <div class="lb-stage"><button class="lb-nav" id="lbPrev" aria-label="Previous photo">‹</button><img id="lbImg" alt=""><button class="lb-nav" id="lbNext" aria-label="Next photo">›</button></div>
+  <p class="lb-desc" id="lbDesc"></p>
+  <div class="lb-strip" id="lbStrip"></div>
+</div>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="js/projects.js"></script>
 </main>
 <footer>
   <div class="wrap">
