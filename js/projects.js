@@ -8,13 +8,6 @@
     messagingSenderId: "830045110816",
     appId: "1:830045110816:web:7d0554853f1e9bd9763245"
   };
-  // Shown until the first project is published from the system (and if the system can't be reached)
-  const STARTER = [
-    {name:'Institutional Block Construction', category:'Building & construction', status:'completed', description:'Construction of a single-storey block with veranda.', photos:['site:img/hero.jpg','site:img/build1.jpg','site:img/build2.jpg']},
-    {name:'Storm Water Drainage Works', category:'Building & construction', status:'completed', description:'Excavation, concrete pouring and drain lining.', photos:['site:img/pour.jpg','site:img/trench.jpg']},
-    {name:'New Building Construction', category:'Building & construction', status:'in-progress', description:'Setting out, foundations, block making on site and walling.', photos:['site:img/found.jpg','site:img/blocks.jpg','site:img/site.jpg']},
-    {name:'Completed Building Works', category:'Building & construction', status:'completed', description:'A completed single-storey building.', photos:['site:img/build3.jpg']}
-  ];
   const $ = s => document.querySelector(s);
   const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const url = u => u.startsWith('site:') ? u.slice(5) : u;
@@ -25,6 +18,11 @@
     const pf = $('#pjFilters');
     pf.hidden = cats.length < 2;
     pf.innerHTML = ['All', ...cats].map(c => `<button class="${c === filter ? 'on' : ''}" data-c="${esc(c)}">${esc(c)}</button>`).join('');
+    if(!projects.length){
+      pf.hidden = true;
+      $('#pjList').innerHTML = '<div class="pj-none"><h3>Projects coming soon</h3><p>We’re adding photos of our recent work. In the meantime, get in touch to hear about what we’ve delivered.</p><a class="btn" href="contact.html">Contact us</a></div>';
+      return;
+    }
     const shown = projects.filter(p => filter === 'All' || p.category === filter);
     $('#pjList').innerHTML = shown.length ? shown.map(p => {
       const i = projects.indexOf(p), ph = p.photos || [], cover = ph[Math.min(p.cover || 0, ph.length - 1)];
@@ -77,8 +75,7 @@
       const snap = await app.firestore().collection('projects').where('published', '==', true).get();
       projects = snap.docs.map(d => ({id:d.id, ...d.data()}))
         .sort((a, b) => (a.order ?? 0) - (b.order ?? 0) || (b._t || 0) - (a._t || 0));
-    }catch(err){ console.warn('Projects: using built-in list', err); projects = []; }
-    if(!projects.length) projects = STARTER;
+    }catch(err){ console.warn('Projects could not be loaded', err); projects = []; }
     render();
   }
   load();

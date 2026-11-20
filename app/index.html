@@ -2648,16 +2648,11 @@ TABLES.top = () => ({
    PROJECTS — shown on the company website. Details in Firestore,
    photos in Supabase Storage (uploaded with the user's Firebase sign-in)
    ============================================================ */
+const MAX_PHOTOS = 5;
 const PROJECT_CATS = ['Building & construction','Food & grocery supply','ICT services','Broadcasting','Transport & logistics'];
 const supabaseReady = () => !/YOUR-/.test(SUPABASE_URL + SUPABASE_KEY);
 // Photos that ship with the website are stored as "site:img/..." so they work from both the site and /app
 const photoURL = u => u.startsWith('site:') ? '../' + u.slice(5) : u;
-const STARTER_PROJECTS = [
-  {name:'Institutional Block Construction', category:'Building & construction', status:'completed', location:'', year:'', description:'Construction of a single-storey block with veranda.', photos:['site:img/hero.jpg','site:img/build1.jpg','site:img/build2.jpg']},
-  {name:'Storm Water Drainage Works', category:'Building & construction', status:'completed', location:'', year:'', description:'Excavation, concrete pouring and drain lining.', photos:['site:img/pour.jpg','site:img/trench.jpg']},
-  {name:'New Building Construction', category:'Building & construction', status:'in-progress', location:'', year:'', description:'Setting out, foundations, block making on site and walling.', photos:['site:img/found.jpg','site:img/blocks.jpg','site:img/site.jpg']},
-  {name:'Completed Building Works', category:'Building & construction', status:'completed', location:'', year:'', description:'A completed single-storey building.', photos:['site:img/build3.jpg']}
-];
 const sortedProjects = () => db.projects.slice().sort((a,b) => (a.order ?? 0) - (b.order ?? 0) || (b._t||0) - (a._t||0));
 const projStatus = p => p.status === 'in-progress' ? '<span class="tpill amber">In progress</span>' : '<span class="tpill green">Completed</span>';
 
@@ -2669,10 +2664,10 @@ function renderProjects(){
     <div class="page-head">${isAdmin() ? iconBtn('', 'projectForm()', 'plus', 'Add Project')
       : `<button class="btn icon locked" disabled data-tip="Add Project" aria-label="Add Project — administrators only" title="Only administrators can add projects">${ICON.plus}</button>`}</div>
     ${!isAdmin() ? `<div class="pj-note lockinfo">${ICON.lock}<div>Only administrators can add, edit or publish projects. You can view them.</div></div>` : ''}
-    ${isAdmin() && !supabaseReady() ? `<div class="pj-note">${ICON.image}<div><b>Photo storage isn’t connected yet.</b> Add your Supabase details to the system file to upload new photos (see SUPABASE-SETUP.md). You can still create projects and use the starter photos.</div></div>` : ''}
+    ${isAdmin() && !supabaseReady() ? `<div class="pj-note">${ICON.image}<div><b>Photo storage isn’t connected yet.</b> Add your Supabase details to the system file to upload new photos (see SUPABASE-SETUP.md). You can still create projects without photos.</div></div>` : ''}
     <div class="x-tools"><span class="x-sum">${list.length} project${list.length===1?'':'s'} · <b>${pub} on the website</b></span></div>
-    ${!list.length ? `<div class="t-card pj-empty">${emptyState('image', 'No projects yet', isAdmin() ? 'Add your first project, or start with the photos already on the website.' : 'An administrator can add projects here.')}
-        ${isAdmin() ? `<div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:6px"><button class="btn" onclick="projectForm()">${ICON.plus}Add project</button><button class="btn outline" onclick="addStarterProjects()">Use the website’s current photos</button></div>` : ''}</div>`
+    ${!list.length ? `<div class="t-card pj-empty">${emptyState('image', 'No projects yet', isAdmin() ? 'Add your first project. It will appear on the website once it’s published.' : 'An administrator can add projects here.')}
+        ${isAdmin() ? `<div style="display:flex;justify-content:center;margin-top:6px"><button class="btn" onclick="projectForm()">${ICON.plus}Add project</button></div>` : ''}</div>`
       : !shown.length ? `<div class="t-card">${emptyState('image','No projects match your search')}</div>`
       : `<div class="pj-grid">${shown.map(projectCard).join('')}</div>`}`;
   setCount('Projects:', list.length);
@@ -2716,10 +2711,10 @@ function projectForm(id){
         <div class="field"><label>Status</label><select name="status"><option value="completed" ${!p || p.status!=='in-progress' ? 'selected' : ''}>Completed</option><option value="in-progress" ${p && p.status==='in-progress' ? 'selected' : ''}>In progress</option></select></div>
       </div>
       <div class="field"><label>Description</label><textarea name="description" rows="3" placeholder="One or two lines about the work">${esc(p ? p.description||'' : '')}</textarea></div>
-      <div class="field"><label>Photos <span class="t-note">— tap a photo to make it the cover</span></label>
+      <div class="field"><label>Photos <span class="t-note" id="pjCount"></span></label>
         <div class="pj-thumbs" id="pjThumbs"></div>
-        <label class="pj-add ${supabaseReady() ? '' : 'disabled'}">${ICON.plus}<span>${supabaseReady() ? 'Add photos' : 'Connect Supabase to add photos'}</span>
-          <input type="file" accept="image/*" multiple ${supabaseReady() ? '' : 'disabled'} onchange="pjAddFiles(this.files); this.value=''"></label></div>
+        <label class="pj-add" id="pjAdd">${ICON.plus}<span></span>
+          <input type="file" accept="image/*" multiple onchange="pjAddFiles(this.files); this.value=''"></label></div>
       <label class="pj-pub"><span><b>Show on website</b><small>Visitors can see this project on the Projects page</small></span>
         <span class="switch big"><input type="checkbox" name="published" ${!p || p.published ? 'checked' : ''}><span></span></span></label>
       <div class="login-error" id="pjErr"></div>
@@ -2733,6 +2728,12 @@ function projectForm(id){
 }
 function drawPjThumbs(){
   const box = $('#pjThumbs'); if(!box) return;
+  const n = pjDraft.photos.length, full = n >= MAX_PHOTOS, add = $('#pjAdd');
+  $('#pjCount').textContent = `— ${n} of ${MAX_PHOTOS}${n ? ' · tap a photo to make it the cover' : ''}`;
+  const off = full || !supabaseReady();
+  add.classList.toggle('disabled', off);
+  add.querySelector('input').disabled = off;
+  add.querySelector('span').textContent = !supabaseReady() ? 'Connect Supabase to add photos' : full ? `Maximum of ${MAX_PHOTOS} photos reached` : `Add photos (${MAX_PHOTOS - n} left)`;
   box.innerHTML = pjDraft.photos.length ? pjDraft.photos.map((ph, i) => `
     <div class="pj-th ${i===pjDraft.cover ? 'cover' : ''}" onclick="pjDraft.cover=${i}; drawPjThumbs()" title="Make cover">
       <img src="${esc(ph.preview || photoURL(ph.url))}" alt="">
@@ -2759,8 +2760,10 @@ function pjRemove(i){
   drawPjThumbs();
 }
 async function pjAddFiles(files){
-  for(const f of [...files]){
-    if(!f.type.startsWith('image/')) continue;
+  const list = [...files].filter(f => f.type.startsWith('image/'));
+  const room = MAX_PHOTOS - pjDraft.photos.length;
+  if(list.length > room) toast(room > 0 ? `Only ${room} more photo${room===1?'':'s'} allowed — a project can have up to ${MAX_PHOTOS}` : `A project can have up to ${MAX_PHOTOS} photos`);
+  for(const f of list.slice(0, Math.max(0, room))){
     try{ const blob = await shrinkPhoto(f); pjDraft.photos.push({file:blob, preview:URL.createObjectURL(blob)}); }
     catch(e){ console.error(e); toast('Could not read ' + f.name); }
   }
@@ -2803,6 +2806,7 @@ async function saveProject(e){
   const f = e.target, btn = $('#pjSave'), name = f.name.value.trim();
   if(!name){ $('#pjErr').textContent = 'Give the project a name.'; return; }
   if(f.year.value && !/^\d{4}$/.test(f.year.value.trim())){ $('#pjErr').textContent = 'Year should be four digits.'; return; }
+  if(pjDraft.photos.length > MAX_PHOTOS){ $('#pjErr').textContent = `A project can have up to ${MAX_PHOTOS} photos. Remove ${pjDraft.photos.length - MAX_PHOTOS}.`; return; }
   btn.disabled = true; $('#pjErr').textContent = '';
   const pending = pjDraft.photos.filter(ph => ph.file);
   try{
@@ -2833,10 +2837,6 @@ function deleteProject(id){
     db.projects = db.projects.filter(x => x.id !== id); save(); sbDelete(p.photos || []);
     closeModal(); toast('Project deleted'); route();
   });
-}
-function addStarterProjects(){
-  STARTER_PROJECTS.forEach((sp, i) => db.projects.push({id:newId('p'), ...sp, cover:0, published:true, order:i, created:new Date().toISOString(), by:currentUser.name}));
-  save(); toast('Starter projects added — edit them to add names, places and years'); route();
 }
 
 /* ============================================================
