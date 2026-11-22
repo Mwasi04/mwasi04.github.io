@@ -25,25 +25,30 @@
     }
     const shown = projects.filter(p => filter === 'All' || p.category === filter);
     $('#pjList').innerHTML = shown.length ? shown.map(p => {
-      const i = projects.indexOf(p), ph = p.photos || [], cover = ph[Math.min(p.cover || 0, ph.length - 1)];
-      const meta = [p.location, p.year, p.category].filter(Boolean).join(' · ');
-      return `<button class="pcard reveal in" data-i="${i}" aria-label="Open ${esc(p.name)} photos">
-        <div class="pc-img">${cover ? `<img src="${esc(url(cover))}" alt="" loading="lazy">` : ''}
-          <span class="pc-s ${p.status === 'in-progress' ? 'prog' : ''}">${p.status === 'in-progress' ? 'In progress' : 'Completed'}</span>
-          <span class="pc-n">${ph.length} photo${ph.length === 1 ? '' : 's'}</span></div>
-        <div class="pc-b"><h3>${esc(p.name)}</h3>${meta ? `<span class="pc-m">${esc(meta)}</span>` : ''}${p.description ? `<p class="pc-d">${esc(p.description)}</p>` : ''}</div>
+      const i = projects.indexOf(p), ph = p.photos || [], ci = Math.min(p.cover || 0, Math.max(0, ph.length - 1));
+      const cover = ph[ci], others = ph.filter((_, k) => k !== ci);
+      const bg = u => u ? ` style="background-image:url('${esc(url(u))}')"` : '';
+      const meta = [p.location, p.category].filter(Boolean).join(' · ');
+      return `<button class="stack reveal in" data-i="${i}" aria-label="Open ${esc(p.name)}: ${ph.length} photo${ph.length === 1 ? '' : 's'}">
+        <span class="st-back st-b2"${bg(others[1])}></span>
+        <span class="st-back st-b1"${bg(others[0])}></span>
+        <span class="st-front">${cover ? `<img src="${esc(url(cover))}" alt="" loading="lazy">` : ''}
+          <span class="st-tag ${p.status === 'in-progress' ? 'prog' : ''}">${p.status === 'in-progress' ? 'In progress' : 'Completed'}</span>
+          <span class="st-n">${ph.length} photo${ph.length === 1 ? '' : 's'}</span>
+          <span class="st-cap"><h3>${esc(p.name)}</h3>${meta ? `<span>${esc(meta)}</span>` : ''}</span>
+        </span>
       </button>`;
     }).join('') : '<p class="note">No projects in this category yet.</p>';
   }
   $('#pjFilters').addEventListener('click', e => { const b = e.target.closest('button'); if(b){ filter = b.dataset.c; render(); } });
-  $('#pjList').addEventListener('click', e => { const c = e.target.closest('.pcard'); if(c) openLb(+c.dataset.i, 0); });
+  $('#pjList').addEventListener('click', e => { const c = e.target.closest('.stack'); if(c){ const p = projects[+c.dataset.i]; openLb(+c.dataset.i, Math.max(0, Math.min(p.cover || 0, (p.photos || []).length - 1))); } });
 
   // ---- photo viewer ----
   const lb = $('#lb'); let cur = null, idx = 0, lastFocus = null;
   function openLb(i, start){
     cur = projects[i]; idx = start; lastFocus = document.activeElement;
     $('#lbTitle').textContent = cur.name;
-    $('#lbMeta').textContent = [cur.location, cur.year, cur.status === 'in-progress' ? 'In progress' : 'Completed'].filter(Boolean).join(' · ');
+    $('#lbMeta').textContent = [cur.location, cur.category, cur.status === 'in-progress' ? 'In progress' : 'Completed'].filter(Boolean).join(' · ');
     $('#lbDesc').textContent = cur.description || '';
     $('#lbStrip').innerHTML = (cur.photos || []).length > 1 ? cur.photos.map((u, k) => `<button data-k="${k}" aria-label="Photo ${k + 1}"><img src="${esc(url(u))}" alt="" loading="lazy"></button>`).join('') : '';
     lb.hidden = false; document.body.style.overflow = 'hidden';
